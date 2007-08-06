@@ -1,0 +1,35 @@
+<html>
+<head>
+  <!--                                           -->
+  <!-- Any title is fine                         -->
+  <!--                                           -->
+  <title>Example title (change this!)</title>
+
+  <!--                                           -->
+  <!-- The module reference below is the link    -->
+  <!-- between html and your Web Toolkit module  -->		
+  <!--                                           -->
+  <meta name="gwt:module" content="${createLinkTo(dir: '', file: 'gwt=@module.name@')}" />
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic ui         -->
+<!--                                           -->
+<body>
+
+  <!--                                            -->
+  <!-- This script is required bootstrap stuff.   -->
+  <!-- You can put it in the HEAD, but startup    -->
+  <!-- is slightly faster if you include it here. -->
+  <!--                                            -->
+  <g:javascript src="gwt.js" />
+
+  <!-- OPTIONAL: include this if you want history support -->
+  <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+
+  <!-- Add the rest of the page here, or leave it -->
+  <!-- blank for a completely dynamic interface.  -->
+</body>
+</html>

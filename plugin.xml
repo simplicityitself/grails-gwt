@@ -1,0 +1,10 @@
+<plugin name='gwt' version='0.1'>
+  <author>Peter Ledbrook</author>
+  <authorEmail>peter@cacoethes.co.uk</authorEmail>
+  <title>The Google Web Toolkit for Grails.</title>
+  <description>Incorporates GWT into Grails. In particular, GWT host pages can be
+GSPs and standard Grails services can be used to handle client RPC
+requests.
+</description>
+  <documentation>http://grails.codehaus.org/GWT+Plugin</documentation>
+</plugin>
