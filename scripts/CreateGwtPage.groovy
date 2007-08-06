@@ -30,8 +30,6 @@ task ('default': 'Creates a new GWT module.') {
     if (m.matches()) {
         // The first group is the controller name, the second is the
         // view file. Does the controller already exist?
-        println "Match: ${m[0][1]}"
-//        def controllerName = GCU.getClassName(m[0][1], 'Controller')
         def controllerName = GCU.getClassNameRepresentation(m[0][1]) + 'Controller'
         if (!new File("${basedir}/grails-app/controllers/${controllerName}.groovy").exists()) {
             // Controller doesn't exist - does the user want to create
