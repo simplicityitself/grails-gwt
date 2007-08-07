@@ -42,6 +42,12 @@ task ('default': 'Runs the GWT hosted mode client.') {
                 }
                 pathElement(location: "${basedir}/src/java")
             }
+
+            // Hosted mode requires a special JVM argument on Mac OS X. 
+            if (antProject.properties.'os.name' == 'Mac OS X') {
+                jvmarg(value: '-XstartOnFirstThread')
+            }
+
             arg(value: "http://${args}/${grailsAppName}")
         }
     }
