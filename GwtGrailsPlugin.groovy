@@ -1,7 +1,7 @@
 import org.codehaus.groovy.grails.plugins.support.GrailsPluginUtils
 
 class GwtGrailsPlugin {
-    def version = '0.1'
+    def version = '0.1.1'
     def author = 'Peter Ledbrook'
     def authorEmail = 'peter@cacoethes.co.uk'
     def title = 'The Google Web Toolkit for Grails.'

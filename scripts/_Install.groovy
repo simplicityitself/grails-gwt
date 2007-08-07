@@ -27,7 +27,7 @@ if (targetJsFile.exists()) {
     }
 }
 
-sourceJsFile = new File("${basedir}/plugins/gwt-0.1/web-app/js/gwt.js")
+sourceJsFile = new File("${basedir}/plugins/gwt-0.1.1/web-app/js/gwt.js")
 Ant.copy(file: sourceJsFile, tofile: targetJsFile, overwrite: true)
  
 event("CreatedFile", [ targetJsFile ])

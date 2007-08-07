@@ -20,7 +20,7 @@ task ('default': 'Creates a new GWT module.') {
     }
 
     // Location of the template page.
-    def templatePath = "${basedir}/plugins/gwt-0.1/src/templates/artifacts"
+    def templatePath = "${basedir}/plugins/gwt-0.1.1/src/templates/artifacts"
     def templateFile = "${templatePath}/GwtHostPage.tmpl"
 
     // Now look at the first argument, which should be the location
