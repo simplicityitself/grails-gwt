@@ -1,0 +1,68 @@
+<project name="grails-gwt" default="test">
+
+    <condition property="grails" value="grails.bat">
+        <os family="windows"/>
+    </condition>
+    <property environment="env"/>
+    <property name="grails" value="grails" />
+    <property name="src.local.dir" value="${basedir}/src-local" />
+    <property name="classes.dir" value="${basedir}/build/classes" />
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="grails.dir" value="${env.GRAILS_HOME}/lib"/>
+
+    <!-- Load up the groovyc task -->
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.GroovycTask">
+        <classpath>
+            <pathelement location="${grails.dir}/groovy-all-1.1-beta-3-SNAPSHOT.jar"/>
+        </classpath>
+    </taskdef>
+
+    <!-- =================================
+      target: clean
+     ================================= -->
+    <target name="clean" depends="clean-local" description="--> Cleans a Grails application">
+        <exec executable="${grails}" failonerror="true">
+            <arg value="clean"/>
+        </exec>
+        <delete dir="${classes.dir}"/>
+    </target>
+
+    <!-- =================================
+      target: war
+     ================================= -->
+    <target name="war" description="--> Creates a WAR of a Grails application">
+        <exec executable="${grails}" failonerror="true">
+            <arg value="war"/>
+        </exec>
+    </target>
+	
+	<!-- ================================= 
+          target: test              
+         ================================= -->
+    <target name="test" description="--> Run a Grails applications unit tests">
+        <exec executable="${grails}" failonerror="true">
+            <arg value="test-app"/>
+        </exec>
+    </target>
+	
+    <!-- =================================
+      target: deploy
+     ================================= -->
+    <target name="deploy" depends="war" description="--> The deploy target (initially empty)">
+        <!-- TODO -->
+    </target>
+
+    <target name="clean-local" description="--> Cleans the locally compiled files.">
+        <delete dir="${classes.dir}"/>
+    </target>
+
+    <target name="compile-local" description="Compiles the locally defined source files.">
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.local.dir}/java" destdir="${classes.dir}" source="1.5" target="1.5"/>
+        <groovyc srcdir="${src.local.dir}/groovy" destdir="${classes.dir}"/>
+    </target>
+
+    <target name="jar-local" depends="clean-local,compile-local" description="Packages the local classes into a JAR file.">
+        <jar destfile="${lib.dir}/grails-gwt-util.jar" basedir="${classes.dir}" />
+    </target>
+</project>
