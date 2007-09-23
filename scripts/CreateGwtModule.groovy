@@ -2,6 +2,7 @@ import org.codehaus.groovy.grails.commons.GrailsClassUtils as GCU
 
 Ant.property(environment: 'env')
 grailsHome = Ant.antProject.properties.'env.GRAILS_HOME'
+srcDir = 'src/java'
 
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
 
@@ -25,9 +26,9 @@ task ('default': 'Creates a new GWT module.') {
     def packagePath = (modulePackage != null ? '/' + modulePackage.replaceAll('\\.', '/') : '')
 
     // Now create the module file.
-    def targetPath = "${basedir}/src/java${packagePath}"
+    def targetPath = "${basedir}/${srcDir}${packagePath}"
     def moduleFile = "${targetPath}/${moduleName}.gwt.xml"
-    def templatePath = "${basedir}/plugins/gwt-0.1.1/src/templates/artifacts"
+    def templatePath = "${basedir}/plugins/gwt-0.2/src/templates/artifacts"
     def templateFile = "${templatePath}/GwtModule.gwt.xml"
 
     // Check whether the target module exists already.

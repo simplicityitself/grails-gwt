@@ -14,20 +14,3 @@ grailsHome = Ant.antProject.properties."env.GRAILS_HOME"
 
 // Create the directory for storing GWT files.
 Ant.mkdir(dir:"${basedir}/web-app/gwt")
-
-// Now copy the gwt.js file into the project's javascript directory.
-targetJsFile = new File("${basedir}/web-app/js/gwt.js")
-if (targetJsFile.exists()) {
-    Ant.input(
-        addProperty: "gwt.js.overwrite",
-        message: "You already have a 'gwt.js' file installed. Overwrite? [y/n]")
-
-    if (Ant.antProject.properties."gwt.js.overwrite" == "n") {
-        return
-    }
-}
-
-sourceJsFile = new File("${basedir}/plugins/gwt-0.1.1/web-app/js/gwt.js")
-Ant.copy(file: sourceJsFile, tofile: targetJsFile, overwrite: true)
- 
-event("CreatedFile", [ targetJsFile ])

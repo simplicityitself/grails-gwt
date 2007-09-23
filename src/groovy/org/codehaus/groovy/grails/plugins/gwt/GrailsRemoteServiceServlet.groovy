@@ -5,6 +5,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet
 import com.google.gwt.user.server.rpc.RPC
 import com.google.gwt.user.server.rpc.RPCRequest
 
+import java.util.Locale
 import org.springframework.web.context.support.WebApplicationContextUtils as CtxUtils
 
 /**
@@ -24,20 +25,16 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
         // to pass.
         def serviceMethod = rpcRequest.method
 
-        // Get the name of the interface that declares this methods,
-        // and strip off the package and any 'Service' suffix.
+        // Get the name of the interface that declares this method.
         def ifaceName = serviceMethod.declaringClass.name
         def pos = ifaceName.lastIndexOf('.')
         if (pos != -1) {
             ifaceName = ifaceName.substring(pos + 1)
         }
-        if (ifaceName.endsWith('Service')) {
-            ifaceName = ifaceName.substring(0, ifaceName.size() - 'Service'.size())
-        }
 
         // Work out the name of the Grails service to dispatch this
         // request to.
-        def serviceName = "gwt${ifaceName}Service"
+        def serviceName = ifaceName[0].toLowerCase(Locale.ENGLISH) + ifaceName.substring(1)
 
         // Get the Spring application context and retrieve the required
         // service from it.

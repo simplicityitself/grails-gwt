@@ -20,13 +20,13 @@ task ('default': 'Creates a new GWT module.') {
     }
 
     // Location of the template page.
-    def templatePath = "${basedir}/plugins/gwt-0.1.1/src/templates/artifacts"
+    def templatePath = "${basedir}/plugins/gwt-0.2/src/templates/artifacts"
     def templateFile = "${templatePath}/GwtHostPage.tmpl"
 
     // Now look at the first argument, which should be the location
     // of the page to create.
     def targetFile = null
-    def m = argArray[0] =~ /(\w+)\/\w+\.gsp/
+    def m = argArray[0] =~ /(\w+)[\/\\]\w+\.gsp/
     if (m.matches()) {
         // The first group is the controller name, the second is the
         // view file. Does the controller already exist?
@@ -48,7 +48,7 @@ task ('default': 'Creates a new GWT module.') {
             }
         }
 
-        // The target file is written into the 'views' firectory.
+        // The target file is written into the 'views' directory.
         targetFile = "grails-app/views/${argArray[0]}"
     }
     else {
