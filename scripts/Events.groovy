@@ -4,7 +4,7 @@ import org.codehaus.groovy.grails.commons.GrailsApplication as GA
 srcDir = 'src/java'
 
 // Called when the compilation phase completes.
-eventCompileEnd = { type ->
+eventCompileStart = { type ->
     def gwtHome = Ant.antProject.properties.'env.GWT_HOME'
 
     if (!gwtHome || type != 'source') {
