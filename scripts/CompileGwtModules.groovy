@@ -33,7 +33,7 @@ task (compileGwtModules: "Compiles any GWT modules in '${srcDir}'.") {
             java(classname: 'com.google.gwt.dev.GWTCompiler', fork: 'true') {
                 // Have to prefix this with 'Ant' because the Init
                 // script includes a 'classpath' target.
-                classpath {
+                Ant.classpath {
                     fileset(dir: "${gwtHome}") {
                         include(name: 'gwt-dev*.jar')
                         include(name: 'gwt-user.jar')
