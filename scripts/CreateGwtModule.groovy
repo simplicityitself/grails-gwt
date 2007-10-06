@@ -28,7 +28,7 @@ task ('default': 'Creates a new GWT module.') {
     // Now create the module file.
     def targetPath = "${basedir}/${srcDir}${packagePath}"
     def moduleFile = "${targetPath}/${moduleName}.gwt.xml"
-    def templatePath = "${basedir}/plugins/gwt-0.2/src/templates/artifacts"
+    def templatePath = "@plugin.basedir@/src/templates/artifacts"
     def templateFile = "${templatePath}/GwtModule.gwt.xml"
 
     // Check whether the target module exists already.
