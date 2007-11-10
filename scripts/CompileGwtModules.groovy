@@ -63,7 +63,7 @@ def findModules(searchDir) {
 
     new File(searchDir).eachFileRecurse { file ->
         // Replace Windows separators with Unix ones.
-        file = file.path.replaceAll(/\\${}/, '/')
+        file = file.path.replace('\\' as char, '/' as char)
 
         // Chop off the search directory.
         file = file.substring(baseLength + 1)
@@ -72,7 +72,7 @@ def findModules(searchDir) {
         def m = file =~ /([\w\/]+)\.gwt\.xml/
         if (m.count > 0) {
             // Extract the fully-qualified module name.
-            modules << m[0][1].replaceAll('/', '.')
+            modules << m[0][1].replace('/' as char, '.' as char)
         }
     }
 

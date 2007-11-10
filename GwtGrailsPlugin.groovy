@@ -163,7 +163,7 @@ requests.
                 matchingInterfaces.each { file ->
                     // Get the file's path and replace Windows separators
                     // with Unix ones.
-                    def path = file.path.replaceAll(/\\${}/, '/')
+                    def path = file.path.replace('\\' as char, '/' as char)
 
                     // Remove the source directory from the path.
                     path = path.substring(srcDir.length() + 1)
@@ -172,7 +172,7 @@ requests.
                     def pkg = ''
                     def pos = path.lastIndexOf('/')
                     if (pos != -1) {
-                        pkg = path.substring(0, pos).replaceAll('/', '.')
+                        pkg = path.substring(0, pos).replace('/' as char, '.' as char)
                     }
 
                     // Does this match the package name specified by
@@ -233,7 +233,7 @@ requests.
      */
     def generateClientInterfaces(serviceWrapper, packageName, log) {
         // Find the directory in which to store the interface files.
-        def outputDir = new File(srcDir, packageName.replaceAll('\\.', '/'))
+        def outputDir = new File(srcDir, packageName.replace('.' as char, '/' as char))
 
         // Make sure that the output directory exists so that we can
         // create the interface files in it.
@@ -507,7 +507,7 @@ public interface ${className}Async {""")
 
         new File(searchDir).eachFileRecurse { file ->
             // Replace Windows separators with Unix ones.
-            file = file.path.replaceAll(/\\${}/, '/')
+            file = file.path.replace('\\' as char, '/' as char)
 
             // Chop off the search directory.
             file = file.substring(baseLength + 1)
@@ -516,7 +516,7 @@ public interface ${className}Async {""")
             def m = file =~ /([\w\/]+)\.gwt\.xml/
             if (m.count > 0) {
                 // Extract the fully-qualified module name.
-                modules << m[0][1].replaceAll('/', '.')
+                modules << m[0][1].replace('/' as char, '.' as char)
             }
         }
 

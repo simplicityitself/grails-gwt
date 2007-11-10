@@ -23,7 +23,7 @@ task ('default': 'Creates a new GWT module.') {
         moduleName = args
     }
 
-    def packagePath = (modulePackage != null ? '/' + modulePackage.replaceAll('\\.', '/') : '')
+    def packagePath = (modulePackage != null ? '/' + modulePackage.replace('.' as char, '/' as char) : '')
 
     // Now create the module file.
     def targetPath = "${basedir}/${srcDir}${packagePath}"
