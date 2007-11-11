@@ -52,7 +52,7 @@ class GwtGrailsPlugin {
         }
     }
 
-    def version = '0.2.1'
+    def version = '0.2.2'
     def author = 'Peter Ledbrook'
     def authorEmail = 'peter@cacoethes.co.uk'
     def title = 'The Google Web Toolkit for Grails.'
