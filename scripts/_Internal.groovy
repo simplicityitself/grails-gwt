@@ -23,6 +23,14 @@ catch (MissingPropertyException ex) {
     gwtForceCompile = false
 }
 
+// We do the same for 'gwtModuleList'.
+try {
+    def test = !gwtModuleList
+}
+catch (MissingPropertyException ex) {
+    gwtModuleList = null
+}
+
 //
 // A target for compiling any GWT modules defined in the project.
 //
@@ -31,6 +39,10 @@ catch (MissingPropertyException ex) {
 //   gwtForceCompile - Set to true to force module compilation. Otherwise
 //                     the modules are only compiled if the environment is
 //                     production or the 'nocache.js' file is missing.
+//
+//   gwtModuleList - A collection or array of modules that should be compiled.
+//                   If this is null or empty, all the modules in the
+//                   application will be compiled.
 //
 target (compileGwtModules: "Compiles any GWT modules in 'src/java'.") {
     depends(checkVersion)
@@ -51,7 +63,7 @@ target (compileGwtModules: "Compiles any GWT modules in 'src/java'.") {
     // Compile any GWT modules. This requires the GWT 'dev' JAR file,
     // so the user must have defined the GWT_HOME environment variable
     // so that we can locate that JAR.
-    def modules = findModules("${basedir}/${srcDir}")
+    def modules = gwtModuleList ?: findModules("${basedir}/${srcDir}")
     Ant.sequential {
         def outputPath = "${basedir}/web-app/gwt"
 
