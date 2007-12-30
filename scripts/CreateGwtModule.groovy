@@ -6,7 +6,7 @@ srcDir = 'src/java'
 
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
 
-task ('default': 'Creates a new GWT module.') {
+target ('default': 'Creates a new GWT module.') {
     depends(promptForName)
 
     // The only argument should be the fully qualified name of the GWT

@@ -6,7 +6,7 @@ grailsHome = Ant.antProject.properties.'env.GRAILS_HOME'
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
 includeTargets << new File ("${grailsHome}/scripts/CreateController.groovy")
 
-task ('default': 'Creates a new GWT module.') {
+target ('default': 'Creates a new GWT module.') {
     depends(promptForName)
 
     // This script takes multiple arguments (in fact, at least two),

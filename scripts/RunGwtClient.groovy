@@ -5,7 +5,7 @@ srcDir = 'src/java'
 
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
 
-task ('default': 'Runs the GWT hosted mode client.') {
+target ('default': 'Runs the GWT hosted mode client.') {
     depends(checkVersion)
 
     if (!gwtHome) {

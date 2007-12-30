@@ -10,7 +10,7 @@ Ant.mkdir(dir: "${basedir}/web-app/gwt")
 
 // Update scripts with the location of the plugin relative to the project.
 def pluginDir = pluginBasedir.replace(basedir.replace('\\' as char, '/' as char), '')[1..-1]
-def scripts = [ 'CreateGwtPage', 'CreateGwtModule' ]
+def scripts = [ 'CreateGwtPage', 'CreateGwtModule', 'CompileGwtModules', 'Events' ]
 scripts.each { script ->
     Ant.replace(
         file: "${pluginBasedir}/scripts/${script}.groovy",
