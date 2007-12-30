@@ -119,7 +119,7 @@ def findModules(searchDir) {
         file = file.substring(baseLength + 1)
 
         // Now check whether this path matches a module file.
-        def m = file =~ /([\w\/]+)\.gwt\.xml/
+        def m = file =~ /([\w\/]+)\.gwt\.xml$/
         if (m.count > 0) {
             // Extract the fully-qualified module name.
             modules << m[0][1].replace('/' as char, '.' as char)
