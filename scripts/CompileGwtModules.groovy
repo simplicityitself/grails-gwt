@@ -2,7 +2,7 @@ Ant.property(environment:"env")
 grailsHome = Ant.antProject.properties."env.GRAILS_HOME"
 
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
-includeTargets << new File('@plugin.basedir@/scripts/_Internal.groovy')
+includeTargets << new File("${gwtPluginDir}/scripts/_Internal.groovy")
 
 target ('default': 'Calls \'compileGetModules\'.') {
     // Force compilation of the GWT modules.
