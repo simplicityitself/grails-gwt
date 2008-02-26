@@ -1,4 +1,4 @@
-<plugin name='gwt' version='0.2.3'>
+<plugin name='gwt' version='0.2.4'>
   <author>Peter Ledbrook</author>
   <authorEmail>peter@cacoethes.co.uk</authorEmail>
   <title>The Google Web Toolkit for Grails.</title>
