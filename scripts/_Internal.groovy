@@ -88,6 +88,9 @@ target (compileGwtModules: "Compiles any GWT modules in 'src/java'.") {
                         include(name: 'gwt-dev*.jar')
                         include(name: 'gwt-user.jar')
                     }
+                    fileset(dir: "${basedir}/lib") {
+                        include(name: 'gwt*.jar')
+                    }
                     pathElement(location: "${basedir}/${srcDir}")
                 }
                 arg(value: '-out')
