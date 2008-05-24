@@ -19,7 +19,7 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
      */
     String processCall(String payload) throws SerializationException {
         // First decode the request.
-        RPCRequest rpcRequest = RPC.decodeRequest(payload, null)
+        RPCRequest rpcRequest = RPC.decodeRequest(payload, null, this)
 
         // The request contains the method to invoke and the arguments
         // to pass.
@@ -51,7 +51,8 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
         try {
             // Invoke the method on the service and encode the response.
             def retval = service.invokeMethod(serviceMethod.name, rpcRequest.parameters)
-            return RPC.encodeResponseForSuccess(serviceMethod, retval)
+            return RPC.encodeResponseForSuccess(serviceMethod, retval, rpcRequest.serializationPolicy)
+
         }
         catch (Exception ex) {
             ex.printStackTrace();
