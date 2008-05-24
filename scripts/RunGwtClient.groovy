@@ -1,9 +1,9 @@
 Ant.property(environment: 'env')
-grailsHome = Ant.antProject.properties.'env.GRAILS_HOME'
-gwtHome = Ant.antProject.properties.'env.GWT_HOME'
-srcDir = 'src/java'
+
+grailsHome = Ant.antProject.properties."env.GRAILS_HOME"
 
 includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
+includeTargets << new File ("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
 target ('default': 'Runs the GWT hosted mode client.') {
     depends(checkVersion)
@@ -32,22 +32,14 @@ target ('default': 'Runs the GWT hosted mode client.') {
     Ant.sequential {
         def outputPath = "${basedir}/web-app/gwt"
 
-        java(classname: 'com.google.gwt.dev.GWTShell', fork: 'true') {
-            // Have to prefix this with 'Ant' because the Init
-            // script includes a 'classpath' target.
-            Ant.classpath {
-                fileset(dir: "${gwtHome}") {
-                    include(name: 'gwt-dev-*.jar')
-                    include(name: 'gwt-user.jar')
-                }
-                pathElement(location: "${basedir}/${srcDir}")
-            }
-
-            // Hosted mode requires a special JVM argument on Mac OS X. 
+        gwtRun('com.google.gwt.dev.GWTShell') {
+            // Hosted mode requires a special JVM argument on Mac OS X.
             if (antProject.properties.'os.name' == 'Mac OS X') {
                 jvmarg(value: '-XstartOnFirstThread')
             }
 
+            arg(value: "-out")
+            arg(value: gwtOutputPath)
             arg(value: "http://${targetServer}/${grailsAppName}")
         }
     }

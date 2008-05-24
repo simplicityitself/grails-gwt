@@ -1,4 +1,4 @@
-includeTargets << new File("${gwtPluginDir}/scripts/_Internal.groovy")
+includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
 // Called when the compilation phase completes.
 eventCompileStart = { type ->
@@ -6,6 +6,6 @@ eventCompileStart = { type ->
         return
     }
 
-    // Compile the GWT modules. This target is provided by '_Internal'.
+    // Compile the GWT modules. This target is provided by '_GwtInternal'.
     compileGwtModules()
 }
