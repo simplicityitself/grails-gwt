@@ -13,21 +13,12 @@ import org.codehaus.groovy.grails.commons.GrailsApplication as GA
 // being overwritten.
 //
 // The events mechanism is a source of great frustration!
-try {
-    def test = !gwtForceCompile
-
-    // If we get here, 'gwtForceCompile' already exists, so we don't
-    // want to override the value.
-}
-catch (MissingPropertyException ex) {
+if (!(getBinding().variables.containsKey('gwtForceCompile'))) {
     gwtForceCompile = false
 }
 
 // We do the same for 'gwtModuleList'.
-try {
-    def test = !gwtModuleList
-}
-catch (MissingPropertyException ex) {
+if (!(getBinding().variables.containsKey('gwtModuleList'))) {
     gwtModuleList = null
 }
 
@@ -81,6 +72,8 @@ target (compileGwtModules: "Compiles any GWT modules in 'src/java'.") {
 
             echo(message: "Module: ${moduleName}")
             java(classname: 'com.google.gwt.dev.GWTCompiler', fork: 'true') {
+            jvmarg(value: "-Xmx256m")
+
                 // Have to prefix this with 'Ant' because the Init
                 // script includes a 'classpath' target.
                 Ant.classpath {
