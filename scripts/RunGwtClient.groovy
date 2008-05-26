@@ -30,8 +30,6 @@ target ('default': 'Runs the GWT hosted mode client.') {
     event('GwtRunHostedStart', [ 'Starting the GWT hosted mode client.' ])
 
     Ant.sequential {
-        def outputPath = "${basedir}/web-app/gwt"
-
         gwtRun('com.google.gwt.dev.GWTShell') {
             // Hosted mode requires a special JVM argument on Mac OS X.
             if (antProject.properties.'os.name' == 'Mac OS X') {

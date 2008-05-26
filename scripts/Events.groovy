@@ -9,3 +9,8 @@ eventCompileStart = { type ->
     // Compile the GWT modules. This target is provided by '_GwtInternal'.
     compileGwtModules()
 }
+
+// Clean up the GWT-generated files on "clean".
+eventCleanEnd = {
+    gwtClean()
+}
