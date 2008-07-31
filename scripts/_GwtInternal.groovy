@@ -66,6 +66,7 @@ target (compileGwtModules: "Compiles any GWT modules in 'src/java'.") {
 
             echo(message: "Module: ${moduleName}")
             gwtRun("com.google.gwt.dev.GWTCompiler") {
+                jvmarg(value: '-Djava.awt.headless=true')
                 arg(value: "-out")
                 arg(value: gwtOutputPath)
                 arg(value: moduleName)
@@ -115,6 +116,7 @@ target (compileI18n: "Compiles any i18n properties files for any GWT modules in 
             }
             else {
                 gwtRun("com.google.gwt.i18n.tools.I18NSync") {
+                    jvmarg(value: '-Djava.awt.headless=true')
                     arg(value: "-out")
                     arg(value: srcDir)
                     arg(value: i18nName)
