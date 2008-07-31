@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RPCRequest
 
 import java.util.Locale
 import org.springframework.web.context.support.WebApplicationContextUtils as CtxUtils
+import java.lang.reflect.UndeclaredThrowableException
 
 /**
  * Custom GWT RPC servlet that dispatches client requests to Grails
@@ -54,8 +55,12 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
             return RPC.encodeResponseForSuccess(serviceMethod, retval, rpcRequest.serializationPolicy)
 
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        catch (Throwable ex) {
+            if (ex instanceof UndeclaredThrowableException) {
+                ex = ex.cause
+            }
+
+            log.warn "Call to service '${serviceName}.${serviceMethod.name}()' failed", ex
             return RPC.encodeResponseForFailure(serviceMethod, ex)
         }
     }
