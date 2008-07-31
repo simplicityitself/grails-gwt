@@ -124,6 +124,13 @@ requests.
     }                                      
 
     def doWithDynamicMethods = { ctx ->
+	    application.serviceClasses.each { serviceWrapper ->
+            def packageName = getPackage(serviceWrapper)
+            if (packageName != null) {
+                WebMetaUtils.registerCommonWebProperties(serviceWrapper.clazz.metaClass, application)
+            }
+        }
+
     }
 
     def onChange = { event ->
