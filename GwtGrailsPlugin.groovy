@@ -16,9 +16,12 @@
 import java.lang.reflect.Modifier
 
 import org.apache.commons.io.FileUtils
-import org.codehaus.groovy.grails.plugins.support.GrailsPluginUtils
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
+import org.codehaus.groovy.grails.plugins.support.GrailsPluginUtils
+import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 import java.lang.reflect.Method
+import java.beans.Introspector
+import java.beans.PropertyDescriptor
 
 class GwtGrailsPlugin {
     private static final GROOVY_METHODS = [
@@ -123,6 +126,10 @@ requests.
         }
     }                                      
 
+    /**
+     * Registers the common web-related dynamic properties on services
+     * that are exposed via GWT.
+     */
     def doWithDynamicMethods = { ctx ->
 	    application.serviceClasses.each { serviceWrapper ->
             def packageName = getPackage(serviceWrapper)
@@ -302,13 +309,30 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ${className}Async {""")
 
+        // Find out what properties the service class contains, because
+        // we want to leave them out of the interface definition.
+        def info = Introspector.getBeanInfo(serviceWrapper.clazz)
+        def propMethods = [] as Set
+        info.propertyDescriptors.each { PropertyDescriptor desc ->
+            propMethods << desc.readMethod
+            propMethods << desc.writeMethod
+
+            // Groovy adds a "get*()" method for booleans as well as
+            // the usual "is*()", so we have to remove it too.
+            if (desc.readMethod?.name?.startsWith("is")) {
+                def name = "get${desc.readMethod.name[2..-1]}".toString()
+                propMethods << info.methodDescriptors.find { it.name == name }.method
+            }
+        }
+
         // Iterate through the methods declared by the Grails service,
         // adding the appropriate ones to the interface definitions.
         serviceWrapper.clazz.declaredMethods.each { Method method ->
-            // Skip non-public, static, and Groovy methods.
+            // Skip non-public, static, Groovy, and property methods.
             if (!Modifier.isPublic(method.modifiers) ||
                     Modifier.isStatic(method.modifiers) ||
-                    GROOVY_METHODS.contains(method.name)) {
+                    GROOVY_METHODS.contains(method.name) ||
+                    propMethods.contains(method)) {
                 return
             }
 
@@ -335,8 +359,19 @@ public interface ${className}Async {""")
                 outputAsync << paramString
             }
 
-            // Close the method off in the main interface definition.
-            output << ');'
+            // Close off the method args.
+            output << ')'
+
+            // Handle any exceptions and close off the method.
+            def exceptionTypes = method.exceptionTypes
+            if (exceptionTypes) {
+                output << ' throws '
+                output << exceptionTypes*.name.join(',')
+            }
+
+            // And don't forget the statement terminator! This needs
+            // to compile under Java as well as Groovy ;)
+            output << ';'
 
             // The async interface definition requires an extra parameter
             // on the method.
