@@ -61,7 +61,7 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
             }
 
             log.warn "Call to service '${serviceName}.${serviceMethod.name}()' failed", ex
-            return RPC.encodeResponseForFailure(serviceMethod, ex)
+            return RPC.encodeResponseForFailure(serviceMethod, ex, rpcRequest.serializationPolicy)
         }
     }
 }
