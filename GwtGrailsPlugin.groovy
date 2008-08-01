@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Peter Ledbrook.
+ * Copyright 2007-2008 Peter Ledbrook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
