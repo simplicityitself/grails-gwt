@@ -7,25 +7,5 @@ GSPs and standard Grails services can be used to handle client RPC
 requests.
 </description>
   <documentation>http://grails.codehaus.org/GWT+Plugin</documentation>
-  <resources>
-    <resource>UrlMappings</resource>
-    <resource>spring.resources</resource>
-    <resource>Config</resource>
-    <resource>DataSource</resource>
-    <resource>BootStrap</resource>
-    <resource>UrlMappings</resource>
-    <resource>Config</resource>
-    <resource>DataSource</resource>
-    <resource>BootStrap</resource>
-    <resource>ScientistController</resource>
-    <resource>InstituteController</resource>
-    <resource>InstituteService</resource>
-    <resource>Institute</resource>
-    <resource>Scientist</resource>
-    <resource>UrlMappings</resource>
-    <resource>spring.resources</resource>
-    <resource>Config</resource>
-    <resource>DataSource</resource>
-    <resource>BootStrap</resource>
-  </resources>
+  <resources />
 </plugin>
