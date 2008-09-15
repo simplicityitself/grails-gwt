@@ -8,6 +8,7 @@ import com.google.gwt.user.server.rpc.RPCRequest
 import java.util.Locale
 import org.springframework.web.context.support.WebApplicationContextUtils as CtxUtils
 import java.lang.reflect.UndeclaredThrowableException
+import org.codehaus.groovy.grails.commons.GrailsClassUtils
 
 /**
  * Custom GWT RPC servlet that dispatches client requests to Grails
@@ -35,7 +36,7 @@ class GrailsRemoteServiceServlet extends RemoteServiceServlet {
 
         // Work out the name of the Grails service to dispatch this
         // request to.
-        def serviceName = ifaceName[0].toLowerCase(Locale.ENGLISH) + ifaceName.substring(1)
+        def serviceName = GrailsClassUtils.getPropertyName(ifaceName)
 
         // Get the Spring application context and retrieve the required
         // service from it.
