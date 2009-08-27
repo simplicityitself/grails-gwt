@@ -1,22 +1,21 @@
 import org.codehaus.groovy.grails.commons.GrailsClassUtils as GCU
 
-Ant.property(environment: 'env')
-grailsHome = Ant.antProject.properties.'env.GRAILS_HOME'
+includeTargets << grailsScript("_GrailsArgParsing")
+includeTargets << grailsScript("_GrailsCreateArtifacts")
 
-includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
-includeTargets << new File ("${grailsHome}/scripts/CreateController.groovy")
-
-target ('default': 'Creates a new GWT module.') {
-    depends(promptForName)
+target (default: "Creates a new GSP page for hosting a GWT UI.") {
+    depends(parseArguments)
 
     // This script takes multiple arguments (in fact, at least two),
     // so split the given string into separate parameters, using
     // whitespace as the delimiter.
-    def argArray = args.split('\\s+')
+    def argArray = argsMap["params"]
 
     if (argArray.size() < 2) {
         println "At least two arguments must be given to this script."
-        return
+        println()
+        println "USAGE: create-gwt-page GSPFILE MODULE"
+        return 1
     }
 
     // Location of the template page.
@@ -34,17 +33,15 @@ target ('default': 'Creates a new GWT module.') {
         if (!new File("${basedir}/grails-app/controllers/${controllerName}.groovy").exists()) {
             // Controller doesn't exist - does the user want to create
             // it?
-            Ant.input(
+            ant.input(
                 addProperty:"${controllerName}.auto.create",
                 message:"${controllerName} does not exist - do you want to create it now? [y/n]")
 
-            if (Ant.antProject.properties."${controllerName}.auto.create" == "y") {
+            if (ant.antProject.properties."${controllerName}.auto.create" == "y") {
                 // User wants to create the controller, so do so.
-                args = m[0][1]
-                typeName = "Controller" 
-                artifactName = "Controller" 	
-                artifactPath = "grails-app/controllers"
-                createArtifact()
+                createArtifact(name: m[0][1], suffix: "Controller", type: "Controller", path: "grails-app/controllers")
+                createUnitTest(name: m[0][1], suffix: "Controller", superClass: "ControllerUnitTestCase")
+                ant.mkdir(dir: "${basedir}/grails-app/views/${propertyName}")
             }
         }
 
@@ -57,11 +54,11 @@ target ('default': 'Creates a new GWT module.') {
     }
 
     // Copy the template file to the target location.
-    Ant.copy(file: templateFile, tofile: targetFile, overwrite: true)
+    ant.copy(file: templateFile, tofile: targetFile, overwrite: true)
 
     // Replace the tokens in the template.
-    Ant.replace(file: targetFile) {
-        Ant.replacefilter(token: '@module.name@', value: argArray[1])
+    ant.replace(file: targetFile) {
+        replacefilter(token: '@module.name@', value: argArray[1])
     }
 
     event("CreatedFile", [ targetFile ])

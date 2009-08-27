@@ -1,18 +1,19 @@
-Ant.property(environment:"env")
-
-grailsHome = Ant.antProject.properties."env.GRAILS_HOME"
-
-includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
+includeTargets << grailsScript("_GrailsCompile")
 
-target ('default': 'Calls \'compileGetModules\'.') {
+target (default: "Calls 'compileGetModules'.") {
+    depends(parseArguments)
+
     // Force compilation of the GWT modules.
     gwtForceCompile = true
 
     // If arguments are provided, treat them as a list of modules to
     // compile.
-    gwtModuleList = args?.split('\\n')
+    gwtModuleList = argsMap["params"]
 
-    // Compile the GWT modules. This target is provided by '_GwtInternal'.
-    compileGwtModules()
+    // Compile the GWT modules. We use the 'compile' target because
+    // 'compileGwtModules' depends on it and the module compilation
+    // is triggered by the end of the standard Grails compilation
+    // (at the moment).
+    compile()
 }

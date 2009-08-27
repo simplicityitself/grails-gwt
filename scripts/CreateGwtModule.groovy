@@ -1,32 +1,27 @@
-import org.codehaus.groovy.grails.commons.GrailsClassUtils as GCU
+includeTargets << grailsScript("_GrailsArgParsing")
+includeTargets << grailsScript("_GrailsCreateArtifacts")
 
-Ant.property(environment: 'env')
-grailsHome = Ant.antProject.properties.'env.GRAILS_HOME'
-srcDir = 'src/java'
+gwtSrcPath = "src/gwt"
 
-includeTargets << new File ("${grailsHome}/scripts/Init.groovy")
-
-target ('default': 'Creates a new GWT module.') {
-    depends(promptForName)
+target (default: "Creates a new GWT module.") {
+    depends(parseArguments)
+    promptForName(type: "")
 
     // The only argument should be the fully qualified name of the GWT
     // module. First, split it into package and name parts.
-    def moduleName
+    def moduleName = argsMap["params"][0]
     def modulePackage = null
-    def pos = args.lastIndexOf('.')
+    def pos = moduleName.lastIndexOf('.')
     if (pos != -1) {
         // Extract the name and the package.
-        moduleName = args.substring(pos + 1)
-        modulePackage = args.substring(0, pos)
-    }
-    else {
-        moduleName = args
+        modulePackage = moduleName.substring(0, pos)
+        moduleName = moduleName.substring(pos + 1)
     }
 
     def packagePath = (modulePackage != null ? '/' + modulePackage.replace('.' as char, '/' as char) : '')
 
     // Now create the module file.
-    def targetPath = "${basedir}/${srcDir}${packagePath}"
+    def targetPath = "${basedir}/${gwtSrcPath}${packagePath}"
     def moduleFile = "${targetPath}/${moduleName}.gwt.xml"
     def templatePath = "${gwtPluginDir}/src/templates/artifacts"
     def templateFile = "${templatePath}/GwtModule.gwt.xml"

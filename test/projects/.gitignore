@@ -1,0 +1,5 @@
+.gwt-cache
+target
+*/*.war
+*/tomcat
+*/web-app/gwt

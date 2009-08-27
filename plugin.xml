@@ -1,4 +1,4 @@
-<plugin name='gwt' version='0.3-SNAPSHOT'>
+<plugin name='gwt' version='0.4.1' grailsVersion='1.1 &gt; *'>
   <author>Peter Ledbrook</author>
   <authorEmail>peter@cacoethes.co.uk</authorEmail>
   <title>The Google Web Toolkit for Grails.</title>
@@ -6,6 +6,10 @@
 GSPs and standard Grails services can be used to handle client RPC
 requests.
 </description>
-  <documentation>http://grails.codehaus.org/GWT+Plugin</documentation>
-  <resources />
+  <documentation>http://www.grails.org/plugin/gwt</documentation>
+  <resources>
+    <resource>org.codehaus.groovy.grails.plugins.gwt.GwtUrlMappings</resource>
+    <resource>org.codehaus.groovy.grails.plugins.gwt.GwtController</resource>
+  </resources>
+  <dependencies />
 </plugin>

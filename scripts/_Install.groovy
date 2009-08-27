@@ -6,4 +6,4 @@
 //
 
 // Create the directory for storing GWT files.
-Ant.mkdir(dir: "${basedir}/web-app/gwt")
+ant.mkdir(dir: "${basedir}/web-app/gwt")

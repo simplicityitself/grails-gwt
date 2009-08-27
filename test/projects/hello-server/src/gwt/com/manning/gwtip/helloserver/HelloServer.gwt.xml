@@ -1,0 +1,20 @@
+<module>
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.i18n.I18N"/>
+
+    <!-- Specify the app entry point class.                   -->
+    <entry-point class='com.manning.gwtip.helloserver.client.HelloServer'/>
+  
+    <!--
+  	<servlet path="/HelloService"
+           class="com.manning.gwtip.helloserver.server.HelloServlet"/>           
+    -->
+    <servlet path="/rpc"
+             class="org.codehaus.groovy.grails.plugins.gwt.GrailsRemoteServiceServlet"/>           
+    
+    <extend-property name="locale" values="fr" />
+	<extend-property name="locale" values="it" />
+	
+     
+</module>

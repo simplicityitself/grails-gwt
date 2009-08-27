@@ -1,0 +1,34 @@
+includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
+
+// Called when the compilation phase completes.
+eventCompileEnd = {
+    // Compile the GWT modules. This target is provided by '_GwtInternal'.
+    compileGwtModules()
+}
+
+// Clean up the GWT-generated files on "clean".
+eventCleanEnd = {
+    gwtClean()
+}
+
+//
+// The GWT libs must be copied to the WAR file. In addition, although
+// we don't do dynamic compilation in production mode, the plugin
+// groovy class gets compiled with the UnableToCompleteException in
+// the class file. Thus, we also have to include this particular file
+// in the system.
+//
+eventCreateWarStart = { warName, stagingDir ->
+    // Extract the UnableToCompleteException file from gwt-dev-*.jar
+    ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
+ 	 	patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
+        fileset(dir: "${gwtHome}", includes: "gwt-dev-*.jar")
+    }
+}
+
+//
+// Adds the GWT servlet library to the root loader.
+//
+eventPackageAppEnd = {
+    rootLoader.addURL(new File(gwtHome, "gwt-servlet.jar").toURI().toURL())
+}
