@@ -85,6 +85,18 @@ requests.
                 WebMetaUtils.registerCommonWebProperties(serviceWrapper.clazz.metaClass, application)
             }
         }
+        else if (application.isActionHandlerClass(event.source)) {
+            // Re-register the action handler bean.
+            def beans = beans {                 
+                final c = configureActionHandler.clone()
+                c.delegate = delegate
+                c.call(application.getActionHandlerClass(event.source.name))
+            }
+
+            if (event.ctx) {         
+                beans.registerBeans(event.ctx)
+            }				
+        }
     }                                                                                  
 
     def onApplicationChange = { event ->
