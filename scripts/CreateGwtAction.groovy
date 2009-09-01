@@ -33,8 +33,11 @@ target (default: "Creates a new GWT action, response, and action handler.") {
     installFile(targetFile, templateFile, [ "action.package": (actionPackage ? "${actionPackage}." : ""), "action.name": actionName ])
 
     // Finally, the action handler.
-    targetFile = new File("${basedir}/grails-app/actionHandlers${packagePath}", "${actionName}ActionHandler.java")
-    templateFile = new File("${gwtPluginDir}/src/templates/artifacts", "GwtActionHandler.java")
+    targetFile = new File("${basedir}/grails-app/actionHandlers${packagePath}", "${actionName}ActionHandler.groovy")
+    templateFile = new File("${gwtPluginDir}/src/templates/artifacts", "GwtActionHandler.groovy")
 
-    installFile(targetFile, templateFile, [ "action.package": (actionPackage ? "package ${actionPackage}\n\n" : ""), "action.name": actionName ])
+    installFile(targetFile, templateFile, [
+        "package.line": (actionPackage ? "package ${actionPackage}\n\n" : ""),
+        "action.package": (actionPackage ? "${actionPackage}." : ""),
+        "action.name": actionName ])
 }
