@@ -1,0 +1,7 @@
+*.log
+eclipse/
+plugins/
+test/reports/
+web-app/gwt/
+web-app/plugins/
+work/

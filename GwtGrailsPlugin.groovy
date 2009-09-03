@@ -86,11 +86,15 @@ requests.
             }
         }
         else if (application.isActionHandlerClass(event.source)) {
+            // Update the artifact. Without this step, the reloading
+            // won't work.
+            def grailsClass = application.addArtefact(ActionHandlerArtefactHandler.TYPE, event.source)
+
             // Re-register the action handler bean.
             def beans = beans {                 
                 final c = configureActionHandler.clone()
                 c.delegate = delegate
-                c.call(application.getActionHandlerClass(event.source.name))
+                c.call(grailsClass)
             }
 
             if (event.ctx) {         
