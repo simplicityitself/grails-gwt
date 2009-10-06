@@ -1,7 +1,16 @@
 includeTargets << grailsScript("_GrailsArgParsing")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
+includeTargets << new File("${gwtPluginDir}/scripts/_GwtCreate.groovy")
 
-gwtSrcPath = "src/gwt"
+USAGE = """
+    create-gwt-i18n [--constants-only] [--messages-only] MODULEPKG.MODULENAME
+
+where
+    --constants-only = Only create a <module>Constants.properties file.
+    --messages-only  = Only create a <module>Messages.properties file.
+    MODULEPKG        = The package name of the associated GWT module.
+    MODULENAME       = The name of the module.
+"""
 
 /**
  * grails create-gwt-i18n MODULE
@@ -21,46 +30,27 @@ target (default: "Creates a new i18n properties file for a GWT module.") {
     else if (argsMap["messages-only"]) {
         i18nSuffixes.remove("Constants")
     }
-
-    // The only argument should be the fully qualified name of the GWT
-    // module. First, split it into package and name parts.
-    def moduleName = argsMap["params"][0]
-    def modulePackage = null
-    def pos = moduleName.lastIndexOf('.')
-    if (pos != -1) {
-        // Extract the name and the package.
-        modulePackage = moduleName.substring(0, pos)
-        moduleName = moduleName.substring(pos + 1)
+    
+    // There must be one and only one argument in 'params'.
+    def params = argsMap["params"]
+    if (!params || params.size() > 1) {
+        println "Unexpected number of command arguments."
+        println()
+        println "USAGE:${USAGE}"
+        exit(1)
     }
-
-    def packagePath = (modulePackage != null ? '/' + modulePackage.replace('.' as char, '/' as char) : '')
+    else if (!params[0]) {
+        println "A module name must be given."
+        exit(1)
+    }
+    
+    // If we only have one argument, we must split it into package and
+    // name parts. Otherwise, we just use the provided arguments as is.
+    def (modulePackage, moduleName) = packageAndName(params[0])
 
     // Now create the properties file(s).
+    def pkg = modulePackage + ".client"
     i18nSuffixes.each { suffix ->
-        def targetPath = "${basedir}/${gwtSrcPath}${packagePath}/client"
-        def i18nFile = "${targetPath}/${moduleName}${suffix}.properties"
-        def templatePath = "${gwtPluginDir}/src/templates/artifacts"
-        def templateFile = "${templatePath}/i18n.properties"
-
-        // Check whether the target module exists already.
-        if (new File(i18nFile).exists()) {
-            // It does, so find out whether the user wants to overwrite
-            // the existing copy.
-            ant.input(
-                addProperty:"${moduleName}${suffix}.overwrite",
-                message:"GwtI18n: ${moduleName}${suffix}.properties already exists. Overwrite? [y/n]")
-
-            if (ant.antProject.properties."${moduleName}${suffix}.overwrite" == "n") {
-                // User doesn't want to overwrite, so stop the script.
-                return
-            }
-        }
-
-        // Copy the template module file over, replacing any tokens in the
-        // process.
-        ant.copy(file: templateFile, tofile: i18nFile, overwrite: true)
-
-        event("CreatedFile", [ i18nFile ])
+        installGwtTemplate(pkg, moduleName, "Gwt${suffix}.properties")
     }
 }
-

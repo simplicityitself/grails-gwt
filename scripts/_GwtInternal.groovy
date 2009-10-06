@@ -353,38 +353,6 @@ gwtRun = { String className, Closure body ->
 }
 
 /**
- * Installs a template file using the given arguments to populate the
- * template and determine where it goes.
- */
-installFile = { File targetFile, File templateFile, Map tokens ->
-    // Check whether the target file exists already.
-    if (targetFile.exists()) {
-        // It does, so find out whether the user wants to overwrite
-        // the existing copy.
-        ant.input(
-            addProperty: "${targetFile.name}.overwrite",
-            message: "GWT: ${targetFile.name} already exists. Overwrite? [y/n]")
-
-        if (ant.antProject.properties."${targetFile.name}.overwrite" == "n") {
-            // User doesn't want to overwrite, so stop the script.
-            return
-        }
-    }
-
-    // Now copy over the template file and replace the various tokens
-    // with the appropriate values.
-    ant.copy(file: templateFile, tofile: targetFile, overwrite: true)
-    ant.replace(file: targetFile) {
-        tokens.each { key, value ->
-            ant.replacefilter(token: "@${key}@", value: value)
-        }
-    }
-
-    // The file was created.
-    event("CreatedFile", [ targetFile ])
-}
-
-/**
  * Searches a given directory for any GWT module files, and
  * returns a list of their fully-qualified names.
  * @param searchDir A string path specifying the directory

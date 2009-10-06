@@ -3,5 +3,5 @@
     <inherits name="com.google.gwt.user.User"/>
 
     <!-- Specify the module entry point class.                   -->
-    <entry-point class="@module.package@client.@module.name@"/>
+    <entry-point class="@artifact.package@.client.@artifact.name@"/>
 </module>

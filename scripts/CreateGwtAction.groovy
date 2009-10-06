@@ -1,43 +1,69 @@
 includeTargets << grailsScript("_GrailsArgParsing")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
+includeTargets << new File("${gwtPluginDir}/scripts/_GwtCreate.groovy")
 
-gwtSrcPath = "src/gwt"
+USAGE = """
+    create-gwt-action MODULEPKG.ACTIONNAME
+    create-gwt-action MODULEPKG [SUBPKG] ACTIONNAME
+
+where
+    MODULEPKG = The package name of the action's GWT module.
+    SUBPKG    = The name of an optional sub-package in which the action
+                class will go, which will be a sub-package of "client".
+    EVENTNAME = The name of the action, without the "Action" suffix.
+"""
 
 target (default: "Creates a new GWT action, response, and action handler.") {
     depends(parseArguments)
     promptForName(type: "")
-
-    // The only argument should be the fully qualified name of the GWT
-    // action. First, split it into package and name parts.
-    def actionName = argsMap["params"][0]
-    def actionPackage = null
-    def pos = actionName.lastIndexOf('.')
-    if (pos != -1) {
-        // Extract the name and the package.
-        actionPackage = actionName[0..<pos]
-        actionName = actionName[(pos + 1)..-1]
+    
+    // We support either one argument or three.
+    def params = argsMap["params"]
+    if (!params || params.size() > 3) {
+        println "Unexpected number of command arguments."
+        println()
+        println "USAGE:${USAGE}"
+        exit(1)
+    }
+    else if (!params[0]) {
+        println "An action name must be given."
+        exit(1)
+    }
+    
+    // If we only have one argument, we must split it into package and
+    // name parts. Otherwise, we just use the provided arguments as is.
+    def modulePackage, actionName
+    def subPackage = ""
+    if (params.size() == 1) {
+        (modulePackage, actionName) = packageAndName(params[0])
+    }
+    else {
+        modulePackage = params[0]
+        if (params.size() == 2) {
+            actionName = params[1]
+        }
+        else {
+            subPackage = '.' + params[1]
+            actionName = params[2]
+        }
     }
 
-    def packagePath = (actionPackage != null ? '/' + actionPackage.replace('.' as char, '/' as char) : '')
-
     // Now create the action file.
-    def targetFile = new File("${basedir}/${grailsSrcPath}${packagePath}/client", "${actionName}Action.java")
-    def templateFile = new File("${gwtPluginDir}/src/templates/artifacts", "GwtAction.java")
-
-    installFile(targetFile, templateFile, [ "action.package": (actionPackage ? "${actionPackage}." : ""), "action.name": actionName ])
+    def actionPackage = "${modulePackage}.client${subPackage}"
+    installGwtTemplate(actionPackage, actionName, "GwtAction.java", grailsSrcPath)
 
     // Now for the response file.
-    targetFile = new File("${basedir}/${grailsSrcPath}${packagePath}/client", "${actionName}Response.java")
-    templateFile = new File("${gwtPluginDir}/src/templates/artifacts", "GwtResponse.java")
-
-    installFile(targetFile, templateFile, [ "action.package": (actionPackage ? "${actionPackage}." : ""), "action.name": actionName ])
+    installGwtTemplate(actionPackage, actionName, "GwtResponse.java", grailsSrcPath)
 
     // Finally, the action handler.
-    targetFile = new File("${basedir}/grails-app/actionHandlers${packagePath}", "${actionName}ActionHandler.groovy")
+    def handlerPackage = modulePackage + subPackage
+    targetFile = new File(
+            "${basedir}/grails-app/actionHandlers${handlerPackage ? '/' : ''}${packageToPath(handlerPackage)}",
+            "${actionName}ActionHandler.groovy")
     templateFile = new File("${gwtPluginDir}/src/templates/artifacts", "GwtActionHandler.groovy")
 
     installFile(targetFile, templateFile, [
-        "package.line": (actionPackage ? "package ${actionPackage}\n\n" : ""),
-        "action.package": (actionPackage ? "${actionPackage}." : ""),
+        "package.line": (handlerPackage ? "package ${handlerPackage}\n\n" : ""),
+        "action.package": actionPackage,
         "action.name": actionName ])
 }

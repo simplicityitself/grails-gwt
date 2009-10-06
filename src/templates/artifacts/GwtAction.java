@@ -1,10 +1,10 @@
-package @action.package@client;
+package @artifact.package@;
 
 import org.grails.plugins.gwt.client.Action;
 
-public class @action.name@Action implements Action<@action.name@Response> {
+public class @artifact.name@Action implements Action<@artifact.name@Response> {
     private static final long serialVersionUID = 1L;
 
-    public @action.name@Action() {
+    public @artifact.name@Action() {
     }
 }
