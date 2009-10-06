@@ -1,4 +1,6 @@
 commit.msg
 docs/
 eclipse/
+grails-gwt-*.zip
+plugin.xml
 web-app/
