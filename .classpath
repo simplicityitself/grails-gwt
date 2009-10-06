@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="grails-app/conf"/>
+	<classpathentry kind="src" path="grails-app/controllers"/>
+	<classpathentry kind="src" path="grails-app/services"/>
+	<classpathentry kind="src" path="scripts"/>
+	<classpathentry kind="src" path="src-local/java"/>
+	<classpathentry kind="src" path="src/groovy"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" path="src/gwt"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="GWT_HOME/gwt-user.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME"/>
+	<classpathentry kind="var" path="GRAILS_HOME/dist/grails-core-1.2-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/dist/grails-test-1.2-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/groovy-all-1.6.4.jar"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/jcl-over-slf4j-1.5.6.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/junit-3.8.2.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/dist/grails-web-1.2-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/slf4j-log4j12-1.5.6.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/org.springframework.beans-3.0.0.RC1.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/org.springframework.context-3.0.0.RC1.jar"/>
+	<classpathentry kind="var" path="GRAILS_HOME/lib/org.springframework.core-3.0.0.RC1.jar"/>
+	<classpathentry kind="output" path="eclipse"/>
+</classpath>
