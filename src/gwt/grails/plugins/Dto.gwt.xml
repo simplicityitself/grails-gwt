@@ -1,0 +1,4 @@
+<module>
+    <!-- Module for the Grails plugin. As yet, it has no dependencies. -->
+    <source path="dto"/>
+</module>

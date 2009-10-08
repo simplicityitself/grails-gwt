@@ -345,6 +345,12 @@ gwtRun = { String className, Closure body ->
             // Add the plugin's module paths.
             pathElement(location: "${gwtPluginDir}/${gwtSrcPath}")
             pathElement(location: "${gwtPluginDir}/${grailsSrcPath}")
+
+            // Add the DTO source path if that plugin is installed in
+            // the current project.
+            if (getBinding().variables.containsKey("dtoPluginDir")) {
+                pathElement(location: "${dtoPluginDir}/${grailsSrcPath}")
+            }
         }
 
         body.delegate = delegate
