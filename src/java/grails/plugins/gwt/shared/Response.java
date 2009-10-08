@@ -1,4 +1,4 @@
-package org.grails.plugins.gwt.client;
+package grails.plugins.gwt.shared;
 
 import java.io.Serializable;
 

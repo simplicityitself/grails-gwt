@@ -1,8 +1,11 @@
 <module>
     <!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name="com.google.gwt.user.User"/>
-    <inherits name="org.grails.plugins.gwt.Grails"/>
+    <inherits name="grails.plugins.gwt.Grails"/>
 
     <!-- Specify the module entry point class.                   -->
     <entry-point class="org.example.client.Main"/>
+
+    <source path="client"/>
+    <source path="shared"/>
 </module>

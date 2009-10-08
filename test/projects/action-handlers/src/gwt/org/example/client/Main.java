@@ -1,8 +1,5 @@
 package org.example.client;
 
-import org.grails.plugins.gwt.client.GwtActionService;
-import org.grails.plugins.gwt.client.GwtActionServiceAsync;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,6 +12,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import grails.plugins.gwt.client.GwtActionService;
+import grails.plugins.gwt.client.GwtActionServiceAsync;
+
+import org.example.shared.HelloAction;
+import org.example.shared.HelloResponse;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

@@ -1,8 +1,9 @@
 package org.codehaus.groovy.grails.plugins.gwt
 
+import grails.plugins.gwt.shared.Action;
+import grails.plugins.gwt.shared.Response;
+
 import org.codehaus.groovy.grails.commons.GrailsClassUtils
-import org.grails.plugins.gwt.client.Action
-import org.grails.plugins.gwt.client.Response
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 
@@ -13,7 +14,7 @@ import org.springframework.context.ApplicationContextAware
  * handler should have the same name as the corresponding action, just
  * with a "Handler" suffix.
  */
-class GwtActionService implements org.grails.plugins.gwt.client.GwtActionService, ApplicationContextAware {
+class GwtActionService implements grails.plugins.gwt.client.GwtActionService, ApplicationContextAware {
     static expose = [ "gwt" ]
 
     ApplicationContext applicationContext

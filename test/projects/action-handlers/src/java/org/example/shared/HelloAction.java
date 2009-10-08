@@ -1,6 +1,6 @@
-package org.example.client;
+package org.example.shared;
 
-import org.grails.plugins.gwt.client.Action;
+import grails.plugins.gwt.shared.Action;
 
 public class HelloAction implements Action<HelloResponse> {
     private static final long serialVersionUID = 1L;

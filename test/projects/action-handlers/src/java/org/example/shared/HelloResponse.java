@@ -1,6 +1,6 @@
-package org.example.client;
+package org.example.shared;
 
-import org.grails.plugins.gwt.client.Response;
+import grails.plugins.gwt.shared.Response;
 
 public class HelloResponse implements Response {
     private static final long serialVersionUID = 1L;

@@ -1,7 +1,7 @@
 package org.example
 
-import org.example.client.HelloAction
-import org.example.client.HelloResponse
+import org.example.shared.HelloAction
+import org.example.shared.HelloResponse
 
 class HelloActionHandler {
     HelloResponse execute(HelloAction action) {

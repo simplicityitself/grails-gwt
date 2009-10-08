@@ -1,6 +1,8 @@
-package org.grails.plugins.gwt.client;
+package grails.plugins.gwt.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import grails.plugins.gwt.shared.Action;
+import grails.plugins.gwt.shared.Response;
 
 /**
  * Async version of {@link GwtActionService}.

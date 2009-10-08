@@ -1,3 +1,5 @@
 <module>
     <!-- Module for the Grails plugin. As yet, it has no dependencies. -->
+    <source path="client"/>
+    <source path="shared"/>
 </module>
