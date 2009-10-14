@@ -3,13 +3,17 @@ includeTargets << grailsScript("_GrailsCreateArtifacts")
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtCreate.groovy")
 
 USAGE = """
-    create-gwt-action MODULEPKG.ACTIONNAME
-    create-gwt-action MODULEPKG [SUBPKG] ACTIONNAME
+    create-gwt-action [--shared-pkg=SHAREDPKG] MODULEPKG.ACTIONNAME
+    create-gwt-action [--shared-pkg=SHAREDPKG] MODULEPKG [SUBPKG] ACTIONNAME
 
 where
+    SHAREDPKG = The action and response need to be in a package that is
+                on the source path of the module. By default, this is the
+                "shared" sub-package, but you can override that with this
+                option. For example, you can set it to "client" instead.
     MODULEPKG = The package name of the action's GWT module.
     SUBPKG    = The name of an optional sub-package in which the action
-                class will go, which will be a sub-package of "client".
+                class will go, which will be a sub-package of "shared".
     EVENTNAME = The name of the action, without the "Action" suffix.
 """
 
@@ -49,7 +53,8 @@ target (default: "Creates a new GWT action, response, and action handler.") {
     }
 
     // Now create the action file.
-    def actionPackage = "${modulePackage}.client${subPackage}"
+    def sharedPkg = argsMap["shared-pkg"] ?: buildConfig.gwt.shared.package ?: "client"
+    def actionPackage = "${modulePackage}.${sharedPkg}${subPackage}"
     installGwtTemplate(actionPackage, actionName, "GwtAction.java", grailsSrcPath)
 
     // Now for the response file.
