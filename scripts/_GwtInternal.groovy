@@ -292,6 +292,14 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             jvmarg(value: '-XstartOnFirstThread')
         }
 
+        // Enable remote debugging if required.
+        if (argsMap["debug"]) {
+            def debugPort = !(argsMap["debug"] instanceof Boolean) ? argsMap["debug"].toInteger() : 5006
+            jvmarg(value: "-Xdebug")
+            jvmarg(value: "-Xnoagent")
+            jvmarg(value: "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debugPort}")
+        }
+
         arg(value: "-noserver")
 
         if (usingGwt16) {
