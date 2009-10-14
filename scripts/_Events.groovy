@@ -1,5 +1,13 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
+// Check that gwtHome points to a valid GWT installation.
+eventClasspathStart = {
+    if (!gwtHome || !new File(gwtHome, "gwt-user.jar").exists()) {
+        event("StatusFinal", [ "ERROR: ${gwtHome} is not a valid GWT installation." ])
+        exit(1)
+    }
+}
+
 // Called when the compilation phase completes.
 eventCompileEnd = {
     // Compile the GWT modules. This target is provided by '_GwtInternal'.
@@ -21,7 +29,7 @@ eventCleanEnd = {
 eventCreateWarStart = { warName, stagingDir ->
     // Extract the UnableToCompleteException file from gwt-dev-*.jar
     ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
- 	 	patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
+        patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
         fileset(dir: "${gwtHome}", includes: "gwt-dev-*.jar")
     }
 }

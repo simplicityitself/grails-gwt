@@ -39,14 +39,20 @@ gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 
-// Add GWT libraries to compiler classpath.
+// Add GWT libraries to compiler classpath. This has to be here because
+// the classpath is set before any events are fired or targets called.
+// It's a problem with the Grails scripts that may take a while to get
+// fixed.
 if (gwtHome) {
-    new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
-        grailsSettings.compileDependencies << f
-        grailsSettings.testDependencies << f
-    }
+    def gwtHomeFile = new File(gwtHome)
+    if (gwtHomeFile.exists()) {
+        new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
+            grailsSettings.compileDependencies << f
+            grailsSettings.testDependencies << f
+        }
 
-    grailsSettings.runtimeDependencies << new File(gwtHome, "gwt-servlet.jar")
+        grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
+    }
 }
 
 //
