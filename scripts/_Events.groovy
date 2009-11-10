@@ -19,6 +19,16 @@ eventCleanEnd = {
     gwtClean()
 }
 
+eventConfigureWarNameEnd = {
+    // If any of the GWT modules haven't been compiled, force a compilation
+    // now. This ensures that WAR files are always created with the latest
+    // compiled JS files.
+    if (!gwtModulesCompiled) {
+        gwtForceCompile = true
+        compileGwtModules()
+    }
+}
+
 //
 // The GWT libs must be copied to the WAR file. In addition, although
 // we don't do dynamic compilation in production mode, the plugin

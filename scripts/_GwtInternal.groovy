@@ -36,6 +36,7 @@ gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
 gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
 gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
 gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
+gwtModulesCompiled = false
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 
@@ -116,15 +117,15 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     // so that we can locate that JAR.
     def modules = gwtModuleList ?: findModules("${basedir}/${gwtSrcPath}", true)
     event("StatusUpdate", [ "Compiling GWT modules" ])
+    gwtModulesCompiled = true
 
     modules.each { moduleName ->
         // Only run the compiler if this is production mode or
         // the 'nocache' file is older than any files in the
         // module directory.
-        if (!gwtForceCompile &&
-                GU.environment != GA.ENV_PRODUCTION &&
-                new File("${gwtOutputPath}/${moduleName}/${moduleName}.nocache.js").exists()) {
+        if (!gwtForceCompile && new File("${gwtOutputPath}/${moduleName}/${moduleName}.nocache.js").exists()) {
             // We can skip this module.
+            gwtModulesCompiled = false
             return
         }
 
