@@ -217,7 +217,7 @@ target (compileI18n: "Compiles any i18n properties files for any GWT modules in 
             def generatedFile = new File(i18nFile.parentFile, i18nFile.name - ".properties" + ".java")
 
             if (!i18nFile.exists()) {
-                event("StatusFinal", [ "No i18n ${suffix} file found" ])
+                event("StatusUpdate", [ "No i18n ${suffix} file found" ])
             }
             else if (i18nFile.lastModified() < generatedFile.lastModified()) {
                 // The generated file is newer than the associated
