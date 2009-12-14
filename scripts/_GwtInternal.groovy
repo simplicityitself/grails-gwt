@@ -108,6 +108,9 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     if (buildConfig.gwt.sync.i18n instanceof Map || buildConfig.gwt.sync.i18n == true) {
         compileI18n()
     }
+
+    // Multi-core compilation.
+    def numCompileWorkers = getPropertyValue("gwt.local.workers", 0).toInteger()
     
     // This triggers the Events scripts in the application and plugins.
     event("GwtCompileStart", [ "Starting to compile the GWT modules." ])
@@ -135,6 +138,15 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
             jvmarg(value: '-Djava.awt.headless=true')
             arg(value: '-style')
             arg(value: gwtOutputStyle)
+
+            // Multi-threaded compilation.
+            if (usingGwt16 && numCompileWorkers > 0) {
+                arg(value: "-localWorkers")
+                arg(value: numCompileWorkers)
+            }
+
+            // The argument specifying the output directory depends on
+            // the version of GWT in use.
             if (usingGwt16) {
                 // GWT 1.6 uses a different directory structure, and
                 // hence arguments to previous versions.
@@ -143,6 +155,7 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
             else {
                 arg(value: "-out")
             }
+
             arg(value: gwtOutputPath)
             arg(value: moduleName)
         }
