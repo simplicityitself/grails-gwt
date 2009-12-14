@@ -43,7 +43,7 @@ grailsSrcPath = "src/java"
 //
 // A target to check for existence of the GWT Home
 //
-target(checkGwtHome: "Stops if GWT_HOME does not exist") {
+target (checkGwtHome: "Stops if GWT_HOME does not exist") {
     if (!gwtHome) {
         event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
@@ -152,7 +152,7 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
 
 // This is only used when running under hosted mode and you have server
 // code (ie. test service classes) used by your client code during testing.
-target(compileServerCode: "Compiles gwt server code into tomcat/classes directory.") {
+target (compileServerCode: "Compiles gwt server code into tomcat/classes directory.") {
     depends(checkGwtHome)
 
     ant.mkdir(dir: gwtHostedModeOutput)
@@ -288,7 +288,17 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
     event("StatusUpdate", [ "Starting the GWT hosted mode client." ])
     event("GwtRunHostedStart", [ "Starting the GWT hosted mode client." ])
 
-    def runClass = usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell"
+    // Check for GWT 2.0 hosted mode.
+    ant.available(classname: "com.google.gwt.dev.DevMode", property: "isGwt20") {
+        ant.classpath {
+            fileset(dir: "${gwtHome}") {
+                include(name: "gwt-dev*.jar")
+            }
+        }
+    }
+
+    def runClass = ant.project.properties.isGwt20 ? "com.google.gwt.dev.DevMode" :
+            (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
     def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", false) : ""
 
     gwtRun(runClass) {
