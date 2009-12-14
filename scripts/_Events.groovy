@@ -11,7 +11,10 @@ eventClasspathStart = {
 // Called when the compilation phase completes.
 eventCompileEnd = {
     // Compile the GWT modules. This target is provided by '_GwtInternal'.
-    compileGwtModules()
+    checkGwtHome()
+    if (!usingGwt16) {
+        compileGwtModules()
+    }
 }
 
 // Clean up the GWT-generated files on "clean".

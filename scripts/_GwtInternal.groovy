@@ -99,6 +99,7 @@ target(checkGwtHome: "Stops if GWT_HOME does not exist") {
 //
 target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     depends(checkGwtHome)
+    if (usingGwt16) depends(compile)
 
     if (gwtDisableCompile) return
 

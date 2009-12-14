@@ -2,7 +2,7 @@ includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 includeTargets << grailsScript("_GrailsCompile")
 
 target (default: "Calls 'compileGetModules'.") {
-    depends(parseArguments)
+    depends(parseArguments, checkGwtHome)
 
     // Force compilation of the GWT modules.
     gwtForceCompile = true
@@ -15,5 +15,10 @@ target (default: "Calls 'compileGetModules'.") {
     // 'compileGwtModules' depends on it and the module compilation
     // is triggered by the end of the standard Grails compilation
     // (at the moment).
-    compile()
+    if (usingGwt16) {
+        compileGwtModules()
+    }
+    else {
+        compile()
+    }
 }
