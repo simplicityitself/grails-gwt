@@ -97,6 +97,15 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     // Multi-core compilation.
     def numCompileWorkers = getPropertyValue("gwt.local.workers", 0).toInteger()
     
+    // Draft compilation.
+    if (!(getBinding().variables.containsKey("gwtDraftCompile"))) {
+        gwtDraftCompile = null
+    }
+
+    if (gwtDraftCompile == null) {
+        gwtDraftCompile = getPropertyValue("gwt.draft.compile", false).toBoolean()
+    }
+    
     // This triggers the Events scripts in the application and plugins.
     event("GwtCompileStart", [ "Starting to compile the GWT modules." ])
 
@@ -128,6 +137,11 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
             if (usingGwt16 && numCompileWorkers > 0) {
                 arg(value: "-localWorkers")
                 arg(value: numCompileWorkers)
+            }
+
+            // Draft compile - GWT 2.0+ only
+            if (gwtDraftCompile) {
+                arg(value: "-draftCompile")
             }
 
             // The argument specifying the output directory depends on

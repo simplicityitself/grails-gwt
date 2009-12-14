@@ -50,6 +50,9 @@ eventConfigureWarNameEnd = {
     // compiled JS files.
     if (!gwtModulesCompiled) {
         gwtForceCompile = true
+
+        // Disable draft mode when we create a WAR.
+        gwtDraftCompile = false
         compileGwtModules()
     }
 }
