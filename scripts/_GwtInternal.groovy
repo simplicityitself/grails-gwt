@@ -354,8 +354,6 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
 
 gwtRun = { String className, Closure body ->
     ant.java(classname: className, fork: "true") {
-        jvmarg(value: "-Xmx256m")
-
         // Have to prefix this with 'ant' because the Init
         // script includes a 'classpath' target.
         ant.classpath {
@@ -388,6 +386,12 @@ gwtRun = { String className, Closure body ->
             if (getBinding().variables.containsKey("dtoPluginDir")) {
                 pathElement(location: "${dtoPluginDir}/${grailsSrcPath}")
             }
+        }
+
+        if (buildConfig.gwt.run.args) {
+            def c = buildConfig.gwt.run.args.clone()
+            c.delegate = delegate
+            c()
         }
 
         body.delegate = delegate
