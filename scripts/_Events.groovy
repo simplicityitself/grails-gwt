@@ -8,6 +8,28 @@ eventClasspathStart = {
     }
 }
 
+eventCompileStart = {
+    // Add GWT libraries to compiler classpath.
+    if (gwtHome) {
+        def gwtHomeFile = new File(gwtHome)
+        if (gwtHomeFile.exists()) {
+            // This line is required if we want to modify the classpaths.
+            classpathSet = false
+
+            // Update the dependency lists.
+            new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
+                grailsSettings.compileDependencies << f
+                grailsSettings.testDependencies << f
+            }
+
+            grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
+
+            // Regenerate the classpaths based on the modified dependencies.
+            classpath()
+        }
+    }
+}
+
 // Called when the compilation phase completes.
 eventCompileEnd = {
     // Compile the GWT modules. This target is provided by '_GwtInternal'.

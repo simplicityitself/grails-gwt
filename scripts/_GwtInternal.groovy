@@ -40,22 +40,6 @@ gwtModulesCompiled = false
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 
-// Add GWT libraries to compiler classpath. This has to be here because
-// the classpath is set before any events are fired or targets called.
-// It's a problem with the Grails scripts that may take a while to get
-// fixed.
-if (gwtHome) {
-    def gwtHomeFile = new File(gwtHome)
-    if (gwtHomeFile.exists()) {
-        new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
-            grailsSettings.compileDependencies << f
-            grailsSettings.testDependencies << f
-        }
-
-        grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
-    }
-}
-
 //
 // A target to check for existence of the GWT Home
 //
