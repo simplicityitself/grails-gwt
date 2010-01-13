@@ -393,6 +393,10 @@ gwtRun = { String className, Closure body ->
             c.delegate = delegate
             c()
         }
+        else {
+            // Bump the max heap size up by default.
+            jvmarg value: "-Xmx256m"
+        }
 
         body.delegate = delegate
         body()
