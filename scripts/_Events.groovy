@@ -78,3 +78,49 @@ eventCreateWarStart = { warName, stagingDir ->
 eventPackageAppEnd = {
     rootLoader.addURL(new File(gwtHome, "gwt-servlet.jar").toURI().toURL())
 }
+
+eventGwtRunHostedStart = {
+    compileGwtClasses()
+}
+
+eventGwtCompileStart = {
+    compileGwtClasses()
+}
+
+void compileGwtClasses() {
+    if (googleGinUsed) {
+        // Hack to work around an issue in Google Gin:
+        //
+        //    http://code.google.com/p/google-gin/issues/detail?id=36
+        //
+        ant.mkdir(dir: grailsSettings.classesDir.path)
+        ant.javac(srcdir: "src/gwt", destDir: grailsSettings.classesDir.path, includes: "**/*.java") {
+            ant.classpath {
+                fileset(dir: gwtHome) {
+                    include(name: "gwt-dev*.jar")
+                    include(name: "gwt-user.jar")
+                }
+
+                fileset(dir: "lib/gwt", includes: "*.jar")
+            }
+        }
+    }
+}
+
+boolean isGoogleGinUsed() {
+    // Is this project using Google Gin?
+    if (gwtLibFile.exists()) {
+        ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
+            ant.classpath {
+                fileset(dir: gwtLibPath) {
+                    include(name: "*.jar")
+                }
+            }
+        }
+
+        return ant.project.properties.usingGin != null
+    }
+    else {
+        return false
+    }
+}

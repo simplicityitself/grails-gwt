@@ -37,6 +37,8 @@ gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
 gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
 gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
 gwtModulesCompiled = false
+gwtLibPath = "$basedir/lib/gwt"
+gwtLibFile = new File(gwtLibPath)
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 
@@ -180,8 +182,8 @@ target (compileServerCode: "Compiles gwt server code into tomcat/classes directo
             }
 
             // Include a GWT-specific lib directory if it exists.
-            if (new File("${basedir}/lib/gwt").exists()) {
-                fileset(dir: "${basedir}/lib/gwt") {
+            if (gwtLibFile.exists()) {
+                fileset(dir: gwtLibPath) {
                     include(name: "*.jar")
                 }
             }
@@ -363,8 +365,8 @@ gwtRun = { String className, Closure body ->
             }
 
             // Include a GWT-specific lib directory if it exists.
-            if (new File("${basedir}/lib/gwt").exists()) {
-                fileset(dir: "${basedir}/lib/gwt") {
+            if (gwtLibFile.exists()) {
+                fileset(dir: gwtLibPath) {
                     include(name: "*.jar")
                 }
             }
