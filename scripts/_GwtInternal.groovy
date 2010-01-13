@@ -313,14 +313,22 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
         }
     }
 
-    def runClass = ant.project.properties.isGwt20 ? "com.google.gwt.dev.DevMode" :
+    def usingGwt20 = ant.project.properties.isGwt20 != null
+    def runClass = usingGwt20 ? "com.google.gwt.dev.DevMode" :
             (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
     def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", false) : ""
 
     gwtRun(runClass) {
         // Hosted mode requires a special JVM argument on Mac OS X.
         if (antProject.properties.'os.name' == 'Mac OS X') {
-            jvmarg(value: '-XstartOnFirstThread')
+            def osVersion = antProject.properties.'os.version'.split(/\./)
+            if (osVersion[0].toInteger() == 10 && osVersion[1].toInteger() >= 6) {
+                jvmarg(value: '-d32')
+            }
+
+            if (!usingGwt20) {
+                jvmarg(value: '-XstartOnFirstThread')
+            }
         }
 
         // Enable remote debugging if required.
