@@ -12,8 +12,8 @@ class DefaultGwtServiceInterfaceGeneratorNoPackageTests extends GrailsUnitTestCa
         def baseDir = new File("src/gwt")
         def testGenerator = new DefaultGwtServiceInterfaceGenerator(srcPath: baseDir.path)
 
-        assertEquals "org.example.client", testGenerator.getPackage(new DefaultGrailsServiceClass(TestServiceWithPackage))
-        assertEquals "client", testGenerator.getPackage(new DefaultGrailsServiceClass(TestServiceWithoutPackage))
+        assertEquals "org.example.client", testGenerator.getPackage(TestServiceWithPackage)
+        assertEquals "client", testGenerator.getPackage(TestServiceWithoutPackage)
     }
 
     void testGetDefaultPackage() {
