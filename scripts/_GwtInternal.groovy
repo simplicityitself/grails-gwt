@@ -68,6 +68,20 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
         usingGwt16 = false
         compilerClass = "com.google.gwt.dev.GWTCompiler"
     }
+
+    // Is this project using Google Gin?
+    usingGoogleGin = false
+    if (gwtLibFile.exists()) {
+        ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
+            ant.classpath {
+                fileset(dir: gwtLibPath) {
+                    include(name: "*.jar")
+                }
+            }
+        }
+
+        usingGoogleGin = ant.project.properties.usingGin != null
+    }
 }
 
 //

@@ -88,7 +88,7 @@ eventGwtCompileStart = {
 }
 
 void compileGwtClasses() {
-    if (googleGinUsed) {
+    if (usingGoogleGin) {
         // Hack to work around an issue in Google Gin:
         //
         //    http://code.google.com/p/google-gin/issues/detail?id=36
@@ -104,23 +104,5 @@ void compileGwtClasses() {
                 fileset(dir: "lib/gwt", includes: "*.jar")
             }
         }
-    }
-}
-
-boolean isGoogleGinUsed() {
-    // Is this project using Google Gin?
-    if (gwtLibFile.exists()) {
-        ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
-            ant.classpath {
-                fileset(dir: gwtLibPath) {
-                    include(name: "*.jar")
-                }
-            }
-        }
-
-        return ant.project.properties.usingGin != null
-    }
-    else {
-        return false
     }
 }
