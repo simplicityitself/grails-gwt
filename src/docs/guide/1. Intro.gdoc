@@ -1,0 +1,5 @@
+h2. GWT
+
+Google are big on HTML-based web applications with very rich and dynamic user interfaces. Achieving such user interfaces purely through Javscript is tough though, particularly for those not well versed in the language and the different behaviours between browsers.
+
+h2. The plugin
