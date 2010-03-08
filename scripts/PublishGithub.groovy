@@ -73,6 +73,7 @@ target(default: "Generates the plugin documentation and makes it available on yo
     executeGit("checkout gh-pages")
     
     FileUtils.copyDirectory(tmpDocsDir, docsDir)
+    ant.delete(dir: tmpDocsDir.absolutePath)
 
     // We populate the template layout with some of the plugin's details,
     // such as author and version. We get this information from the XML
