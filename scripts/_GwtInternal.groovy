@@ -401,6 +401,14 @@ gwtRun = { String className, Closure body ->
             pathElement(location: "${basedir}/${grailsSrcPath}")
             pathElement(location: grailsSettings.classesDir.path)
 
+            // Fix to get this working with Grails 1.3+. We have to
+            // add the directory where plugin classes are compiled
+            // to. Pre-1.3, plugin classes were compiled to the same
+            // directory as the application classes.
+            if (grailsSettings.metaClass.hasProperty(grailsSettings, "pluginClassesDir")) {
+                pathElement(location: grailsSettings.pluginClassesDir.path)
+            }
+
             // Add the plugin's module paths.
             pathElement(location: "${gwtPluginDir}/${gwtSrcPath}")
             pathElement(location: "${gwtPluginDir}/${grailsSrcPath}")
