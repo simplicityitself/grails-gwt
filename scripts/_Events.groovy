@@ -101,7 +101,19 @@ void compileGwtClasses() {
                     include(name: "gwt-user.jar")
                 }
 
-                fileset(dir: "lib/gwt", includes: "*.jar")
+                if (gwtLibFile.exists()) {
+                    fileset(dir: gwtLibPath) {
+                        include(name: "*.jar")
+                    }
+                }
+
+                // Fix to get this working with Grails 1.3+. We have to
+                // add the directory where plugin classes are compiled
+                // to. Pre-1.3, plugin classes were compiled to the same
+                // directory as the application classes.
+                if (grailsSettings.metaClass.hasProperty(grailsSettings, "pluginClassesDir")) {
+                    pathElement(location: grailsSettings.pluginClassesDir.path)
+                }
             }
         }
     }
