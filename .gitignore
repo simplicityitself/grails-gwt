@@ -3,4 +3,4 @@ docs/
 eclipse/
 grails-gwt-*.zip
 plugin.xml
-web-app/
+/web-app/
