@@ -386,6 +386,22 @@ gwtRun = { String className, Closure body ->
                 include(name: "gwt-user.jar")
             }
 
+            // We allow users to specify GWT dependencies via the "provided"
+            // configuration. Ideally, we would add a custom "gwt" conf,
+            // but that's not possible with Grails at the moment.
+            if (buildConfig.gwt.use.provided.deps == true) {
+                if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+                    grailsSettings.providedDependencies.each { dep ->
+                        pathElement(location: dep.absolutePath)
+                    }
+                }
+                else {
+                    ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+                            "but are using a pre-1.2 version of Grails. The setting " +
+                            "will be ignored."
+                }
+            }
+
             // Include a GWT-specific lib directory if it exists.
             if (gwtLibFile.exists()) {
                 fileset(dir: gwtLibPath) {
