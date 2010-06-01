@@ -9,8 +9,8 @@ USAGE = """
 where
     SHAREDPKG = The action and response need to be in a package that is
                 on the source path of the module. By default, this is the
-                "shared" sub-package, but you can override that with this
-                option. For example, you can set it to "client" instead.
+                "${buildConfig.gwt.shared.package ?: "client"}" sub-package, but you can override that with this
+                option or with the "gwt.shared.package" build setting.
     MODULEPKG = The package name of the action's GWT module.
     SUBPKG    = The name of an optional sub-package in which the action
                 class will go, which will be a sub-package of "shared".
