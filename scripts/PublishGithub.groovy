@@ -58,7 +58,13 @@ target(default: "Generates the plugin documentation and makes it available on yo
     // We have to generate the docs on the current branch because the
     // 'docs' target depends on 'compile', which of course requires all
     // the source files.
-    def docsDir = new File("${basedir}/docs")
+    def docsDir
+    try {
+        docsDir = grailsSettings.docsOutputDir
+    }
+    catch (MissingPropertyException ex) {
+        docsDir = new File("${basedir}/docs")
+    }
     ant.delete(dir: docsDir.absolutePath)
     docs()
 
