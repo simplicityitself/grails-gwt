@@ -1,5 +1,3 @@
-import grails.util.GrailsUtil as GU
-import org.codehaus.groovy.grails.commons.GrailsApplication as GA
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -71,12 +69,27 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
 
     // Is this project using Google Gin?
     usingGoogleGin = false
-    if (gwtLibFile.exists()) {
+    if (gwtLibFile.exists() || buildConfig.gwt.use.provided.deps == true) {
         ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
             ant.classpath {
-                fileset(dir: gwtLibPath) {
-                    include(name: "*.jar")
-                }
+				if (gwtLibFile.exists()) {
+					fileset(dir: gwtLibPath) {
+	                    include(name: "*.jar")
+	                }
+				}
+				
+				if (buildConfig.gwt.use.provided.deps == true) {
+			        if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+			            grailsSettings.providedDependencies.each { dep ->
+			                pathElement(location: dep.absolutePath)
+			            }
+			        }
+			        else {
+			            ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+			                    "but are using a pre-1.2 version of Grails. The setting " +
+			                    "will be ignored."
+			        }
+				}
             }
         }
 
