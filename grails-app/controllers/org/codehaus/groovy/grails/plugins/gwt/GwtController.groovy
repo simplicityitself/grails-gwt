@@ -73,7 +73,8 @@ class GwtController extends RemoteServiceServlet {
             }
 
             // Invoke the method on the service and encode the response.
-            def retval = service.invokeMethod(serviceMethod.name, rpcRequest.parameters)
+			def serviceMethodName = serviceMethod.name
+			def retval = service."$serviceMethodName"(* rpcRequest.parameters)
             return RPC.encodeResponseForSuccess(serviceMethod, retval, rpcRequest.serializationPolicy)
 
         }
