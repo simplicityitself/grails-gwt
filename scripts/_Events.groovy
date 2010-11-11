@@ -107,18 +107,18 @@ void compileGwtClasses() {
                     }
                 }
 
-				if (buildConfig.gwt.use.provided.deps == true) {
-					if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
-						grailsSettings.providedDependencies.each { dep ->
-							pathElement(location: dep.absolutePath)
-						}
-					}
-					else {
-						ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
-								"but are using a pre-1.2 version of Grails. The setting " +
-								"will be ignored."
-					}
-				}
+                if (buildConfig.gwt.use.provided.deps == true) {
+                    if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+                        grailsSettings.providedDependencies.each { dep ->
+                            pathElement(location: dep.absolutePath)
+                        }
+                    }
+                    else {
+                        ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+                                          "but are using a pre-1.2 version of Grails. The setting " +
+                                          "will be ignored."
+                    }
+                }
 
                 // Fix to get this working with Grails 1.3+. We have to
                 // add the directory where plugin classes are compiled

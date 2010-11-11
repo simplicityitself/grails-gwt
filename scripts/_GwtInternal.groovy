@@ -72,24 +72,24 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
     if (gwtLibFile.exists() || buildConfig.gwt.use.provided.deps == true) {
         ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
             ant.classpath {
-				if (gwtLibFile.exists()) {
-					fileset(dir: gwtLibPath) {
-	                    include(name: "*.jar")
-	                }
-				}
+                if (gwtLibFile.exists()) {
+                    fileset(dir: gwtLibPath) {
+                        include(name: "*.jar")
+                    }
+                }
 				
-				if (buildConfig.gwt.use.provided.deps == true) {
-			        if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
-			            grailsSettings.providedDependencies.each { dep ->
-			                pathElement(location: dep.absolutePath)
-			            }
-			        }
-			        else {
-			            ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
-			                    "but are using a pre-1.2 version of Grails. The setting " +
-			                    "will be ignored."
-			        }
-				}
+                if (buildConfig.gwt.use.provided.deps == true) {
+                    if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+                        grailsSettings.providedDependencies.each { dep ->
+                            pathElement(location: dep.absolutePath)
+                        }
+                    }
+                    else {
+                        ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+                                          "but are using a pre-1.2 version of Grails. The setting " +
+                                          "will be ignored."
+                    }
+                }
             }
         }
 
