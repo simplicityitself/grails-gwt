@@ -26,7 +26,7 @@ import org.codehaus.groovy.grails.plugins.gwt.GwtServiceInterfaceGenerator
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "0.5.2"
+    def version = "0.5.2-PK"
     def grailsVersion = "1.1 > *"
     def author = "Peter Ledbrook"
     def authorEmail = "peter@cacoethes.co.uk"
