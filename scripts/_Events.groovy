@@ -169,17 +169,9 @@ eventAllTestsStart = {
 }
 
 eventTestCompileStart = { types ->
-    def typeNames = types.collect { it instanceof String ? it : it.name }
     // both gwt and normal unit test can refer GWT classes, hence - they must be compiled before compiling test classes
-    if (typeNames.any { it in ["unit", gwtTestTypeName, gwtProdTestTypeName] }) { 
-        compileGwtClasses(true)
-        // add gwt dependencies to the classloader, if we run plain unit tests
-        if ("unit" in typeNames) {
-            // it would be better to create a new classLoader that includes GWT dependencies, replace the current one and
-            // restore it after tests are completed, but this for some reason does not work - I get ClassNotFound exceptio for GWT classes
-            gwtDependencies.each { classLoader.addURL(it.toURI().toURL()) }
-        }
-    }
+    compileGwtClasses(true)
+    gwtDependencies.each { classLoader.addURL(it.toURI().toURL()) }
 }
 
 eventPackagePluginsEnd = {
