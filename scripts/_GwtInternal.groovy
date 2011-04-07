@@ -366,6 +366,11 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             jvmarg(value: "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debugPort}")
         }
 
+        if (argsMap["bindAddress"]) {
+            arg(value: "-bindAddress")
+            arg(value: argsMap["bindAddress"])
+        }
+        
         arg(value: "-noserver")
 
         if (usingGwt16) {
