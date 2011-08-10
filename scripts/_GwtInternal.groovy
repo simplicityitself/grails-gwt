@@ -397,6 +397,8 @@ gwtRun = { String className, Closure body ->
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
                 include(name: "gwt-user.jar")
+                // needed to include in case of GWT 2.3
+                include(name: "validation-api*.jar")
             }
 
             // We allow users to specify GWT dependencies via the "provided"
