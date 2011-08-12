@@ -16,16 +16,13 @@
 package org.codehaus.groovy.grails.plugins.gwt
 
 
-import org.codehaus.groovy.grails.test.GrailsTestTypeResult
-import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
-import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
-
-
 import java.lang.reflect.Modifier
 
 import junit.framework.TestSuite
 
-import org.codehaus.groovy.grails.plugins.gwt.XMLJUnitResultFormatter
+import org.codehaus.groovy.grails.test.GrailsTestTypeResult
+import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
+import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
 
 
 
@@ -146,7 +143,7 @@ return suite;
                             new File(buildBinding.gwtPluginDir, buildBinding.grailsSrcPath)
                             ] as Set
             // GWT
-            new File(buildBinding.gwtHome).eachFileMatch(~/^gwt.+\.jar$/) { f ->
+            new File(buildBinding.gwtHome).eachFileMatch(~/^(gwt|validation-api).+\.jar$/) { f ->
                 classPath << f
             }
             if (compiledClassesDir) {
