@@ -7,3 +7,15 @@
 
 // Create the directory for storing GWT files.
 ant.mkdir(dir: "${basedir}/web-app/gwt")
+
+// add gwt-user.jar to compile dependencies 
+// otherwise it is not possible to compile plugin classes
+// if installing plugin is just a part of some other grails workflow (i.e. testing)
+ 
+ant.property(environment: "env")
+gwtHome = ant.project.properties."env.GWT_HOME"
+if (gwtHome) {
+   new File(gwtHome).eachFileMatch(~/^gwt-user\.jar$/) { File f ->
+        grailsSettings.compileDependencies << f
+   }
+}

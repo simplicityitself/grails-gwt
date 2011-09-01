@@ -1,32 +1,43 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
-// Check that gwtHome points to a valid GWT installation.
-eventClasspathStart = {
-    if (!gwtHome || !new File(gwtHome, "gwt-user.jar").exists()) {
-        event("StatusFinal", [ "ERROR: ${gwtHome} is not a valid GWT installation." ])
-        exit(1)
-    }
-}
-
-eventCompileStart = {
+eventSetClasspath = {
     // Add GWT libraries to compiler classpath.
     if (gwtHome) {
         def gwtHomeFile = new File(gwtHome)
         if (gwtHomeFile.exists()) {
-            // This line is required if we want to modify the classpaths.
-            classpathSet = false
-
             // Update the dependency lists.
             new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
                 grailsSettings.compileDependencies << f
                 grailsSettings.testDependencies << f
+                gwtDependencies << f
             }
-
+            if (gwtLibFile.exists()) {
+                gwtLibFile.eachFileMatch(~/.+\.jar$/) { f ->
+                    grailsSettings.testDependencies << f
+                    gwtDependencies << f
+                }
+            }
+            if (buildConfig.gwt.use.provided.deps == true) {
+                if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+                    grailsSettings.providedDependencies.each { dep ->
+                        grailsSettings.testDependencies << dep
+                        gwtDependencies << f
+                    }
+                }
+                else {
+                    ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+                                      "but are using a pre-1.2 version of Grails. The setting " +
+                                      "will be ignored."
+                }
+            }
             grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
-
-            // Regenerate the classpaths based on the modified dependencies.
-            classpath()
+            
         }
+    }
+    // Check that gwtHome points to a valid GWT installation.
+    else if (!new File(gwtHome, "gwt-user.jar").exists()) {
+        event("StatusFinal", [ "ERROR: ${gwtHome} is not a valid GWT installation." ])
+        exit(1)
     }
 }
 
@@ -40,7 +51,7 @@ eventCompileEnd = {
 }
 
 // Clean up the GWT-generated files on "clean".
-eventCleanEnd = {
+eventCleanEnd = {    
     gwtClean()
 }
 
@@ -87,8 +98,8 @@ eventGwtCompileStart = {
     compileGwtClasses()
 }
 
-void compileGwtClasses() {
-    if (usingGoogleGin) {
+void compileGwtClasses(forceCompile = false) {
+    if (!gwtClassesCompiled && (usingGoogleGin || forceCompile)) {
         // Hack to work around an issue in Google Gin:
         //
         //    http://code.google.com/p/google-gin/issues/detail?id=36
@@ -129,5 +140,50 @@ void compileGwtClasses() {
                 }
             }
         }
+        gwtClassesCompiled = true
     }
+}
+
+loadGwtTestTypeClass = { ->
+    def doLoad = { -> classLoader.loadClass('org.codehaus.groovy.grails.plugins.gwt.GwtJUnitGrailsTestType') }
+    try {
+      doLoad()
+    } catch (ClassNotFoundException e) {
+      includeTargets << grailsScript("_GrailsCompile")
+      compile()
+      doLoad()
+    }
+  }
+
+registerGwtTestTypes = {
+    // register gwt test types in unit test phase
+    if (!binding.variables.containsKey("unitTests") || gwtTestTypesRegistered) return
+    def type = loadGwtTestTypeClass()
+    unitTests << type.newInstance(gwtTestTypeName, gwtRelativeTestSrcPath)
+    unitTests << type.newInstance(gwtProdTestTypeName, gwtRelativeTestSrcPath)
+    gwtTestTypesRegistered = true
+}
+
+eventAllTestsStart = {
+    registerGwtTestTypes()
+}
+
+eventTestCompileStart = { types ->
+    // both gwt and normal unit test can refer GWT classes, hence - they must be compiled before compiling test classes
+    compileGwtClasses(true)
+    gwtDependencies.each { classLoader.addURL(it.toURI().toURL()) }
+}
+
+eventPackagePluginsEnd = {
+    // invoked after installing plugin and compiling its classes
+    // and from other places in the build process. However, adjusting
+    // classpaths and registering gwt test types should happen only once
+    
+    // if GWT dependencies are not discovered, do it now
+    if (!gwtDependencies) {
+        eventSetClasspath()
+        classpathSet = false
+        classpath()
+    }
+    registerGwtTestTypes()
 }
