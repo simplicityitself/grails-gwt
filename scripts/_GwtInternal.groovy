@@ -29,7 +29,7 @@ if (!(getBinding().variables.containsKey("gwtModuleList"))) {
 
 // Common properties and closures (used as re-usable functions).
 ant.property(environment: "env")
-gwtHome = System.getProperty("gwt.home") ?: ant.project.properties."env.GWT_HOME"
+gwtHome = resolveHome(getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME")
 gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
 gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
 gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
@@ -501,4 +501,20 @@ def findModules(String searchDir, boolean entryPointOnly) {
     }
 
     return modules
+}
+
+def resolveHome(def buildConfigSetting, def sysPropSetting, def antPropSetting) {
+  if (buildConfigSetting) {
+    return new File(buildConfigSetting).absolutePath
+  }
+  if (sysPropSetting) {
+    return sysPropSetting
+  }
+  if (antPropSetting) {
+    return antPropSetting
+  }
+  if (new File("gwt").exists()) {
+    return new File("gwt").absolutePath
+  }
+  return null
 }
