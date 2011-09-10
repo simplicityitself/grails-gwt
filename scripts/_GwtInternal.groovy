@@ -1,3 +1,11 @@
+import org.apache.ivy.core.module.id.ModuleRevisionId
+import org.apache.ivy.core.report.ResolveReport
+import org.apache.ivy.core.resolve.ResolveOptions
+import org.apache.ivy.core.resolve.DownloadOptions
+import org.apache.ivy.core.report.ArtifactDownloadReport
+import org.apache.ivy.core.module.descriptor.Artifact
+import org.springframework.util.FileCopyUtils
+import static org.springframework.util.FileCopyUtils.*
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -29,14 +37,14 @@ if (!(getBinding().variables.containsKey("gwtModuleList"))) {
 
 // Common properties and closures (used as re-usable functions).
 ant.property(environment: "env")
-gwtHome = System.getProperty("gwt.home") ?: ant.project.properties."env.GWT_HOME"
-gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
-gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
-gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
-gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
-gwtModulesCompiled = false
-gwtLibPath = "$basedir/lib/gwt"
-gwtLibFile = new File(gwtLibPath)
+//gwtHome = resolveHome(getPropertyValue("gwt.version", null), getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME")
+//gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
+//gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
+//gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
+//gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
+//gwtModulesCompiled = false
+//gwtLibPath = "$basedir/lib/gwt"
+//gwtLibFile = new File(gwtLibPath)
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 gwtClassesCompiled = false
@@ -54,6 +62,14 @@ gwtJavaCmd = getPropertyValue("gwt.java.cmd", null)
 // A target to check for existence of the GWT Home
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
+    binding.setProperty('gwtHome', resolveHome(getPropertyValue("gwt.version", null), getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME"))
+    binding.setProperty('gwtOutputPath', getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt"))
+    binding.setProperty('gwtOutputStyle', getPropertyValue("gwt.output.style", "OBF"))
+    binding.setProperty('gwtDisableCompile', getPropertyValue("gwt.compile.disable", "false").toBoolean())
+    binding.setProperty('gwtHostedModeOutput', getPropertyValue("gwt.hosted.output.path", "tomcat/classes")) // Default is where gwt shell runs its embedded tomcat
+    binding.setProperty('gwtLibPath', "$basedir/lib/gwt")
+    binding.setProperty('gwtLibFile', new File(gwtLibPath))
+
     if (!gwtHome) {
         event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
@@ -538,4 +554,55 @@ def findModules(String searchDir, boolean entryPointOnly) {
     }
 
     return modules
+}
+
+def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def antPropSetting) {
+  if (gwtVersion) {
+      event("StatusUpdate", [ "Gwt version ${gwtVersion} requested, creating local environment" ])
+      File tempGwtHome = new File("target/gwt/tempHome")
+
+      tempGwtHome.deleteDir()
+      tempGwtHome.mkdirs()
+
+      downloadGwtJarsAndCopy(tempGwtHome, gwtVersion)
+
+      return tempGwtHome.absolutePath
+  }
+  if (buildConfigSetting) {
+    return new File(buildConfigSetting).absolutePath
+  }
+  if (sysPropSetting) {
+    return sysPropSetting
+  }
+  if (antPropSetting) {
+    return antPropSetting
+  }
+  if (new File("gwt").exists()) {
+    return new File("gwt").absolutePath
+  }
+  return null
+}
+
+def downloadGwtJarsAndCopy(File gwtHome, String version) {
+    File gwtDev = resolveArtifactToFile("com.google.gwt", "gwt-dev", version)
+    File gwtUser = resolveArtifactToFile("com.google.gwt", "gwt-user", version)
+    //TODO, for GWT versions > 2.3 add validation-api.jar ?
+
+    FileCopyUtils.copy(gwtDev, new File(gwtHome, gwtDev.name))
+    FileCopyUtils.copy(gwtUser, new File(gwtHome, gwtUser.name))
+
+    event("StatusUpdate", [ "Gwt environment with version ${version} has been created" ])
+}
+
+def resolveArtifactToFile(group, name, version) {
+    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
+
+    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: ["master"] as String[], transitive:true, outputReport: true, download: true, useCacheOnly: false), false)
+
+    def ret
+    report.artifacts.each { Artifact artifact ->
+        ArtifactDownloadReport rep = grailsSettings.dependencyManager.resolveEngine.download(artifact, new DownloadOptions(log: DownloadOptions.LOG_DOWNLOAD_ONLY))
+        ret = rep.localFile
+    }
+    return ret
 }
