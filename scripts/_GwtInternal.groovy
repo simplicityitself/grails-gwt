@@ -586,18 +586,25 @@ def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def 
 def downloadGwtJarsAndCopy(File gwtHome, String version) {
     File gwtDev = resolveArtifactToFile("com.google.gwt", "gwt-dev", version)
     File gwtUser = resolveArtifactToFile("com.google.gwt", "gwt-user", version)
-    //TODO, for GWT versions > 2.3 add validation-api.jar ?
+    File gwtServlet = resolveArtifactToFile("com.google.gwt", "gwt-servlet", version)
 
-    FileCopyUtils.copy(gwtDev, new File(gwtHome, gwtDev.name))
-    FileCopyUtils.copy(gwtUser, new File(gwtHome, gwtUser.name))
+    File validationApi = resolveArtifactToFile("javax.validation", "validation-api", "1.0.0.GA")
+    File validationApiSources = resolveArtifactToFile("javax.validation", "validation-api", "1.0.0.GA", "sources")
+
+
+    FileCopyUtils.copy(gwtDev, new File(gwtHome, "gwt-dev.jar"))
+    FileCopyUtils.copy(gwtUser, new File(gwtHome, "gwt-user.jar"))
+    FileCopyUtils.copy(gwtServlet, new File(gwtHome, "gwt-servlet.jar"))
+    FileCopyUtils.copy(validationApi, new File(gwtHome, validationApi.name))
+    FileCopyUtils.copy(validationApiSources, new File(gwtHome, validationApiSources.name))
 
     event("StatusUpdate", [ "Gwt environment with version ${version} has been created" ])
 }
 
-def resolveArtifactToFile(group, name, version) {
+def resolveArtifactToFile(group, name, version, type="master") {
     ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
 
-    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: ["master"] as String[], transitive:true, outputReport: true, download: true, useCacheOnly: false), false)
+    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: [type] as String[], transitive:true, outputReport: true, download: true, useCacheOnly: false), false)
 
     def ret
     report.artifacts.each { Artifact artifact ->
