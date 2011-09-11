@@ -559,13 +559,13 @@ def findModules(String searchDir, boolean entryPointOnly) {
 def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def antPropSetting) {
   if (gwtVersion) {
       event("StatusUpdate", [ "Gwt version ${gwtVersion} requested, creating local environment" ])
-      File tempGwtHome = new File("target/gwt/tempHome")
+      File tempGwtHome = new File("target/gwt/tempHome-${gwtVersion}")
 
-      tempGwtHome.deleteDir()
-      tempGwtHome.mkdirs()
+      if (!tempGwtHome.exists()) {
+        tempGwtHome.mkdirs()
 
-      downloadGwtJarsAndCopy(tempGwtHome, gwtVersion)
-
+        downloadGwtJarsAndCopy(tempGwtHome, gwtVersion)
+      }
       return tempGwtHome.absolutePath
   }
   if (buildConfigSetting) {
