@@ -97,7 +97,7 @@ class GWTCompiler {
   }
 
   def fullParallelCompile() {
-    println "Selected Full Parallel compilation"
+    println "Selected Full Parallel compilation :-"
     def executor = Executors.newFixedThreadPool(numThreads)
 
     int remaining = 0
@@ -132,7 +132,7 @@ class GWTCompiler {
 
   def compile(String moduleName) {
     def b = new AntBuilder()
-    println "Compiling ${moduleName}"
+    println "  Compiling ${moduleName}"
 
     def logFile = new File(logDir, "${moduleName}.log")
 
@@ -185,10 +185,10 @@ class GWTCompiler {
         def newLogFile = new File(logDir, "FAILED-${moduleName}.log")
         newLogFile.delete()
         logFile.renameTo(newLogFile)
-        println "Compiling module ${moduleName} FAILED, output is available in ${newLogFile.absolutePath}"
+        println "   module ${moduleName} FAILED, output is available in ${newLogFile.absolutePath}"
         throw new GwtCompilationException()
       } else {
-        println "Compiling Module ${moduleName} SUCCEEDED"
+        println "   module ${moduleName} SUCCEEDED"
       }
 
     } catch (Exception ex) {
