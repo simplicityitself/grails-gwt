@@ -171,50 +171,28 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     event("StatusUpdate", [ "Compiling GWT modules" ])
     gwtModulesCompiled = true
 
-    modules.each { moduleName ->
-        // Only run the compiler if this is production mode or
-        // the 'nocache' file is older than any files in the
-        // module directory.
-        if (!gwtForceCompile && new File("${gwtOutputPath}/${moduleName}/${moduleName}.nocache.js").exists()) {
-            // We can skip this module.
-            gwtModulesCompiled = false
-            return
-        }
 
-        event("StatusUpdate", [ "Module: ${moduleName}" ])
+    def parClass = classLoader.loadClass("org.codehaus.groovy.grails.plugins.gwt.GWTCompiler")
 
-        gwtRun(compilerClass) {
-            jvmarg(value: '-Djava.awt.headless=true')
-            arg(value: '-style')
-            arg(value: gwtOutputStyle)
+    def compiler = parClass.newInstance()
 
-            // Multi-threaded compilation.
-            if (usingGwt16 && numCompileWorkers > 0) {
-                arg(value: "-localWorkers")
-                arg(value: numCompileWorkers)
-            }
-
-            // Draft compile - GWT 2.0+ only
-            if (gwtDraftCompile) {
-                arg(value: "-draftCompile")
-            }
-
-            // The argument specifying the output directory depends on
-            // the version of GWT in use.
-            if (usingGwt16) {
-                // GWT 1.6 uses a different directory structure, and
-                // hence arguments to previous versions.
-                arg(value: "-war")
-            }
-            else {
-                arg(value: "-out")
-            }
-
-            arg(value: gwtOutputPath)
-            arg(value: moduleName)
-        }
+    compiler.baseDir = basedir
+    compiler.draft = gwtDraftCompile
+    //compiler.gwtOutputStyle = gwtOutputStyle   TODO
+    compiler.usingGwt16 = usingGwt16
+    compiler.gwtOutputPath = gwtOutputPath
+    //compiler.compileReport = compileReport   TODO
+    compiler.gwtModuleList = gwtModuleList
+    compiler.grailsSettings = grailsSettings
+    compiler.compilerClass = compilerClass
+    compiler.gwtRun = gwtRunWithProps
+    //TODO, config max number of threads
+    def ret = compiler.compileAll()
+    if (ret == 1) {
+      event("GwtCompileFail", [ "Failed to compile all GWT modules" ])
+      throw new RuntimeException("Failed to compile all GWT Modules")
     }
-    
+
     event("StatusUpdate", [ "Finished compiling GWT modules" ])
     event("GwtCompileEnd", [ "Finished compiling the GWT modules." ])
 }
@@ -441,8 +419,14 @@ gwtJavac = { Map options, Closure body ->
     ant.javac(options, body)
 }
 
-gwtRun = { String className, Closure body ->
-    gwtJava(classname: className, fork: "true") {
+gwtRun = {String className, Closure body ->
+  gwtRunWithProps(className, [fork:true], body)
+}
+
+gwtRunWithProps = { String className, Map properties, Closure body ->
+  properties.classname = className
+  properties.resultproperty="result"
+  gwtJava(properties) {
         // Have to prefix this with 'ant' because the Init
         // script includes a 'classpath' target.
         ant.classpath {
@@ -517,6 +501,7 @@ gwtRun = { String className, Closure body ->
         body.delegate = delegate
         body()
     }
+  return ant.project.properties.result
 }
 
 /**
