@@ -136,6 +136,7 @@ return suite;
             testClassesDir = new File(buildBinding.grailsSettings.testClassesDir, relativeSourcePath) 
             classPath = [   testClassesDir,
                             buildBinding.grailsSettings.classesDir,
+                            buildBinding.gwtClassesDir,
                             new File(buildBinding.testSourceDir, relativeSourcePath),
                             new File(buildBinding.gwtSrcPath),
                             new File(buildBinding.grailsSrcPath),
@@ -172,7 +173,12 @@ return suite;
     GrailsTestTypeResult run(GrailsTestEventPublisher eventPublisher) {
 
         // run tests using ant's junit task        
-        buildBinding.ant.junit(fork: true) {
+        def junitOptions = [fork: true]
+        if (buildBinding.gwtJavaCmd) {
+            buildBinding.ant.echo message: "Using ${buildBinding.gwtJavaCmd} for executing GWT tests"
+            junitOptions["jvm"] = buildBinding.gwtJavaCmd
+        }
+        buildBinding.ant.junit(junitOptions) {
             if (buildBinding.buildConfig.gwt.test.args) {
                 def c = buildBinding.buildConfig.gwt.run.args.clone()
                 c.delegate = delegate
@@ -186,6 +192,7 @@ return suite;
             classpath() {
                 pathElement(location: gwtTmpTestsDir.absolutePath)
                 pathElement(location: buildBinding.grailsSettings.classesDir.absolutePath)
+                pathElement(location: buildBinding.gwtClassesDir)
                 pathElement(location: testClassesDir.absolutePath)
                 classPath.each { dep ->
                     pathElement(location: dep.absolutePath)
