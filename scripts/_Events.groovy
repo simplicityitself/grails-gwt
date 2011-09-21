@@ -11,6 +11,7 @@ eventSetClasspath = {
                 grailsSettings.testDependencies << f
                 gwtDependencies << f
             }
+            grailsSettings.testDependencies << gwtClassesDir
             if (gwtLibFile.exists()) {
                 gwtLibFile.eachFileMatch(~/.+\.jar$/) { f ->
                     grailsSettings.testDependencies << f
@@ -104,8 +105,8 @@ void compileGwtClasses(forceCompile = false) {
         //
         //    http://code.google.com/p/google-gin/issues/detail?id=36
         //
-        ant.mkdir(dir: grailsSettings.classesDir.path)
-        ant.javac(srcdir: "src/gwt", destDir: grailsSettings.classesDir.path, includes: "**/*.java") {
+        ant.mkdir(dir: gwtClassesDir)
+        gwtJavac(srcdir: "src/gwt", destDir: gwtClassesDir, includes: "**/*.java") {
             ant.classpath {
                 fileset(dir: gwtHome) {
                     include(name: "gwt-dev*.jar")
@@ -130,7 +131,8 @@ void compileGwtClasses(forceCompile = false) {
                                           "will be ignored."
                     }
                 }
-
+                pathElement(location: grailsSettings.classesDir.path)
+                
                 // Fix to get this working with Grails 1.3+. We have to
                 // add the directory where plugin classes are compiled
                 // to. Pre-1.3, plugin classes were compiled to the same
@@ -171,7 +173,18 @@ eventAllTestsStart = {
 eventTestCompileStart = { types ->
     // both gwt and normal unit test can refer GWT classes, hence - they must be compiled before compiling test classes
     compileGwtClasses(true)
-    gwtDependencies.each { classLoader.addURL(it.toURI().toURL()) }
+    (gwtDependencies + gwtClassesDir).each { classLoader.addURL(it.toURI().toURL()) }
+    
+    // if we use specific JDK for compiling GWT classes, then we need to compile test/gwt classes as well
+    // before Grails attempts that
+    if (types.class == loadGwtTestTypeClass() && gwtJavacCmd) {
+        def destDir = new File(grailsSettings.testClassesDir, types.relativeSourcePath)
+        ant.mkdir(dir: destDir)
+        gwtJavac(destdir: destDir, classpathref: "grails.test.classpath", debug: "yes") {
+            src(path: new File("${testSourceDir}", types.relativeSourcePath))
+        }
+    }
+     
 }
 
 eventPackagePluginsEnd = {
