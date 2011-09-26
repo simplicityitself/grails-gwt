@@ -4,3 +4,7 @@ eclipse/
 grails-gwt-*.zip
 plugin.xml
 /web-app/
+
+.project
+
+.settings/org.eclipse.wst.common.project.facet.core.xml
