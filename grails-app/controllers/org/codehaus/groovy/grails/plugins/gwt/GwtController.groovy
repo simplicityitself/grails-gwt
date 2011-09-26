@@ -27,7 +27,7 @@ class GwtController extends RemoteServiceServlet {
      */
     def index = {
         doPost(request, response)
-		response.outputStream.flush()
+        response.outputStream.flush()
     }
 
     /**
