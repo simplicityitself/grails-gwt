@@ -580,7 +580,12 @@ def downloadDependencies() {
           String name = m[0][2]
           def group = m[0][1]
           def version = m[0][3]
+
+          println "${group}/${name}/${version}"
           downloadJarWithIvy(group, name, version)
+      } else {
+        println "${depDefinition} isn't a valid definition, exiting"
+        exit(1)
       }
     }
   }
