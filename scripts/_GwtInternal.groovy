@@ -149,9 +149,6 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
         compileI18n()
     }
 
-    // Multi-core compilation.
-    def numCompileWorkers = getPropertyValue("gwt.local.workers", 0).toInteger()
-    
     // Draft compilation.
     if (!(getBinding().variables.containsKey("gwtDraftCompile"))) {
         gwtDraftCompile = null
@@ -178,10 +175,10 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
 
     compiler.baseDir = basedir
     compiler.draft = gwtDraftCompile
-    //compiler.gwtOutputStyle = gwtOutputStyle   TODO
+    compiler.gwtOutputStyle = gwtOutputStyle
     compiler.usingGwt16 = usingGwt16
     compiler.gwtOutputPath = gwtOutputPath
-    //compiler.compileReport = compileReport   TODO
+//    compiler.compileReport = compileReport
     compiler.gwtModuleList = gwtModuleList
     compiler.grailsSettings = grailsSettings
     compiler.compilerClass = compilerClass
@@ -190,6 +187,7 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     def ret = compiler.compileAll()
     if (ret == 1) {
       event("GwtCompileFail", [ "Failed to compile all GWT modules" ])
+      //This ensures that anything monitoring this process (eg a CI agent), will record this as failed
       throw new RuntimeException("Failed to compile all GWT Modules")
     }
 

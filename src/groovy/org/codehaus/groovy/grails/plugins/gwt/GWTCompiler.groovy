@@ -16,7 +16,6 @@ class GWTCompiler {
   def baseDir
   def logDir
 
-  //TODO, support the property passthrough
   def gwtOutputStyle ="PRETTY"
   def usingGwt16
   def gwtOutputPath
@@ -26,6 +25,9 @@ class GWTCompiler {
   def gwtRun
   def compilerClass
   def failed
+
+  //Set BuildConfig gwt.parallel=false  to force the use of this, otherwise it will be auto selected based on modules and number of processor cores.
+  private int numCompileWorkers = 0
 
   public int compileAll() {
     logDir = new File(baseDir, "target/gwt/logs")
@@ -53,8 +55,6 @@ class GWTCompiler {
     println "Will compile ${modules.size()} modules"
 
     failed = []
-
-    //TODO, select a compilation strategy.  if 2 or less modules, select GWT worker, otherwise full parallel.
 
     if (shouldUseFullParallel()) {
       fullParallelCompile()
@@ -87,13 +87,29 @@ class GWTCompiler {
   }
 
   boolean shouldUseFullParallel() {
-    //TODO, respect config option
-    //TODO, if more than 2 modules then full parallel by default, otherwise GWT worker
-    return true
+
+    if(grailsSettings.config.gwt.parallel != null) {
+      return grailsSettings.config.gwt.parallel
+    }
+
+    return modules.size() > 2
   }
 
   def gwtWorkerCompile() {
-    println "Selected GWT Worker parallel compilation"
+    numCompileWorkers = grailsSettings.config.gwt.local.workers ?: numThreads
+
+    println "Selected GWT Worker parallel compilation with ${numCompileWorkers} worker threads"
+
+    modules.each { moduleName ->
+        try {
+          compile(moduleName)
+        } catch (Exception ex) {
+          failed << moduleName
+          if (!(ex instanceof GwtCompilationException)) {
+            ex.printStackTrace()
+          }
+        }
+    }
   }
 
   def fullParallelCompile() {
@@ -131,7 +147,6 @@ class GWTCompiler {
   }
 
   def compile(String moduleName) {
-    def b = new AntBuilder()
     println "  Compiling ${moduleName}"
 
     def logFile = new File(logDir, "${moduleName}.log")
@@ -151,17 +166,16 @@ class GWTCompiler {
           arg(value: '-style')
           arg(value: gwtOutputStyle)
 
-        //TODO, this should move to the GWT WOrkers strategy
-//          // Multi-threaded compilation.
-//          if (usingGwt16 && numCompileWorkers > 0) {
-//              arg(value: "-localWorkers")
-//              arg(value: numCompileWorkers)
-//          }
+          // Multi-threaded compilation.
+          if (usingGwt16 && numCompileWorkers > 0) {
+              arg(value: "-localWorkers")
+              arg(value: numCompileWorkers)
+          }
 
           // Draft compile - GWT 2.0+ only
-//          if (gwtDraftCompile) {
-//              arg(value: "-draftCompile")
-//          }
+          if (draft) {
+              arg(value: "-draftCompile")
+          }
 
           // The argument specifying the output directory depends on
           // the version of GWT in use.
