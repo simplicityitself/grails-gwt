@@ -62,7 +62,7 @@ gwtJavaCmd = getPropertyValue("gwt.java.cmd", null)
 // A target to check for existence of the GWT Home
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
-    binding.setProperty('gwtHome', resolveHome(getPropertyValue("gwt.version", null), getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME"))
+    binding.setProperty('gwtHome', resolveHome(getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME"))
     binding.setProperty('gwtOutputPath', getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt"))
     binding.setProperty('gwtOutputStyle', getPropertyValue("gwt.output.style", "OBF"))
     binding.setProperty('gwtDisableCompile', getPropertyValue("gwt.compile.disable", "false").toBoolean())
@@ -149,9 +149,6 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
         compileI18n()
     }
 
-    // Multi-core compilation.
-    def numCompileWorkers = getPropertyValue("gwt.local.workers", 0).toInteger()
-    
     // Draft compilation.
     if (!(getBinding().variables.containsKey("gwtDraftCompile"))) {
         gwtDraftCompile = null
@@ -171,50 +168,29 @@ target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     event("StatusUpdate", [ "Compiling GWT modules" ])
     gwtModulesCompiled = true
 
-    modules.each { moduleName ->
-        // Only run the compiler if this is production mode or
-        // the 'nocache' file is older than any files in the
-        // module directory.
-        if (!gwtForceCompile && new File("${gwtOutputPath}/${moduleName}/${moduleName}.nocache.js").exists()) {
-            // We can skip this module.
-            gwtModulesCompiled = false
-            return
-        }
 
-        event("StatusUpdate", [ "Module: ${moduleName}" ])
+    def parClass = classLoader.loadClass("org.codehaus.groovy.grails.plugins.gwt.GWTCompiler")
 
-        gwtRun(compilerClass) {
-            jvmarg(value: '-Djava.awt.headless=true')
-            arg(value: '-style')
-            arg(value: gwtOutputStyle)
+    def compiler = parClass.newInstance()
 
-            // Multi-threaded compilation.
-            if (usingGwt16 && numCompileWorkers > 0) {
-                arg(value: "-localWorkers")
-                arg(value: numCompileWorkers)
-            }
-
-            // Draft compile - GWT 2.0+ only
-            if (gwtDraftCompile) {
-                arg(value: "-draftCompile")
-            }
-
-            // The argument specifying the output directory depends on
-            // the version of GWT in use.
-            if (usingGwt16) {
-                // GWT 1.6 uses a different directory structure, and
-                // hence arguments to previous versions.
-                arg(value: "-war")
-            }
-            else {
-                arg(value: "-out")
-            }
-
-            arg(value: gwtOutputPath)
-            arg(value: moduleName)
-        }
+    compiler.baseDir = basedir
+    compiler.draft = gwtDraftCompile
+    compiler.gwtOutputStyle = gwtOutputStyle
+    compiler.usingGwt16 = usingGwt16
+    compiler.gwtOutputPath = gwtOutputPath
+//    compiler.compileReport = compileReport
+    compiler.gwtModuleList = gwtModuleList
+    compiler.grailsSettings = grailsSettings
+    compiler.compilerClass = compilerClass
+    compiler.gwtRun = gwtRunWithProps
+    //TODO, config max number of threads
+    def ret = compiler.compileAll()
+    if (ret == 1) {
+      event("GwtCompileFail", [ "Failed to compile all GWT modules" ])
+      //This ensures that anything monitoring this process (eg a CI agent), will record this as failed
+      throw new RuntimeException("Failed to compile all GWT Modules")
     }
-    
+
     event("StatusUpdate", [ "Finished compiling GWT modules" ])
     event("GwtCompileEnd", [ "Finished compiling the GWT modules." ])
 }
@@ -441,14 +417,20 @@ gwtJavac = { Map options, Closure body ->
     ant.javac(options, body)
 }
 
-gwtRun = { String className, Closure body ->
-    gwtJava(classname: className, fork: "true") {
+gwtRun = {String className, Closure body ->
+  gwtRunWithProps(className, [fork:true], body)
+}
+
+gwtRunWithProps = { String className, Map properties, Closure body ->
+  properties.classname = className
+  properties.resultproperty="result"
+  gwtJava(properties) {
         // Have to prefix this with 'ant' because the Init
         // script includes a 'classpath' target.
         ant.classpath {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
-                include(name: "gwt-user.jar")
+                include(name: "gwt-user*.jar")
                 // needed to include in case of GWT 2.3
                 include(name: "validation-api*.jar")
             }
@@ -517,6 +499,7 @@ gwtRun = { String className, Closure body ->
         body.delegate = delegate
         body()
     }
+  return ant.project.properties.result
 }
 
 /**
@@ -556,18 +539,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
     return modules
 }
 
-def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def antPropSetting) {
-  if (gwtVersion) {
-      event("StatusUpdate", [ "Gwt version ${gwtVersion} requested, creating local environment" ])
-      File tempGwtHome = new File("target/gwt/tempHome-${gwtVersion}")
-
-      if (!tempGwtHome.exists()) {
-        tempGwtHome.mkdirs()
-
-        downloadGwtJarsAndCopy(tempGwtHome, gwtVersion)
-      }
-      return tempGwtHome.absolutePath
-  }
+def resolveHome(def buildConfigSetting, def sysPropSetting, def antPropSetting) {
   if (buildConfigSetting) {
     return new File(buildConfigSetting).absolutePath
   }
@@ -581,35 +553,4 @@ def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def 
     return new File("gwt").absolutePath
   }
   return null
-}
-
-def downloadGwtJarsAndCopy(File gwtHome, String version) {
-    File gwtDev = resolveArtifactToFile("com.google.gwt", "gwt-dev", version)
-    File gwtUser = resolveArtifactToFile("com.google.gwt", "gwt-user", version)
-    File gwtServlet = resolveArtifactToFile("com.google.gwt", "gwt-servlet", version)
-
-    File validationApi = resolveArtifactToFile("javax.validation", "validation-api", "1.0.0.GA")
-    File validationApiSources = resolveArtifactToFile("javax.validation", "validation-api", "1.0.0.GA", "sources")
-
-
-    FileCopyUtils.copy(gwtDev, new File(gwtHome, "gwt-dev.jar"))
-    FileCopyUtils.copy(gwtUser, new File(gwtHome, "gwt-user.jar"))
-    FileCopyUtils.copy(gwtServlet, new File(gwtHome, "gwt-servlet.jar"))
-    FileCopyUtils.copy(validationApi, new File(gwtHome, validationApi.name))
-    FileCopyUtils.copy(validationApiSources, new File(gwtHome, validationApiSources.name))
-
-    event("StatusUpdate", [ "Gwt environment with version ${version} has been created" ])
-}
-
-def resolveArtifactToFile(group, name, version, type="master") {
-    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
-
-    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: [type] as String[], transitive:true, outputReport: true, download: true, useCacheOnly: false), false)
-
-    def ret
-    report.artifacts.each { Artifact artifact ->
-        ArtifactDownloadReport rep = grailsSettings.dependencyManager.resolveEngine.download(artifact, new DownloadOptions(log: DownloadOptions.LOG_DOWNLOAD_ONLY))
-        ret = rep.localFile
-    }
-    return ret
 }
