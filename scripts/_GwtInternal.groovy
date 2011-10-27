@@ -4,8 +4,11 @@ import org.apache.ivy.core.resolve.ResolveOptions
 import org.apache.ivy.core.resolve.DownloadOptions
 import org.apache.ivy.core.report.ArtifactDownloadReport
 import org.apache.ivy.core.module.descriptor.Artifact
-import org.springframework.util.FileCopyUtils
-import static org.springframework.util.FileCopyUtils.*
+import org.apache.ivy.core.resolve.IvyNode
+import org.apache.ivy.core.module.descriptor.ModuleDescriptor
+import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor
+import org.apache.ivy.core.module.descriptor.Configuration
+import org.apache.ivy.core.module.descriptor.DependencyDescriptor
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -37,14 +40,7 @@ if (!(getBinding().variables.containsKey("gwtModuleList"))) {
 
 // Common properties and closures (used as re-usable functions).
 ant.property(environment: "env")
-//gwtHome = resolveHome(getPropertyValue("gwt.version", null), getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME")
-//gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
-//gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
-//gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
-//gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
-//gwtModulesCompiled = false
-//gwtLibPath = "$basedir/lib/gwt"
-//gwtLibFile = new File(gwtLibPath)
+resolvedDependencies = []
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 gwtClassesCompiled = false
@@ -57,20 +53,21 @@ gwtRelativeTestSrcPath = "gwt"
 gwtClassesDir = new File(grailsSettings.projectWorkDir, "gwtclasses")
 gwtJavacCmd = getPropertyValue("gwt.javac.cmd", null)
 gwtJavaCmd = getPropertyValue("gwt.java.cmd", null)
+gwtHome = resolveHome(getPropertyValue("gwt.version", null), getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME")
+gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
+gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
+gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
+gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
+gwtLibPath = "$basedir/lib/gwt"
+gwtLibFile = new File(gwtLibPath)
+
+downloadDependencies()
 
 //
 // A target to check for existence of the GWT Home
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
-    binding.setProperty('gwtHome', resolveHome(getPropertyValue("gwt.home", null), System.getProperty("gwt.home"), ant.project.properties."env.GWT_HOME"))
-    binding.setProperty('gwtOutputPath', getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt"))
-    binding.setProperty('gwtOutputStyle', getPropertyValue("gwt.output.style", "OBF"))
-    binding.setProperty('gwtDisableCompile', getPropertyValue("gwt.compile.disable", "false").toBoolean())
-    binding.setProperty('gwtHostedModeOutput', getPropertyValue("gwt.hosted.output.path", "tomcat/classes")) // Default is where gwt shell runs its embedded tomcat
-    binding.setProperty('gwtLibPath', "$basedir/lib/gwt")
-    binding.setProperty('gwtLibFile', new File(gwtLibPath))
-
-    if (!gwtHome) {
+    if (gwtHome==null) {
         event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
     }
@@ -435,6 +432,12 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
                 include(name: "validation-api*.jar")
             }
 
+            if (resolvedDependencies) {
+              resolvedDependencies.each {
+                pathElement(location: it)
+              }
+            }
+
             // We allow users to specify GWT dependencies via the "provided"
             // configuration. Ideally, we would add a custom "gwt" conf,
             // but that's not possible with Grails at the moment.
@@ -539,9 +542,39 @@ def findModules(String searchDir, boolean entryPointOnly) {
     return modules
 }
 
-def resolveHome(def buildConfigSetting, def sysPropSetting, def antPropSetting) {
+def downloadDependencies() {
+  if (buildConfig.gwt.gin.version) {
+     addGinToDependencies(buildConfig.gwt.gin.version)
+  }
+  if (buildConfig.gwt.dependencies) {
+    buildConfig.gwt.dependencies.each { depDefinition ->
+      def m = depDefinition =~ /([a-zA-Z0-9\-\/\._+=]*?):([a-zA-Z0-9\-\/\._+=]+?):([a-zA-Z0-9\-\/\._+=]+)/
+      if (m.matches()) {
+          String name = m[0][2]
+          def group = m[0][1]
+          def version = m[0][3]
+
+          downloadJarWithIvy(group, name, version)
+      } else {
+        println "${depDefinition} isn't a valid definition, exiting"
+        exit(1)
+      }
+    }
+  }
+}
+
+def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def antPropSetting) {
+  if (gwtVersion) {
+      println "Gwt version ${gwtVersion} requested, downloading required dependencies"
+      addGwtCoreToDependencies(gwtVersion)
+      return ""
+  }
   if (buildConfigSetting) {
-    return new File(buildConfigSetting).absolutePath
+    if (buildConfigSetting == "ivy") {
+      return ""
+    } else {
+      return new File(buildConfigSetting).absolutePath
+    }
   }
   if (sysPropSetting) {
     return sysPropSetting
@@ -553,4 +586,58 @@ def resolveHome(def buildConfigSetting, def sysPropSetting, def antPropSetting) 
     return new File("gwt").absolutePath
   }
   return null
+}
+
+def addGwtCoreToDependencies(String version) {
+
+    downloadJarWithIvy("com.google.gwt", "gwt-dev", version)
+    downloadJarWithIvy("com.google.gwt", "gwt-user", version)
+    downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
+
+    downloadJarWithIvy("javax.validation", "validation-api", "1.0.0.GA")
+
+    println "Gwt environment with version ${version} has been created"
+}
+
+def addGinToDependencies(String version) {
+
+    downloadJarWithIvy("com.google.gwt.inject", "gin", version)
+
+    if (version.contains("1.0")) {
+      downloadJarWithIvy("com.google.inject", "guice", "2.0")
+    } else if (version.contains("1.5.0")) {
+      downloadJarWithIvy("com.google.inject", "guice", "3.0-rc3")
+      downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0-rc3")
+      downloadJarWithIvy("javax.inject", "javax.inject", "1")
+      addDependency("aopalliance", "aopalliance", "1.0", "default")
+    } else {
+      println "Google Gin ${version} not supported by plugin, please manage the dependencies manually"
+      exit(1)
+    }
+
+    println "Added Google Gin ${version} to GWT environment"
+}
+
+
+def downloadJarWithIvy(String group, String artifact, String version) {
+    addDependency(group, artifact, version, "master")
+    addDependency(group, artifact, version, "sources")
+}
+
+def addDependency(group, name, version, type="master") {
+    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
+    addModuleToDependencies(mrid, type)
+}
+
+def addModuleToDependencies(ModuleRevisionId mrid, type) {
+    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: [type] as String[], transitive:false, outputReport: true, download: true, useCacheOnly: false), false)
+
+    if (report.hasError()) {
+      println "GWT Dependency resolution has errors, exiting"
+      exit(1)
+    }
+    report.artifacts.each { Artifact artifact ->
+        ArtifactDownloadReport rep = grailsSettings.dependencyManager.resolveEngine.download(artifact, new DownloadOptions(log: DownloadOptions.LOG_DOWNLOAD_ONLY))
+        resolvedDependencies << rep.localFile
+    }
 }
