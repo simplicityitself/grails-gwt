@@ -47,11 +47,6 @@ eventSetClasspath = { ClassLoader rootLoader ->
           }
         }
     }
-    // Check that gwtHome points to a valid GWT installation.
-    else if (!new File(gwtHome, "gwt-user.jar").exists()) {
-        event("StatusFinal", [ "ERROR: ${gwtHome} is not a valid GWT installation." ])
-        exit(1)
-    }
 }
 
 // Called when the compilation phase completes.
