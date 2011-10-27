@@ -1,8 +1,8 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
-eventSetClasspath = {
+eventSetClasspath = { ClassLoader rootLoader ->
     // Add GWT libraries to compiler classpath.
-    if (gwtHome) {
+    if (gwtHome != null) {
         def gwtHomeFile = new File(gwtHome)
         if (gwtHomeFile.exists()) {
             // Update the dependency lists.
@@ -11,28 +11,40 @@ eventSetClasspath = {
                 grailsSettings.testDependencies << f
                 gwtDependencies << f
             }
-            grailsSettings.testDependencies << gwtClassesDir
-            if (gwtLibFile.exists()) {
-                gwtLibFile.eachFileMatch(~/.+\.jar$/) { f ->
-                    grailsSettings.testDependencies << f
+            grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
+        }
+        grailsSettings.testDependencies << gwtClassesDir
+        if (gwtLibFile.exists()) {
+            gwtLibFile.eachFileMatch(~/.+\.jar$/) { f ->
+                grailsSettings.testDependencies << f
+                gwtDependencies << f
+            }
+        }
+        if (buildConfig.gwt.use.provided.deps == true) {
+            if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+                grailsSettings.providedDependencies.each { dep ->
+                    grailsSettings.testDependencies << dep
                     gwtDependencies << f
                 }
             }
-            if (buildConfig.gwt.use.provided.deps == true) {
-                if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
-                    grailsSettings.providedDependencies.each { dep ->
-                        grailsSettings.testDependencies << dep
-                        gwtDependencies << f
-                    }
-                }
-                else {
-                    ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
-                                      "but are using a pre-1.2 version of Grails. The setting " +
-                                      "will be ignored."
-                }
+            else {
+                ant.echo message: "WARN: You have set gwt.use.provided.deps, " +
+                                  "but are using a pre-1.2 version of Grails. The setting " +
+                                  "will be ignored."
             }
-            grailsSettings.runtimeDependencies << new File(gwtHomeFile, "gwt-servlet.jar")
-            
+        }
+        if (resolvedDependencies) {
+          resolvedDependencies.each { File f ->
+            //Ensure that we make them all available at runtime/ with tomcat.
+            rootLoader.addURL(f.toURL())
+            if (!f.name.contains("gwt-servlet")) {
+              grailsSettings.compileDependencies << f
+            }
+            if (!f.name.contains("-sources")) {
+              grailsSettings.runtimeDependencies << f
+            }
+            gwtDependencies << f
+          }
         }
     }
     // Check that gwtHome points to a valid GWT installation.
