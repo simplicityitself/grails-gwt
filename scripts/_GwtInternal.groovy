@@ -78,6 +78,11 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
             }
+            if (resolvedDependencies) {
+              resolvedDependencies.each { File f ->
+                pathElement(location: f.absolutePath)
+              }
+            }
         }
     }
 

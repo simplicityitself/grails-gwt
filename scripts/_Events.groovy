@@ -115,6 +115,11 @@ void compileGwtClasses(forceCompile = false) {
         ant.mkdir(dir: gwtClassesDir)
         gwtJavac(srcdir: "src/gwt", destDir: gwtClassesDir, includes: "**/*.java") {
             ant.classpath {
+                if (resolvedDependencies) {
+                  resolvedDependencies.each { File f ->
+                    pathElement(location: f.absolutePath)
+                  }
+                }
                 fileset(dir: gwtHome) {
                     include(name: "gwt-dev*.jar")
                     include(name: "gwt-user.jar")
