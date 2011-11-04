@@ -58,6 +58,7 @@ gwtOutputPath = getPropertyValue("gwt.output.path", "${basedir}/web-app/gwt")
 gwtOutputStyle = getPropertyValue("gwt.output.style", "OBF")
 gwtDisableCompile = getPropertyValue("gwt.compile.disable", "false").toBoolean()
 gwtHostedModeOutput = getPropertyValue("gwt.hosted.output.path", "tomcat/classes") // Default is where gwt shell runs its embedded tomcat
+gwtModulesCompiled = false
 gwtLibPath = "$basedir/lib/gwt"
 gwtLibFile = new File(gwtLibPath)
 
@@ -85,7 +86,6 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
             }
         }
     }
-
     if (ant.project.properties.isGwt16) {
         usingGwt16 = true
         compilerClass = "com.google.gwt.dev.Compiler"
@@ -140,6 +140,7 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
 //
 target (compileGwtModules: "Compiles any GWT modules in '$gwtSrcPath'.") {
     depends(checkGwtHome)
+
     if (usingGwt16) depends(compile)
 
     if (gwtDisableCompile) return
@@ -216,6 +217,11 @@ target (compileServerCode: "Compiles gwt server code into tomcat/classes directo
             if (gwtLibFile.exists()) {
                 fileset(dir: gwtLibPath) {
                     include(name: "*.jar")
+                }
+            }
+            if (resolvedDependencies) {
+                resolvedDependencies.each { File f ->
+                    pathElement(location: f.absolutePath)
                 }
             }
         }
@@ -342,6 +348,11 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
         ant.classpath {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
+            }
+            if (resolvedDependencies) {
+                resolvedDependencies.each { File f ->
+                    pathElement(location: f.absolutePath)
+                }
             }
         }
     }
@@ -600,8 +611,6 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
 
     downloadJarWithIvy("javax.validation", "validation-api", "1.0.0.GA")
-
-    println "Gwt environment with version ${version} has been created"
 }
 
 def addGinToDependencies(String version) {

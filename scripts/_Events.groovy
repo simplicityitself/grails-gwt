@@ -84,11 +84,21 @@ eventConfigureWarNameEnd = {
 // in the system.
 //
 eventCreateWarStart = { warName, stagingDir ->
-    // Extract the UnableToCompleteException file from gwt-dev-*.jar
-    ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
-        patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
-        fileset(dir: "${gwtHome}", includes: "gwt-dev-*.jar")
+    if (gwtHome) {
+      // Extract the UnableToCompleteException file from gwt-dev-*.jar
+      ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
+          patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
+          fileset(dir: "${gwtHome}", includes: "gwt-dev-*.jar")
+      }
+    } else if (resolvedDependencies) {
+      def gwtDevJar = resolvedDependencies.find { it.name.contains("gwt-dev")}
+      // Extract the UnableToCompleteException file from gwt-dev-*.jar
+      ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
+          patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
+          path(location: gwtDevJar.absolutePath)
+      }
     }
+
 }
 
 //
