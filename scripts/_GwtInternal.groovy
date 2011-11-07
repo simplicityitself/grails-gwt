@@ -396,6 +396,7 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
         }
         
         arg(value: "-noserver")
+        sysproperty(key:"gwt.persistentunitcachedir", value:"${basedir}/target/gwt/unitCache")
 
         if (usingGwt16) {
             // GWT 1.6 uses a different directory structure, and
