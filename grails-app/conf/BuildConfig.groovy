@@ -8,6 +8,10 @@ grails.project.dependency.resolution = {
         grailsCentral()
         mavenCentral()
     }
+    dependencies {
+      //for the release plugin..
+      build 'org.apache.httpcomponents:httpclient:4.0.3'
+    }
 }
 
 gwt {

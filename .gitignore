@@ -6,5 +6,11 @@ plugin.xml
 /web-app/
 
 .project
+.classpath
+*.ipr
+*.iws
+*.iml
+*.zip
+*.log
 
-.settings/org.eclipse.wst.common.project.facet.core.xml
+.settings
