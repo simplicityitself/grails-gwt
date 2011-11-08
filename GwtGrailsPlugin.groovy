@@ -26,7 +26,7 @@ import org.codehaus.groovy.grails.plugins.gwt.GwtServiceInterfaceGenerator
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "0.6"
+    def version = "0.6-SNAPSHOT"
     def grailsVersion = "1.1 > *"
     def author = "Peter Ledbrook"
     def authorEmail = "peter@cacoethes.co.uk"
@@ -36,8 +36,9 @@ Incorporates GWT into Grails. In particular, GWT host pages can be
 GSPs and standard Grails services can be used to handle client RPC
 requests.
 """
+    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPGWT" ]
     def documentation = "http://www.grails.org/plugin/gwt"
-
+    def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
     def observe = [ "services" ]
     def watchedResources = "file:./grails-app/actionHandlers/**/*ActionHandler.groovy"
     def artefacts = [ ActionHandlerArtefactHandler ]
