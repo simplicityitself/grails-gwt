@@ -25,6 +25,7 @@ class GWTCompiler {
   def gwtRun
   def compilerClass
   def failed
+  boolean gwtForceCompile
 
   //Set BuildConfig gwt.parallel=false  to force the use of this, otherwise it will be auto selected based on modules and number of processor cores.
   private int numCompileWorkers = 0
@@ -147,6 +148,7 @@ class GWTCompiler {
   }
 
   def compile(String moduleName) {
+
     println "  Compiling ${moduleName}"
 
     def logFile = new File(logDir, "${moduleName}.log")
@@ -210,6 +212,13 @@ class GWTCompiler {
       throw ex
     }
   }
+
+  def readInternalModuleName(String name) {
+
+
+
+  }
+
   //TODO, remove the copy paste here by passing a reference through.
   /**
  * Searches a given directory for any GWT module files, and
