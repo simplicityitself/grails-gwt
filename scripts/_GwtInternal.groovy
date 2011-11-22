@@ -367,11 +367,11 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
             }
-            if (gwtResolvedDependencies) {
-                gwtResolvedDependencies.each { File f ->
-                    pathElement(location: f.absolutePath)
-                }
+            
+            gwtResolvedDependencies.each { File f ->
+                pathElement(location: f.absolutePath)
             }
+            
         }
     }
 
@@ -470,7 +470,7 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
             }
             
             gwtResolvedDependencies.each {
-               pathElement(location: it)
+               pathElement(location: it.absolutePath)
             }
 
             // We allow users to specify GWT dependencies via the "provided"
@@ -630,6 +630,7 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
 
     downloadJarWithIvy("javax.validation", "validation-api", "1.0.0.GA")
+    addDependency("javax.validation", "validation-api", "1.0.0.GA", "sources")
 }
 
 def addGinToDependencies(String version) {
