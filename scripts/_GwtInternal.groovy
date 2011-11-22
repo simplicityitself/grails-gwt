@@ -380,9 +380,10 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
     def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", false) : ""
 
-  println "GWT OUTPUTPATH=${gwtOutputPath}"
-
-    gwtRun(runClass) {
+    // GWT dev mode process does not need parent Gant process for anything.
+    // Hence it is a good idea to spawn in, making parent script to continue and eventually exit
+    // freeing allocated memory that could be significant (up to 512MB in the default Grails installation)
+    gwtRunWithProps(runClass, [spawn: true, fork: true]) {
         // Hosted mode requires a special JVM argument on Mac OS X.
         if (antProject.properties.'os.name' == 'Mac OS X') {
             def osVersion = antProject.properties.'os.version'.split(/\./)
@@ -457,7 +458,6 @@ gwtRun = {String className, Closure body ->
 
 gwtRunWithProps = { String className, Map properties, Closure body ->
   properties.classname = className
-  properties.resultproperty="result"
   gwtJava(properties) {
         // Have to prefix this with 'ant' because the Init
         // script includes a 'classpath' target.

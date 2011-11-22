@@ -163,7 +163,7 @@ class GWTCompiler {
 
     try {
 
-      def result = gwtRun(compilerClass, [fork:true, output:"${logFile.absoluteFile}", error:"${logFile.absoluteFile}", append:true]) {
+      def result = gwtRun(compilerClass, [resultproperty: "result", fork:true, output:"${logFile.absoluteFile}", error:"${logFile.absoluteFile}", append:true]) {
           jvmarg(value: '-Djava.awt.headless=true')
           arg(value: '-style')
           arg(value: gwtOutputStyle)
