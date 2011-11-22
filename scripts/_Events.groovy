@@ -33,8 +33,8 @@ eventSetClasspath = { ClassLoader rootLoader ->
                                   "will be ignored."
             }
         }
-        if (resolvedDependencies) {
-          resolvedDependencies.each { File f ->
+        if (gwtResolvedDependencies) {
+          gwtResolvedDependencies.each { File f ->
             //Ensure that we make them all available at runtime/ with tomcat.
             rootLoader.addURL(f.toURL())
             if (!f.name.contains("gwt-servlet")) {
@@ -90,8 +90,8 @@ eventCreateWarStart = { warName, stagingDir ->
           patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
           fileset(dir: "${gwtHome}", includes: "gwt-dev-*.jar")
       }
-    } else if (resolvedDependencies) {
-      def gwtDevJar = resolvedDependencies.find { it.name.contains("gwt-dev")}
+    } else if (gwtResolvedDependencies) {
+      def gwtDevJar = gwtResolvedDependencies.find { it.name.contains("gwt-dev")}
       // Extract the UnableToCompleteException file from gwt-dev-*.jar
       ant.unjar(dest: "${stagingDir}/WEB-INF/classes") {
           patternset(includes: "com/google/gwt/core/ext/UnableToCompleteException.class")
@@ -125,11 +125,11 @@ void compileGwtClasses(forceCompile = false) {
         ant.mkdir(dir: gwtClassesDir)
         gwtJavac(srcdir: "src/gwt", destDir: gwtClassesDir, includes: "**/*.java") {
             ant.classpath {
-                if (resolvedDependencies) {
-                  resolvedDependencies.each { File f ->
+                
+                gwtResolvedDependencies.each { File f ->
                     pathElement(location: f.absolutePath)
-                  }
                 }
+                
                 fileset(dir: gwtHome) {
                     include(name: "gwt-dev*.jar")
                     include(name: "gwt-user.jar")

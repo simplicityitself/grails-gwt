@@ -14,7 +14,7 @@ grails.project.dependency.resolution = {
     }
 }
 
-gwt {
-  version="2.4.0"
-  parallel=false
-}
+//gwt {
+//  version="2.4.0"
+//  parallel=false
+//}

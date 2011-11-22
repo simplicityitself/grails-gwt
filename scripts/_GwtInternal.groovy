@@ -40,7 +40,7 @@ if (!(getBinding().variables.containsKey("gwtModuleList"))) {
 
 // Common properties and closures (used as re-usable functions).
 ant.property(environment: "env")
-resolvedDependencies = []
+gwtResolvedDependencies = []
 gwtSrcPath = "src/gwt"
 grailsSrcPath = "src/java"
 gwtClassesCompiled = false
@@ -62,12 +62,13 @@ gwtModulesCompiled = false
 gwtLibPath = "$basedir/lib/gwt"
 gwtLibFile = new File(gwtLibPath)
 
-downloadDependencies()
+
 
 //
 // A target to check for existence of the GWT Home
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
+    depends(resolveGwtDependencies)
     if (gwtHome==null) {
         event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
@@ -79,8 +80,8 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
             }
-            if (resolvedDependencies) {
-              resolvedDependencies.each { File f ->
+            if (gwtResolvedDependencies) {
+              gwtResolvedDependencies.each { File f ->
                 pathElement(location: f.absolutePath)
               }
             }
@@ -97,8 +98,7 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
 
     // Is this project using Google Gin?
     usingGoogleGin = false
-
-    if (gwtLibFile.exists() || buildConfig.gwt.use.provided.deps == true || resolvedDependencies) {
+    if (gwtLibFile.exists() || buildConfig.gwt.use.provided.deps == true || gwtResolvedDependencies) {
         ant.available(classname: "com.google.gwt.inject.client.Ginjector", property: "usingGin") {
             ant.classpath {
                 if (gwtLibFile.exists()) {
@@ -107,6 +107,9 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
                     }
                 }
 				
+                gwtResolvedDependencies.each { dep ->
+                   pathElement(location: dep.absolutePath)
+                }
                 if (buildConfig.gwt.use.provided.deps == true) {
                     if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
                         grailsSettings.providedDependencies.each { dep ->
@@ -226,8 +229,8 @@ target (compileServerCode: "Compiles gwt server code into tomcat/classes directo
                     include(name: "*.jar")
                 }
             }
-            if (resolvedDependencies) {
-                resolvedDependencies.each { File f ->
+            if (gwtResolvedDependencies) {
+                gwtResolvedDependencies.each { File f ->
                     pathElement(location: f.absolutePath)
                 }
             }
@@ -364,8 +367,8 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
             }
-            if (resolvedDependencies) {
-                resolvedDependencies.each { File f ->
+            if (gwtResolvedDependencies) {
+                gwtResolvedDependencies.each { File f ->
                     pathElement(location: f.absolutePath)
                 }
             }
@@ -465,11 +468,9 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
                 // needed to include in case of GWT 2.3
                 include(name: "validation-api*.jar")
             }
-
-            if (resolvedDependencies) {
-              resolvedDependencies.each {
-                pathElement(location: it)
-              }
+            
+            gwtResolvedDependencies.each {
+               pathElement(location: it)
             }
 
             // We allow users to specify GWT dependencies via the "provided"
@@ -576,7 +577,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
     return modules
 }
 
-def downloadDependencies() {
+target(resolveGwtDependencies: "Resolve GWT dependencies") {
   if (buildConfig.gwt.gin.version) {
      addGinToDependencies(buildConfig.gwt.gin.version)
   }
@@ -638,8 +639,8 @@ def addGinToDependencies(String version) {
     if (version.contains("1.0")) {
       downloadJarWithIvy("com.google.inject", "guice", "2.0")
     } else if (version.contains("1.5.0")) {
-      downloadJarWithIvy("com.google.inject", "guice", "3.0-rc3")
-      downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0-rc3")
+      downloadJarWithIvy("com.google.inject", "guice", "3.0")
+      downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0")
       downloadJarWithIvy("javax.inject", "javax.inject", "1")
       addDependency("aopalliance", "aopalliance", "1.0", "default")
     } else {
@@ -652,11 +653,12 @@ def addGinToDependencies(String version) {
 
 
 def downloadJarWithIvy(String group, String artifact, String version) {
-    addDependency(group, artifact, version, "master")
-    addDependency(group, artifact, version, "sources")
+    addDependency(group, artifact, version)
+    // what do we want to download sources as well?
+    //addDependency(group, artifact, version, "sources")
 }
 
-def addDependency(group, name, version, type="master") {
+def addDependency(group, name, version, type="default") {
     ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
     addModuleToDependencies(mrid, type)
 }
@@ -670,6 +672,14 @@ def addModuleToDependencies(ModuleRevisionId mrid, type) {
     }
     report.artifacts.each { Artifact artifact ->
         ArtifactDownloadReport rep = grailsSettings.dependencyManager.resolveEngine.download(artifact, new DownloadOptions(log: DownloadOptions.LOG_DOWNLOAD_ONLY))
-        resolvedDependencies << rep.localFile
+        def jarFile = rep.localFile
+        gwtResolvedDependencies << jarFile
+        // add artifacts to the list of Grails provided dependencies
+        // this enables SpringSource STS to build Eclipse's classpath properly
+        if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+            if (!grailsSettings.providedDependencies.contains(jarFile)) {
+                grailsSettings.providedDependencies << jarFile
+            }
+        }
     }
 }
