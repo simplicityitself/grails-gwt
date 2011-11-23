@@ -62,13 +62,12 @@ gwtModulesCompiled = false
 gwtLibPath = "$basedir/lib/gwt"
 gwtLibFile = new File(gwtLibPath)
 
-
+resolveGwtDependencies()
 
 //
 // A target to check for existence of the GWT Home
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
-    depends(resolveGwtDependencies)
     if (gwtHome==null) {
         event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
@@ -577,7 +576,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
     return modules
 }
 
-target(resolveGwtDependencies: "Resolve GWT dependencies") {
+def resolveGwtDependencies() {
   if (buildConfig.gwt.gin.version) {
      addGinToDependencies(buildConfig.gwt.gin.version)
   }

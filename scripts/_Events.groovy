@@ -33,19 +33,17 @@ eventSetClasspath = { ClassLoader rootLoader ->
                                   "will be ignored."
             }
         }
-        if (gwtResolvedDependencies) {
-          gwtResolvedDependencies.each { File f ->
-            //Ensure that we make them all available at runtime/ with tomcat.
-            rootLoader.addURL(f.toURL())
+        
+        gwtResolvedDependencies.each { File f ->
             if (!f.name.contains("gwt-servlet")) {
-              grailsSettings.compileDependencies << f
+                grailsSettings.compileDependencies << f
+            } else {            
+                grailsSettings.runtimeDependencies << f
             }
-            if (!f.name.contains("-sources")) {
-              grailsSettings.runtimeDependencies << f
-            }
+            grailsSettings.testDependencies << f
             gwtDependencies << f
-          }
         }
+        
     }
 }
 
