@@ -3,7 +3,7 @@ import groovy.util.XmlSlurper
 import org.apache.commons.io.FileUtils
 
 includeTargets << grailsScript("_GrailsEvents")
-includeTargets << grailsScript("_GrailsDocs")
+includeTargets << new File("${newDocPluginDir}/scripts/_NewDocs.groovy")
 
 USAGE = """
     publish-github [--commit] [--push]
@@ -66,7 +66,7 @@ target(default: "Generates the plugin documentation and makes it available on yo
         docsDir = new File("${basedir}/docs")
     }
     ant.delete(dir: docsDir.absolutePath)
-    docs()
+    newDocs()
 
     // To publish the project pages to GitHub, we need to switch to the
     // gh-pages branch. Since the docs may have changed, we need to move
