@@ -48,7 +48,7 @@ class GWTCompiler {
       println "Will generate a compilation report"
     }
     if (gwtOutputStyle) {
-      println "Using GWT JS Syle ${gwtOutputStyle}"
+      println "Using GWT JS Style ${gwtOutputStyle}"
     }
     if (draft) {
       println "Draft compilation (not for production)"
@@ -163,7 +163,7 @@ class GWTCompiler {
 
     try {
 
-      def result = gwtRun(compilerClass, [fork:true, output:"${logFile.absoluteFile}", error:"${logFile.absoluteFile}", append:true]) {
+      def result = gwtRun(compilerClass, [resultproperty: "result", fork:true, output:"${logFile.absoluteFile}", error:"${logFile.absoluteFile}", append:true]) {
           jvmarg(value: '-Djava.awt.headless=true')
           arg(value: '-style')
           arg(value: gwtOutputStyle)

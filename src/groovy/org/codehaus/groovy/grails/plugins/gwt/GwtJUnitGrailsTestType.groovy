@@ -144,7 +144,12 @@ return suite;
                             new File(buildBinding.gwtPluginDir, buildBinding.grailsSrcPath)
                             ] as Set
             // GWT
-            new File(buildBinding.gwtHome).eachFileMatch(~/^(gwt|validation-api).+\.jar$/) { f ->
+            if (buildBinding.gwtHome) {            
+                new File(buildBinding.gwtHome).eachFileMatch(~/^(gwt|validation-api).+\.jar$/) { f ->
+                    classPath << f
+                }
+            }
+            buildBinding.gwtResolvedDependencies.each { f ->
                 classPath << f
             }
             if (compiledClassesDir) {
