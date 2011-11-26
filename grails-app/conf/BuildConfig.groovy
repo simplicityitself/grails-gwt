@@ -14,7 +14,8 @@ grails.project.dependency.resolution = {
     }
 }
 
-//gwt {
-//  version="2.4.0"
-//  parallel=false
-//}
+grails.release.scm.enabled = false
+//needed to run commands locally that trip over the GWT_HOME check.
+gwt {
+  version="2.4.0"
+}
