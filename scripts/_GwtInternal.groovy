@@ -121,11 +121,6 @@ target (checkGwtHome: "Stops if GWT_HOME does not exist") {
                                           "will be ignored."
                     }
                 }
-                if (resolvedDependencies) {
-                  resolvedDependencies.each { File f ->
-                    pathElement(location: f.absolutePath)
-                  }
-                }
             }
         }
 
