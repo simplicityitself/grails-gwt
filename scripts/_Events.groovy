@@ -40,6 +40,7 @@ eventSetClasspath = { ClassLoader rootLoader ->
               grailsSettings.compileDependencies << f
           } else {
               grailsSettings.compileDependencies << f
+              grailsSettings.runtimeDependencies << f
           }
           grailsSettings.testDependencies << f
           gwtDependencies << f
