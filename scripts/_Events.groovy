@@ -38,6 +38,7 @@ eventSetClasspath = { ClassLoader rootLoader ->
           rootLoader.addURL(f.toURL())
           if (!f.name.contains("gwt-servlet")) {
               grailsSettings.compileDependencies << f
+              grailsSettings.runtimeDependencies << f
           } else {
               grailsSettings.compileDependencies << f
               grailsSettings.runtimeDependencies << f
