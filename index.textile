@@ -1,6 +1,0 @@
-layout: main
-title: GWT Plugin for Grails
--
-h2. The plugin
-
-This is a test file.
