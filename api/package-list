@@ -1,0 +1,3 @@
+grails.plugins.gwt.client
+grails.plugins.gwt.shared
+org.codehaus.groovy.grails.plugins.gwt
