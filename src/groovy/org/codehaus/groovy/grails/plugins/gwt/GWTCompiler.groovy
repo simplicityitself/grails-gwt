@@ -168,7 +168,7 @@ class GWTCompiler {
           arg(value: '-style')
           arg(value: gwtOutputStyle)
 
-          sysproperty(key:"gwt.persistentunitcachedir", value:"${basedir}/target/gwt/unitCache")
+          sysproperty(key:"gwt.persistentunitcachedir", value:"${baseDir}/target/gwt/unitCache")
 
           // Multi-threaded compilation.
           if (usingGwt16 && numCompileWorkers > 0) {
