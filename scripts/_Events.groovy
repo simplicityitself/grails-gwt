@@ -217,7 +217,7 @@ eventPackagePluginsEnd = {
     
     // if GWT dependencies are not discovered, do it now
     if (!gwtDependencies) {
-        eventSetClasspath()
+        eventSetClasspath(classLoader)
         classpathSet = false
         classpath()
     }
