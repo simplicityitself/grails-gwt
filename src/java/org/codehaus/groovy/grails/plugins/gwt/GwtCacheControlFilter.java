@@ -46,6 +46,13 @@ public class GwtCacheControlFilter implements Filter {
             httpResponse.setDateHeader("Expires", now - 86400000L);  // One day ago.
             httpResponse.setHeader("Pragma", "no-cache");
             httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+        } else if (requestURI.contains(".cache.")) {
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            httpResponse.setHeader("Cache-Control", "public");
+            httpResponse.setHeader("Cache-Control", "max-age=29030400");
+            long oneYearFromNow = System.currentTimeMillis() + 31536000000l;
+            httpResponse.setDateHeader("Expires", oneYearFromNow);
+            httpResponse.setDateHeader("max-age", oneYearFromNow);
         }
         filterChain.doFilter(request, response);
     }
