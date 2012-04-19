@@ -1,0 +1,100 @@
+h2. Introduction
+Almost any non-trivial GWT application will require the use of its RPC support at some stage. GWT normally requires you to write a servlet for each service interface that you define, but the plugin simplifies this step by allowing you to implement the server-side RPC with normal Grails services. Any service can be configured for GWT by adding an expose property, as is done with the Remoting plugin and others:
+
+{code}
+class MyService {
+    static expose = [ 'gwt:example.client' ]
+    List listUsers() {
+        …
+    }
+    …
+}
+{code}
+
+The format of the GWT expose entry is basically: gwt:<package> where <package> is the java package in which the associated RPC interfaces will be created. This will normally match a particular module's entry point package. The colon and package name are optional: if you just specify gwt in the expose list, the plugin will put the interfaces in a client sub-package of the service's package. For example, if the Grails service is in the package org.mysoft.myapp , then the interfaces will go into the package org.mysoft.myapp.client by default.
+
+You could create the RPC interfaces yourself, but the plugin provides a nice little command to give you a head start:
+
+{code}
+grails generate-gwt-rpc [--force] [--non-interactive]
+{code}
+
+This will create the required normal and asynchronous interfaces under the src/java directory. The optional arguments shown only take effect if the interface files already exist. By default, the plugin asks you whether you want to overwrite such a file
+
+For example, say you have a Grails service example.MyService exposed via GWT. The plugin will generate these files for it:
+
+* src/java/example/client/MyService.java , and
+* @src/java/example/client/MyServiceAsync.java@
+Once you have generated the files, it is generally a good idea to maintain them yourself rather than regenerating them. You then have much greater control and usually much cleaner code.
+
+When accessing the service from your client GWT code, use the URL described in this example:
+
+{code}
+MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;
+
+// Note the URL where the RPC service is located!
+String moduleRelativeURL = GWT.getModuleBaseURL() + "rpc";
+endpoint.setServiceEntryPoint(moduleRelativeURL);
+
+// Call a method on the service!
+List users = myService.listUsers()
+...
+{code}
+
+h2. Collection and map types
+
+GWT supports both collections (list, sets, etc.) and maps as method arguments and return types. However, it does not support generics to determine what types are collection or map holds; instead, the user must add a custom javadoc annotation to the RPC interface definition, '@gwt.typeArgs'. The plugin simplifies this process slightly if you are running on a 1.5+ JVM by supplying two annotation classes: CollectionTypeArg and MapTypeArg . These can be used to specify both argument types and return types like so:
+
+{code}
+import org.codehaus.groovy.grails.plugins.gwt.annotation.CollectionTypeArg
+import org.codehaus.groovy.grails.plugins.gwt.annotation.MapTypeArg
+class MyService {
+    static expose = [ 'gwt:example.client' ]
+
+    // The return list contains objects of type java.lang.String.
+    @CollectionTypeArg(String)
+    List listUsers() {
+        …
+    }
+
+    // The 'arg' parameter is a map whose keys are java.lang.Integers,
+    // and values are java.lang.Strings.
+    void processMap(@MapTypeArg(key=Integer, value=String) Map arg) {
+        …
+    }
+    …
+}
+{code}
+
+*Note* At the time of writing, the annotations will not work with method arguments. Hopefully this will be rectified for the Grails 1.0 release.
+
+h2. Including inherited modules
+Create a sub-directory called "gwt" under the Grails application "lib". Drop your GWT module jar files in this directory and compile-gwt-modules will automatically pick them up and add them.
+See [Configuration|5. Configuration]
+
+h2. Note for GWT 2+
+
+If you are using gwt 2+, you can put the following to the service interface MyService.java:
+
+{code}
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+@RemoteServiceRelativePath("rpc")
+{code}
+
+Then you can change these lines:
+
+{code}
+MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;
+
+// Note the URL where the RPC service is located!
+String moduleRelativeURL = GWT.getModuleBaseURL() + "rpc";
+endpoint.setServiceEntryPoint(moduleRelativeURL);
+{code}
+
+
+into:
+{code}
+MyServiceAsync myService = GWT.create(MyService.class);
+{code}

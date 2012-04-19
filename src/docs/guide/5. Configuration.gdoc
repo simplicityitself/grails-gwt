@@ -1,0 +1,47 @@
+
+h2. Dependency Management
+
+h3. GWT and Gin Versions
+
+The GWT module uses the Ivy dependency management of Grails to download GWT/ Gin and other dependencies specifically for use by GWT.
+It will use any repositories that you set up in the main BuildConfig.groovy
+It *does not* use the dependencies block from BuildConfig, instead you must use the options below.
+
+The following options control dependency management
+* gwt.version - Set a version number (eg "2.4.0") of GWT to use.
+* gwt.home (prefer to set a version have have it downloaded) - use the gwt version installed at the given location
+* gwt.gin.version - download gin and any necessary libraries
+
+*example*
+{code}
+
+gwt {
+    version="2.3.0"
+    gin.version="1.5.0"
+}
+
+{code}
+
+h3. GWT Modules
+
+* gwt.dependencies - a List of dependencies to import as GWT module dependencies (they will be given to the GWT Developer mode and compiler). Uses the same format as in BuildConfig.groovy
+
+{code}
+  gwt.dependencies=['com.extjs:gxt:2.2.0', ''com.someother:module:1.2']
+{code}
+
+h3. Import Plugins int GWT Scope
+
+* gwt.plugins - A list of plugins (that are already installed into your project) that are to be imported as GWT sources.  Both their src/java and src/gwt (if it exists) will be include
+
+{code}
+ gwt.plugins = ['reporting', 'work-management']
+{code}
+
+h2. Other Configuration
+
+* gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)
+* gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode
+* gwt.parallel - can force the full parallel compiler mode to be on/ off
+
+... other options ...

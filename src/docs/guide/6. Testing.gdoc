@@ -1,0 +1,4 @@
+
+GWT Code can generally be partially unpicked from the GWT.create calls.  Any code that can be moved away from that, should be unit tested in the normal manner.
+
+.. some extra information here on the native GWT test support ...

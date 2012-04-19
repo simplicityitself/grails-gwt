@@ -1,0 +1,81 @@
+h2. How to use it
+
+When starting with GWT, the first thing you need to do is create a module. This packages a bunch of client-side code into a single unit.
+
+h3. Creating a module
+
+{code}
+  grails create-gwt-module <module>
+{code}
+
+The above command will generate a module file and a corresponding client class under your project's src/java directory. If the name of the module includes a package (recommended), then the files are created in the appropriate directory path. For example:
+
+{code}
+  grails create-gwt-module org.example.MyApp
+{code}
+
+will create the files
+
+# src/gwt/org/example/MyApp.gwt.xml , and
+# src/gwt/org/example/client/MyApp.java .
+
+h3. Creating a host page
+
+Once you have a module, you need to create an HTML page that will host the user interface elements defined by it. Again, this is as simple as running another Grails command:
+
+{code}
+grails create-gwt-page <page> <module>
+{code}
+
+The first argument specifies the page to create, and the second specifies which GWT module the page should host. The page is given as a relative path to a file, which can for example have an "html" or "gsp" extension. If the path consists of a single directory and a GSP file name, then it is treated as a controller view. Otherwise it is treated as a normal web page.
+
+{code}
+// This will create the view file: grails-app/views/main/index.gsp
+grails create-gwt-page main/index.gsp org.example.MyApp
+// This will create the file: web-app/dir/main.html
+grails create-gwt-page dir/main.html MyModule
+
+// This will create the file: web-app/index.gsp
+grails create-gwt-page index.gsp org.example.AnotherModule
+{code}
+
+With the first method, the script will offer to create the relevant controller if it does not already exist.
+
+h3. Trying it out
+
+GWT has something called hosted mode that allows you to test and debug your web interface from a custom browser. This is also available from the plugin. Just run this command:
+
+{code}
+grails run-gwt-client
+{code}
+
+This will launch GWT Developer Mode runtime.  Once this has launched, follow the link it gives you in your normal browser (with the GWT Plugin install) (it would be a good idea to run grails run-app in one console, and this in another).
+
+To actually hit a breakpoint, you'll need to pass in -debug[=8000] (default debugPort is 5006). Then launch a process to attach to the debug port. I use STS(eclipse)'s debug launch configurations. So, run-gwt-client:
+
+{code}
+grails run-gwt-client -debug
+{code}
+
+will cause the following output:
+
+{code}
+Starting the GWT hosted mode client. …
+     [java] Listening for transport dt_socket at address: 5006
+{code}
+
+Then, create a launch config in STS:
+
+{code}
+(Run->Debug Configurations...-> Select Remote Java Application in left tree view-> click New icon top-left)
+Under Connect tab->
+    Project:Browse->select your project
+    Connection Type: Standard (Socket Attach)
+    Connection Properties:
+        Host: localhost (or remote host)
+        Port: 5006 (default, but whatever GWT Dev Mode is listening for)
+    Name: <whatever you want> I usually name it "<project> <command>"
+Click Apply (or Debug if you're ready)
+{code}
+
+

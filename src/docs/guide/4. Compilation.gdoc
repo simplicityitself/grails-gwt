@@ -1,0 +1,20 @@
+The plugin will automatically compile your GWT modules the first time that you perform a normal Grails compile, for example via grails compile or grails run-app . Once a module has been compiled, however, it will not be compiled again in development mode. This is fine if you are using GWT's hosted mode to test your application, but any changes will not be picked up when using a standard browser. So, if you want to test the latest changes in development with a normal browser, you can manually compile the GWT modules with this command:
+
+{code}
+grails compile-gwt-modules
+{code}
+
+h2. Creating a WAR
+
+This is as simple as running the normal Grails command:
+
+{code}
+grails war
+{code}
+
+The plugin will ensure that the GWT modules are re-compiled before everything is packaged up in the WAR file. Once that's done, you can deploy your web application to any servlet container as normal.
+
+This is as simple as running the normal Grails command:
+
+grails war
+The plugin will ensure that the GWT modules are re-compiled before everything is packaged up in the WAR file. Once that's done, you can deploy your web application to any servlet container as normal.
