@@ -3,6 +3,7 @@ eclipse/
 grails-gwt-*.zip
 plugin.xml
 /web-app/
+.idea/
 
 .project
 .classpath
