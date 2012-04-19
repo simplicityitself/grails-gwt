@@ -512,6 +512,15 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
             pathElement(location: "${gwtPluginDir}/${gwtSrcPath}")
             pathElement(location: "${gwtPluginDir}/${grailsSrcPath}")
 
+            //add any modules from plugins defined by gwt.plugins in BuildConfig
+            buildConfig?.gwt?.plugins?.each {pluginName ->
+              def pluginDir = binding.variables["${pluginName}PluginDir"]
+              if (pluginDir) {
+                pathElement(location: "${pluginDir}/src/gwt")
+                pathElement(location: "${pluginDir}/src/java")
+              }
+            }
+
             // Add the DTO source path if that plugin is installed in
             // the current project.
             if (getBinding().variables.containsKey("dtoPluginDir")) {
