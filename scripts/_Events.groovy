@@ -41,7 +41,7 @@ void updateClasspath() {
     }
 
     gwtResolvedDependencies.each { File f ->
-      if (!f.name.contains("gwt-dev")) { rootLoader.addURL(f.toURL()) }
+      if (!f.name.contains("gwt-dev")) { classLoader.addURL(f.toURL()) }
       grailsSettings.compileDependencies << f
       grailsSettings.runtimeDependencies << f
       grailsSettings.testDependencies << f
