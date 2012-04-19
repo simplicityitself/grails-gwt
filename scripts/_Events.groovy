@@ -35,7 +35,7 @@ eventSetClasspath = { ClassLoader rootLoader ->
         }
         
         gwtResolvedDependencies.each { File f ->
-          rootLoader.addURL(f.toURL())
+          if (!f.name.contains("gwt-dev")) { rootLoader.addURL(f.toURL()) }
           if (!f.name.contains("gwt-servlet")) {
               grailsSettings.compileDependencies << f
               grailsSettings.runtimeDependencies << f
