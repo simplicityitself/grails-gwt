@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>2 Getting Started 0.7</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/1.%20Introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/2.%20Getting%20Started.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Configuration.html"><strong>5</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Incorporates GWT into Grails. In particular, GWT host pages can be
+GSPs and standard Grails services can be used to handle client RPC
+requests.
+</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/1.%20Introduction.html">&lt;&lt; <strong>1</strong><span>Introduction</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>2 Getting Started - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
+
+                    <p><strong>Version:</strong> 0.7</p>
+                </div>
+
+                
+
+                
+
+<h1 id="2. Getting Started">2 Getting Started</h1>
+<h2>How to use it</h2><p class="paragraph"/>When starting with GWT, the first thing you need to do is create a module. This packages a bunch of client-side code into a single unit.<p class="paragraph"/><h3>Creating a module</h3><p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;module &#60;module&#62;</pre></div><p class="paragraph"/>The above command will generate a module file and a corresponding client class under your project's src/java directory. If the name of the module includes a package (recommended), then the files are created in the appropriate directory path. For example:<p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;module org.example.MyApp</pre></div><p class="paragraph"/>will create the files
+<ol>
+<li>src/gwt/org/example/MyApp.gwt.xml , and</li>
+<li>src/gwt/org/example/client/MyApp.java .</li>
+</ol><p class="paragraph"/><h3>Creating a host page</h3><p class="paragraph"/>Once you have a module, you need to create an HTML page that will host the user interface elements defined by it. Again, this is as simple as running another Grails command:<p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;page &#60;page&#62; &#60;module&#62;</pre></div><p class="paragraph"/>The first argument specifies the page to create, and the second specifies which GWT module the page should host. The page is given as a relative path to a file, which can for example have an "html" or "gsp" extension. If the path consists of a single directory and a GSP file name, then it is treated as a controller view. Otherwise it is treated as a normal web page.<p class="paragraph"/><div class="code"><pre>// This will create the view file: grails&#45;app/views/main/index.gsp
+grails create&#45;gwt&#45;page main/index.gsp org.example.MyApp
+// This will create the file: web&#45;app/dir/main.html
+grails create&#45;gwt&#45;page dir/main.html MyModule<p class="paragraph"/>// This will create the file: web&#45;app/index.gsp
+grails create&#45;gwt&#45;page index.gsp org.example.AnotherModule</pre></div><p class="paragraph"/>With the first method, the script will offer to create the relevant controller if it does not already exist.<p class="paragraph"/><h3>Trying it out</h3><p class="paragraph"/>GWT has something called hosted mode that allows you to test and debug your web interface from a custom browser. This is also available from the plugin. Just run this command:<p class="paragraph"/><div class="code"><pre>grails run&#45;gwt&#45;client</pre></div><p class="paragraph"/>This will launch GWT Developer Mode runtime.  Once this has launched, follow the link it gives you in your normal browser (with the GWT Plugin install) (it would be a good idea to run grails run-app in one console, and this in another).<p class="paragraph"/>To actually hit a breakpoint, you'll need to pass in -debug=8000 (default debugPort is 5006). Then launch a process to attach to the debug port. I use STS(eclipse)'s debug launch configurations. So, run-gwt-client:<p class="paragraph"/><div class="code"><pre>grails run&#45;gwt&#45;client &#45;debug</pre></div><p class="paragraph"/>will cause the following output:<p class="paragraph"/><div class="code"><pre>Starting the GWT hosted mode client. …
+     &#91;java&#93; Listening <span class="java&#45;keyword">for</span> transport dt_socket at address: 5006</pre></div><p class="paragraph"/>Then, create a launch config in STS:<p class="paragraph"/><div class="code"><pre>(Run&#45;&#62;Debug Configurations...&#45;&#62; Select Remote Java Application in left tree view&#45;&#62; click New icon top&#45;left)
+Under Connect tab&#45;&#62;
+    Project:Browse&#45;&#62;select your project
+    Connection Type: Standard (Socket Attach)
+    Connection Properties:
+        Host: localhost (or remote host)
+        Port: 5006 (<span class="java&#45;keyword">default</span>, but whatever GWT Dev Mode is listening <span class="java&#45;keyword">for</span>)
+    Name: &#60;whatever you want&#62; I usually name it <span class="java&#45;quote">"&#60;project&#62; &#60;command&#62;"</span>
+Click Apply (or Debug <span class="java&#45;keyword">if</span> you're ready)</pre></div><p class="paragraph"/>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/1.%20Introduction.html">&lt;&lt; <strong>1</strong><span>Introduction</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

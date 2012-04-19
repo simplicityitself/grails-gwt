@@ -1,36 +1,233 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>grails-gwt 0.6.1 - Reference Documentation</title>
-        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Style" charset="utf-8"/>
+        <title>The Google Web Toolkit for Grails. 0.7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <script type="text/javascript">
+function addJsClass(el) {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
     </head>
-    <body class="body">
+
+    <body class="body" onload="addJsClass();">
+        <div id="navigation">
+            <ul>
+                <li>
+                    <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                        <a href="../guide/index.html" class="button">Table of contents</a>
+                        <div id="nav-summary-childs" style="display:none;">
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#1.%20Introduction"><strong>1</strong><span>Introduction</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#2.%20Getting%20Started"><strong>2</strong><span>Getting Started</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#3.%20Server%20RPC"><strong>3</strong><span>Server RPC</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#4.%20Compilation"><strong>4</strong><span>Compilation</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#5.%20Configuration"><strong>5</strong><span>Configuration</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#6.%20Testing"><strong>6</strong><span>Testing</span></a></div>
+                            
+                        </div>
+                    </div>
+                </li>
+                <li class="separator selected">
+                    <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+                </li>
+            </ul>
+        </div>
         <div id="header">
-            <div class="images"><br/><br/>
-                <a href="http://grails.org" target="_blank"><img alt="The Grails Framework" src="../img/grails.png" border="0"/></a>
-                <span style="right:30px; top:20px; position:absolute;">
-                    <a href="../index.html" target="_top">Frames</a> | <a href="index.html" target="_top">No Frames</a><br/><br/>
-                    <a href="http://springsource.com" target="_blank"><img alt="SpringSource - A Division of VMware" src="../img/springsource-logo.png" border="0"/></a>
-                </span>
+            <div class="images clearfix">
+                
+                
             </div>
-            <div class="message">grails-gwt</div>
-            <h1>grails-gwt - Reference Documentation</h1>
-            <p><strong>Authors:</strong> </p>
-            <p><strong>Version:</strong> 0.6.1</p>
-            <em></em>
+            <p>Incorporates GWT into Grails. In particular, GWT host pages can be
+GSPs and standard Grails services can be used to handle client RPC
+requests.
+</p>
         </div>
 
-        <div id="toc">
-            <h2>Table of Contents</h2>
-            <div class="tocItem" style="margin-left:0px"><a href="#1. Intro">1. Intro</a></div>
-        </div>
-        <div id="content">
-            <h1><a name="1. Intro">1. Intro</a></h1><h2>GWT</h2><p class="paragraph"/>Google are big on HTML-based web applications with very rich and dynamic user interfaces. Achieving such user interfaces purely through Javscript is tough though, particularly for those not well versed in the language and the different behaviours between browsers.<p class="paragraph"/><h2>The plugin</h2>
 
-        </div>
+        <table id="colset" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td id="col1">
+                    <div id="main" class="corner-all">
+
+                        <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                        <div class="project">
+                            <h1>The Google Web Toolkit for Grails. - Reference Documentation</h1>
+                            <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
+                            <p><strong>Version:</strong> 0.7</p>
+                        </div>
+
+                        
+                        <div id="table-of-content">
+                            <h2>Table of Contents</h2>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#1.%20Introduction"><strong>1</strong><span>Introduction</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#2.%20Getting%20Started"><strong>2</strong><span>Getting Started</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#3.%20Server%20RPC"><strong>3</strong><span>Server RPC</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#4.%20Compilation"><strong>4</strong><span>Compilation</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#5.%20Configuration"><strong>5</strong><span>Configuration</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#6.%20Testing"><strong>6</strong><span>Testing</span></a></div>
+                            
+                            <div style="clear:both" ></div>
+                        </div>
+                        
+                        
+
+<h1 id="1. Introduction">1 Introduction</h1>
+The <a href="http://code.google.com/webtoolkit/" target="blank">Google Web Toolkit (GWT)</a> is an advanced AJAX framework that allows you to develop rich user interfaces in Java, thus taking advantage of type-checking and code re-use. GWT will then compile your Java code and generate fast, cross-platform Javascript that can be included in any web page you choose.<p class="paragraph"/>The plugin makes it easy to incorporate GWT code into your GSP pages, and it also simplifies the handling of RPC requests on the server. If you have not used GWT before, please read the documentation on the GWT website.<p class="paragraph"/>Jan Ehrhardt has kindly created a simple <a href="http://code.google.com/p/derjanandhisblog/wiki/GWTGrailsTutorial" target="blank">tutorial</a> with sample code. Alberto Zaccagni wrote a <a href="http://www.lazywithclass.com/code/4/gwt-on-grails" target="blank">gwt on grails tutorial</a> with a working example of client side passing a transfer object to the server side. You can also join in the discussions about the plugin and ask questions on the "Google Group for GWT/Grails integration":http://groups.google.com/group/grails-gwt/.
+
+
+<h1 id="2. Getting Started">2 Getting Started</h1>
+<h2>How to use it</h2><p class="paragraph"/>When starting with GWT, the first thing you need to do is create a module. This packages a bunch of client-side code into a single unit.<p class="paragraph"/><h3>Creating a module</h3><p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;module &#60;module&#62;</pre></div><p class="paragraph"/>The above command will generate a module file and a corresponding client class under your project's src/java directory. If the name of the module includes a package (recommended), then the files are created in the appropriate directory path. For example:<p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;module org.example.MyApp</pre></div><p class="paragraph"/>will create the files
+<ol>
+<li>src/gwt/org/example/MyApp.gwt.xml , and</li>
+<li>src/gwt/org/example/client/MyApp.java .</li>
+</ol><p class="paragraph"/><h3>Creating a host page</h3><p class="paragraph"/>Once you have a module, you need to create an HTML page that will host the user interface elements defined by it. Again, this is as simple as running another Grails command:<p class="paragraph"/><div class="code"><pre>grails create&#45;gwt&#45;page &#60;page&#62; &#60;module&#62;</pre></div><p class="paragraph"/>The first argument specifies the page to create, and the second specifies which GWT module the page should host. The page is given as a relative path to a file, which can for example have an "html" or "gsp" extension. If the path consists of a single directory and a GSP file name, then it is treated as a controller view. Otherwise it is treated as a normal web page.<p class="paragraph"/><div class="code"><pre>// This will create the view file: grails&#45;app/views/main/index.gsp
+grails create&#45;gwt&#45;page main/index.gsp org.example.MyApp
+// This will create the file: web&#45;app/dir/main.html
+grails create&#45;gwt&#45;page dir/main.html MyModule<p class="paragraph"/>// This will create the file: web&#45;app/index.gsp
+grails create&#45;gwt&#45;page index.gsp org.example.AnotherModule</pre></div><p class="paragraph"/>With the first method, the script will offer to create the relevant controller if it does not already exist.<p class="paragraph"/><h3>Trying it out</h3><p class="paragraph"/>GWT has something called hosted mode that allows you to test and debug your web interface from a custom browser. This is also available from the plugin. Just run this command:<p class="paragraph"/><div class="code"><pre>grails run&#45;gwt&#45;client</pre></div><p class="paragraph"/>This will launch GWT Developer Mode runtime.  Once this has launched, follow the link it gives you in your normal browser (with the GWT Plugin install) (it would be a good idea to run grails run-app in one console, and this in another).<p class="paragraph"/>To actually hit a breakpoint, you'll need to pass in -debug=8000 (default debugPort is 5006). Then launch a process to attach to the debug port. I use STS(eclipse)'s debug launch configurations. So, run-gwt-client:<p class="paragraph"/><div class="code"><pre>grails run&#45;gwt&#45;client &#45;debug</pre></div><p class="paragraph"/>will cause the following output:<p class="paragraph"/><div class="code"><pre>Starting the GWT hosted mode client. …
+     &#91;java&#93; Listening <span class="java&#45;keyword">for</span> transport dt_socket at address: 5006</pre></div><p class="paragraph"/>Then, create a launch config in STS:<p class="paragraph"/><div class="code"><pre>(Run&#45;&#62;Debug Configurations...&#45;&#62; Select Remote Java Application in left tree view&#45;&#62; click New icon top&#45;left)
+Under Connect tab&#45;&#62;
+    Project:Browse&#45;&#62;select your project
+    Connection Type: Standard (Socket Attach)
+    Connection Properties:
+        Host: localhost (or remote host)
+        Port: 5006 (<span class="java&#45;keyword">default</span>, but whatever GWT Dev Mode is listening <span class="java&#45;keyword">for</span>)
+    Name: &#60;whatever you want&#62; I usually name it <span class="java&#45;quote">"&#60;project&#62; &#60;command&#62;"</span>
+Click Apply (or Debug <span class="java&#45;keyword">if</span> you're ready)</pre></div><p class="paragraph"/>
+
+
+
+<h1 id="3. Server RPC">3 Server RPC</h1>
+<h2>Introduction</h2>
+Almost any non-trivial GWT application will require the use of its RPC support at some stage. GWT normally requires you to write a servlet for each service interface that you define, but the plugin simplifies this step by allowing you to implement the server-side RPC with normal Grails services. Any service can be configured for GWT by adding an expose property, as is done with the Remoting plugin and others:<p class="paragraph"/><div class="code"><pre>class MyService &#123;
+    <span class="java&#45;keyword">static</span> expose = &#91; 'gwt:example.client' &#93;
+    List listUsers() &#123;
+        …
+    &#125;
+    …
+&#125;</pre></div><p class="paragraph"/>The format of the GWT expose entry is basically: gwt:&#60;package&#62; where &#60;package&#62; is the java package in which the associated RPC interfaces will be created. This will normally match a particular module's entry point package. The colon and package name are optional: if you just specify gwt in the expose list, the plugin will put the interfaces in a client sub-package of the service's package. For example, if the Grails service is in the package org.mysoft.myapp , then the interfaces will go into the package org.mysoft.myapp.client by default.<p class="paragraph"/>You could create the RPC interfaces yourself, but the plugin provides a nice little command to give you a head start:<p class="paragraph"/><div class="code"><pre>grails generate&#45;gwt&#45;rpc &#91;&#45;&#45;force&#93; &#91;&#45;&#45;non&#45;interactive&#93;</pre></div><p class="paragraph"/>This will create the required normal and asynchronous interfaces under the src/java directory. The optional arguments shown only take effect if the interface files already exist. By default, the plugin asks you whether you want to overwrite such a file<p class="paragraph"/>For example, say you have a Grails service example.MyService exposed via GWT. The plugin will generate these files for it:
+<ul class="star">
+<li>src/java/example/client/MyService.java , and</li>
+<li><code>src/java/example/client/MyServiceAsync.java</code></li>
+</ul><p class="paragraph"/>Once you have generated the files, it is generally a good idea to maintain them yourself rather than regenerating them. You then have much greater control and usually much cleaner code.<p class="paragraph"/>When accessing the service from your client GWT code, use the URL described in this example:<p class="paragraph"/><div class="code"><pre>MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;<p class="paragraph"/>// Note the URL where the RPC service is located!
+<span class="java&#45;object">String</span> moduleRelativeURL = GWT.getModuleBaseURL() + <span class="java&#45;quote">"rpc"</span>;
+endpoint.setServiceEntryPoint(moduleRelativeURL);<p class="paragraph"/>// Call a method on the service!
+List users = myService.listUsers()
+...</pre></div><p class="paragraph"/><h2>Collection and map types</h2><p class="paragraph"/>GWT supports both collections (list, sets, etc.) and maps as method arguments and return types. However, it does not support generics to determine what types are collection or map holds; instead, the user must add a custom javadoc annotation to the RPC interface definition, '@gwt.typeArgs'. The plugin simplifies this process slightly if you are running on a 1.5+ JVM by supplying two annotation classes: CollectionTypeArg and MapTypeArg . These can be used to specify both argument types and return types like so:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.gwt.annotation.CollectionTypeArg
+<span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.gwt.annotation.MapTypeArg
+class MyService &#123;
+    <span class="java&#45;keyword">static</span> expose = &#91; 'gwt:example.client' &#93;<p class="paragraph"/>    // The <span class="java&#45;keyword">return</span> list contains objects of type java.lang.<span class="java&#45;object">String</span>.
+    @CollectionTypeArg(<span class="java&#45;object">String</span>)
+    List listUsers() &#123;
+        …
+    &#125;<p class="paragraph"/>    // The 'arg' parameter is a map whose keys are java.lang.Integers,
+    // and values are java.lang.Strings.
+    void processMap(@MapTypeArg(key=<span class="java&#45;object">Integer</span>, value=<span class="java&#45;object">String</span>) Map arg) &#123;
+        …
+    &#125;
+    …
+&#125;</pre></div><p class="paragraph"/><strong class="bold">Note</strong> At the time of writing, the annotations will not work with method arguments. Hopefully this will be rectified for the Grails 1.0 release.<p class="paragraph"/><h2>Including inherited modules</h2>
+Create a sub-directory called "gwt" under the Grails application "lib". Drop your GWT module jar files in this directory and compile-gwt-modules will automatically pick them up and add them.
+See 5. Configuration<p class="paragraph"/><h2>Note for GWT 2+</h2><p class="paragraph"/>If you are using gwt 2+, you can put the following to the service interface MyService.java:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+@RemoteServiceRelativePath(<span class="java&#45;quote">"rpc"</span>)</pre></div><p class="paragraph"/>Then you can change these lines:<p class="paragraph"/><div class="code"><pre>MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;<p class="paragraph"/>// Note the URL where the RPC service is located!
+<span class="java&#45;object">String</span> moduleRelativeURL = GWT.getModuleBaseURL() + <span class="java&#45;quote">"rpc"</span>;
+endpoint.setServiceEntryPoint(moduleRelativeURL);</pre></div><p class="paragraph"/>
+into:
+<div class="code"><pre>MyServiceAsync myService = GWT.create(MyService.class);</pre></div>
+
+
+
+<h1 id="4. Compilation">4 Compilation</h1>
+The plugin will automatically compile your GWT modules the first time that you perform a normal Grails compile, for example via grails compile or grails run-app . Once a module has been compiled, however, it will not be compiled again in development mode. This is fine if you are using GWT's hosted mode to test your application, but any changes will not be picked up when using a standard browser. So, if you want to test the latest changes in development with a normal browser, you can manually compile the GWT modules with this command:<p class="paragraph"/><div class="code"><pre>grails compile&#45;gwt&#45;modules</pre></div><p class="paragraph"/><h2>Creating a WAR</h2><p class="paragraph"/>This is as simple as running the normal Grails command:<p class="paragraph"/><div class="code"><pre>grails war</pre></div><p class="paragraph"/>The plugin will ensure that the GWT modules are re-compiled before everything is packaged up in the WAR file. Once that's done, you can deploy your web application to any servlet container as normal.<p class="paragraph"/>This is as simple as running the normal Grails command:<p class="paragraph"/>grails war
+The plugin will ensure that the GWT modules are re-compiled before everything is packaged up in the WAR file. Once that's done, you can deploy your web application to any servlet container as normal.
+
+
+
+<h1 id="5. Configuration">5 Configuration</h1>
+
+<h2>Dependency Management</h2><p class="paragraph"/><h3>GWT and Gin Versions</h3><p class="paragraph"/>The GWT module uses the Ivy dependency management of Grails to download GWT/ Gin and other dependencies specifically for use by GWT.
+It will use any repositories that you set up in the main BuildConfig.groovy
+It <strong class="bold">does not</strong> use the dependencies block from BuildConfig, instead you must use the options below.<p class="paragraph"/>The following options control dependency management
+<ul class="star">
+<li>gwt.version - Set a version number (eg "2.4.0") of GWT to use.</li>
+<li>gwt.home (prefer to set a version have have it downloaded) - use the gwt version installed at the given location</li>
+<li>gwt.gin.version - download gin and any necessary libraries</li>
+</ul><p class="paragraph"/><strong class="bold">example</strong>
+<div class="code"><pre>gwt &#123;
+    version=<span class="java&#45;quote">"2.3.0"</span>
+    gin.version=<span class="java&#45;quote">"1.5.0"</span>
+&#125;</pre></div><p class="paragraph"/><h3>GWT Modules</h3>
+<ul class="star">
+<li>gwt.dependencies - a List of dependencies to import as GWT module dependencies (they will be given to the GWT Developer mode and compiler). Uses the same format as in BuildConfig.groovy</li>
+</ul><p class="paragraph"/><div class="code"><pre>gwt.dependencies=&#91;'com.extjs:gxt:2.2.0', ''com.someother:module:1.2'&#93;</pre></div><p class="paragraph"/><h3>Import Plugins int GWT Scope</h3>
+<ul class="star">
+<li>gwt.plugins - A list of plugins (that are already installed into your project) that are to be imported as GWT sources.  Both their src/java and src/gwt (if it exists) will be include</li>
+</ul><p class="paragraph"/><div class="code"><pre>gwt.plugins = &#91;'reporting', 'work&#45;management'&#93;</pre></div><p class="paragraph"/><h2>Other Configuration</h2>
+<ul class="star">
+<li>gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)</li>
+<li>gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode</li>
+<li>gwt.parallel - can force the full parallel compiler mode to be on/ off</li>
+</ul><p class="paragraph"/>&#8230; other options &#8230;
+
+
+
+<h1 id="6. Testing">6 Testing</h1>
+
+GWT Code can generally be partially unpicked from the GWT.create calls.  Any code that can be moved away from that, should be unit tested in the normal manner.<p class="paragraph"/>.. some extra information here on the native GWT test support &#8230;
+
+                    </div>
+                </td>
+                <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
+                        </div>
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+            </tr>
+        </table>
+
         <div id="footer">
-             
+            
+            
         </div>
+
+
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
     </body>
 </html>

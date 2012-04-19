@@ -49,10 +49,17 @@
 <FONT color="green">046</FONT>                httpResponse.setDateHeader("Expires", now - 86400000L);  // One day ago.<a name="line.46"></a>
 <FONT color="green">047</FONT>                httpResponse.setHeader("Pragma", "no-cache");<a name="line.47"></a>
 <FONT color="green">048</FONT>                httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");<a name="line.48"></a>
-<FONT color="green">049</FONT>            }<a name="line.49"></a>
-<FONT color="green">050</FONT>            filterChain.doFilter(request, response);<a name="line.50"></a>
-<FONT color="green">051</FONT>        }<a name="line.51"></a>
-<FONT color="green">052</FONT>    }<a name="line.52"></a>
+<FONT color="green">049</FONT>            } else if (requestURI.contains(".cache.")) {<a name="line.49"></a>
+<FONT color="green">050</FONT>                HttpServletResponse httpResponse = (HttpServletResponse) response;<a name="line.50"></a>
+<FONT color="green">051</FONT>                httpResponse.setHeader("Cache-Control", "public");<a name="line.51"></a>
+<FONT color="green">052</FONT>                httpResponse.setHeader("Cache-Control", "max-age=29030400");<a name="line.52"></a>
+<FONT color="green">053</FONT>                long oneYearFromNow = System.currentTimeMillis() + 31536000000l;<a name="line.53"></a>
+<FONT color="green">054</FONT>                httpResponse.setDateHeader("Expires", oneYearFromNow);<a name="line.54"></a>
+<FONT color="green">055</FONT>                httpResponse.setDateHeader("max-age", oneYearFromNow);<a name="line.55"></a>
+<FONT color="green">056</FONT>            }<a name="line.56"></a>
+<FONT color="green">057</FONT>            filterChain.doFilter(request, response);<a name="line.57"></a>
+<FONT color="green">058</FONT>        }<a name="line.58"></a>
+<FONT color="green">059</FONT>    }<a name="line.59"></a>
 
 
 

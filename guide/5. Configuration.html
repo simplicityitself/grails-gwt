@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>5 Configuration 0.7</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/1.%20Introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/2.%20Getting%20Started.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Configuration.html"><strong>5</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Incorporates GWT into Grails. In particular, GWT host pages can be
+GSPs and standard Grails services can be used to handle client RPC
+requests.
+</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/4.%20Compilation.html">&lt;&lt; <strong>4</strong><span>Compilation</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>5 Configuration - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
+
+                    <p><strong>Version:</strong> 0.7</p>
+                </div>
+
+                
+
+                
+
+<h1 id="5. Configuration">5 Configuration</h1>
+
+<h2>Dependency Management</h2><p class="paragraph"/><h3>GWT and Gin Versions</h3><p class="paragraph"/>The GWT module uses the Ivy dependency management of Grails to download GWT/ Gin and other dependencies specifically for use by GWT.
+It will use any repositories that you set up in the main BuildConfig.groovy
+It <strong class="bold">does not</strong> use the dependencies block from BuildConfig, instead you must use the options below.<p class="paragraph"/>The following options control dependency management
+<ul class="star">
+<li>gwt.version - Set a version number (eg "2.4.0") of GWT to use.</li>
+<li>gwt.home (prefer to set a version have have it downloaded) - use the gwt version installed at the given location</li>
+<li>gwt.gin.version - download gin and any necessary libraries</li>
+</ul><p class="paragraph"/><strong class="bold">example</strong>
+<div class="code"><pre>gwt &#123;
+    version=<span class="java&#45;quote">"2.3.0"</span>
+    gin.version=<span class="java&#45;quote">"1.5.0"</span>
+&#125;</pre></div><p class="paragraph"/><h3>GWT Modules</h3>
+<ul class="star">
+<li>gwt.dependencies - a List of dependencies to import as GWT module dependencies (they will be given to the GWT Developer mode and compiler). Uses the same format as in BuildConfig.groovy</li>
+</ul><p class="paragraph"/><div class="code"><pre>gwt.dependencies=&#91;'com.extjs:gxt:2.2.0', ''com.someother:module:1.2'&#93;</pre></div><p class="paragraph"/><h3>Import Plugins int GWT Scope</h3>
+<ul class="star">
+<li>gwt.plugins - A list of plugins (that are already installed into your project) that are to be imported as GWT sources.  Both their src/java and src/gwt (if it exists) will be include</li>
+</ul><p class="paragraph"/><div class="code"><pre>gwt.plugins = &#91;'reporting', 'work&#45;management'&#93;</pre></div><p class="paragraph"/><h2>Other Configuration</h2>
+<ul class="star">
+<li>gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)</li>
+<li>gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode</li>
+<li>gwt.parallel - can force the full parallel compiler mode to be on/ off</li>
+</ul><p class="paragraph"/>&#8230; other options &#8230;
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/4.%20Compilation.html">&lt;&lt; <strong>4</strong><span>Compilation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

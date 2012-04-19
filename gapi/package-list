@@ -1,13 +1,4 @@
 DefaultPackage
-com.example.tests
-com.manning.gwtip.calculator.client
-com.manning.gwtip.calculator.client.controller
-com.manning.gwtip.calculator.client.model.operator
-com.manning.gwtip.calculator.client.view.button
-com.manning.gwtip.helloserver
-com.manning.gwtip.helloserver.client
-com.manning.gwtip.helloserver.client.i18n
 grails.plugins.gwt.client
 grails.plugins.gwt.shared
 org.codehaus.groovy.grails.plugins.gwt
-org.codehaus.groovy.grails.plugins.gwt.annotation

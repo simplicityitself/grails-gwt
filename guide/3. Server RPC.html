@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>3 Server RPC 0.7</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/1.%20Introduction.html"><strong>1</strong><span>Introduction</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/2.%20Getting%20Started.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Configuration.html"><strong>5</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Incorporates GWT into Grails. In particular, GWT host pages can be
+GSPs and standard Grails services can be used to handle client RPC
+requests.
+</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/2.%20Getting%20Started.html">&lt;&lt; <strong>2</strong><span>Getting Started</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3 Server RPC - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
+
+                    <p><strong>Version:</strong> 0.7</p>
+                </div>
+
+                
+
+                
+
+<h1 id="3. Server RPC">3 Server RPC</h1>
+<h2>Introduction</h2>
+Almost any non-trivial GWT application will require the use of its RPC support at some stage. GWT normally requires you to write a servlet for each service interface that you define, but the plugin simplifies this step by allowing you to implement the server-side RPC with normal Grails services. Any service can be configured for GWT by adding an expose property, as is done with the Remoting plugin and others:<p class="paragraph"/><div class="code"><pre>class MyService &#123;
+    <span class="java&#45;keyword">static</span> expose = &#91; 'gwt:example.client' &#93;
+    List listUsers() &#123;
+        …
+    &#125;
+    …
+&#125;</pre></div><p class="paragraph"/>The format of the GWT expose entry is basically: gwt:&#60;package&#62; where &#60;package&#62; is the java package in which the associated RPC interfaces will be created. This will normally match a particular module's entry point package. The colon and package name are optional: if you just specify gwt in the expose list, the plugin will put the interfaces in a client sub-package of the service's package. For example, if the Grails service is in the package org.mysoft.myapp , then the interfaces will go into the package org.mysoft.myapp.client by default.<p class="paragraph"/>You could create the RPC interfaces yourself, but the plugin provides a nice little command to give you a head start:<p class="paragraph"/><div class="code"><pre>grails generate&#45;gwt&#45;rpc &#91;&#45;&#45;force&#93; &#91;&#45;&#45;non&#45;interactive&#93;</pre></div><p class="paragraph"/>This will create the required normal and asynchronous interfaces under the src/java directory. The optional arguments shown only take effect if the interface files already exist. By default, the plugin asks you whether you want to overwrite such a file<p class="paragraph"/>For example, say you have a Grails service example.MyService exposed via GWT. The plugin will generate these files for it:
+<ul class="star">
+<li>src/java/example/client/MyService.java , and</li>
+<li><code>src/java/example/client/MyServiceAsync.java</code></li>
+</ul><p class="paragraph"/>Once you have generated the files, it is generally a good idea to maintain them yourself rather than regenerating them. You then have much greater control and usually much cleaner code.<p class="paragraph"/>When accessing the service from your client GWT code, use the URL described in this example:<p class="paragraph"/><div class="code"><pre>MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;<p class="paragraph"/>// Note the URL where the RPC service is located!
+<span class="java&#45;object">String</span> moduleRelativeURL = GWT.getModuleBaseURL() + <span class="java&#45;quote">"rpc"</span>;
+endpoint.setServiceEntryPoint(moduleRelativeURL);<p class="paragraph"/>// Call a method on the service!
+List users = myService.listUsers()
+...</pre></div><p class="paragraph"/><h2>Collection and map types</h2><p class="paragraph"/>GWT supports both collections (list, sets, etc.) and maps as method arguments and return types. However, it does not support generics to determine what types are collection or map holds; instead, the user must add a custom javadoc annotation to the RPC interface definition, '@gwt.typeArgs'. The plugin simplifies this process slightly if you are running on a 1.5+ JVM by supplying two annotation classes: CollectionTypeArg and MapTypeArg . These can be used to specify both argument types and return types like so:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.gwt.annotation.CollectionTypeArg
+<span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.gwt.annotation.MapTypeArg
+class MyService &#123;
+    <span class="java&#45;keyword">static</span> expose = &#91; 'gwt:example.client' &#93;<p class="paragraph"/>    // The <span class="java&#45;keyword">return</span> list contains objects of type java.lang.<span class="java&#45;object">String</span>.
+    @CollectionTypeArg(<span class="java&#45;object">String</span>)
+    List listUsers() &#123;
+        …
+    &#125;<p class="paragraph"/>    // The 'arg' parameter is a map whose keys are java.lang.Integers,
+    // and values are java.lang.Strings.
+    void processMap(@MapTypeArg(key=<span class="java&#45;object">Integer</span>, value=<span class="java&#45;object">String</span>) Map arg) &#123;
+        …
+    &#125;
+    …
+&#125;</pre></div><p class="paragraph"/><strong class="bold">Note</strong> At the time of writing, the annotations will not work with method arguments. Hopefully this will be rectified for the Grails 1.0 release.<p class="paragraph"/><h2>Including inherited modules</h2>
+Create a sub-directory called "gwt" under the Grails application "lib". Drop your GWT module jar files in this directory and compile-gwt-modules will automatically pick them up and add them.
+See 5. Configuration<p class="paragraph"/><h2>Note for GWT 2+</h2><p class="paragraph"/>If you are using gwt 2+, you can put the following to the service interface MyService.java:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+@RemoteServiceRelativePath(<span class="java&#45;quote">"rpc"</span>)</pre></div><p class="paragraph"/>Then you can change these lines:<p class="paragraph"/><div class="code"><pre>MyServiceAsync myService = (MyServiceAsync) GWT.create(MyService.class);
+ServiceDefTarget endpoint = (ServiceDefTarget) myService;<p class="paragraph"/>// Note the URL where the RPC service is located!
+<span class="java&#45;object">String</span> moduleRelativeURL = GWT.getModuleBaseURL() + <span class="java&#45;quote">"rpc"</span>;
+endpoint.setServiceEntryPoint(moduleRelativeURL);</pre></div><p class="paragraph"/>
+into:
+<div class="code"><pre>MyServiceAsync myService = GWT.create(MyService.class);</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/2.%20Getting%20Started.html">&lt;&lt; <strong>2</strong><span>Getting Started</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
