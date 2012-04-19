@@ -101,7 +101,9 @@ eventCreateWarStart = { warName, stagingDir ->
 // Adds the GWT servlet library to the root loader.
 //
 eventPackageAppEnd = {
+  if (getBinding().variables.contains("gwtHome")) {
     rootLoader.addURL(new File(gwtHome, "gwt-servlet.jar").toURI().toURL())
+  }
 }
 
 eventGwtRunHostedStart = {
