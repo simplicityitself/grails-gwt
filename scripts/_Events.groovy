@@ -8,7 +8,7 @@ eventSetClasspath = { ClassLoader rootLoader ->
 
 void updateClasspath() {
   // Add GWT libraries to compiler classpath.
-  if (getBinding().variables.contains("gwtHome") || getBinding().variables.contains("gwtResolvedDependencies")) {
+  if (getBinding().variables.containsKey("gwtHome") || getBinding().variables.containsKey("gwtResolvedDependencies")) {
     def gwtHomeFile = new File(gwtHome)
     if (gwtHomeFile.exists()) {
       // Update the dependency lists.
@@ -107,7 +107,7 @@ eventCreateWarStart = { warName, stagingDir ->
 // Adds the GWT servlet library to the root loader.
 //
 eventPackageAppEnd = {
-  if (getBinding().variables.contains("gwtHome")) {
+  if (getBinding().variables.containsKey("gwtHome")) {
     rootLoader.addURL(new File(gwtHome, "gwt-servlet.jar").toURI().toURL())
   }
 }
