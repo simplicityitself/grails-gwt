@@ -1,14 +1,10 @@
+includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.core.resolve.ResolveOptions
 import org.apache.ivy.core.resolve.DownloadOptions
 import org.apache.ivy.core.report.ArtifactDownloadReport
 import org.apache.ivy.core.module.descriptor.Artifact
-import org.apache.ivy.core.resolve.IvyNode
-import org.apache.ivy.core.module.descriptor.ModuleDescriptor
-import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor
-import org.apache.ivy.core.module.descriptor.Configuration
-import org.apache.ivy.core.module.descriptor.DependencyDescriptor
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -433,7 +429,11 @@ gwtJava = { Map options, Closure body ->
         ant.echo message: "Using ${gwtJavaCmd} for invoking GWT tools"
         options["jvm"] = gwtJavaCmd
     }
-    ant.java(options, body)
+    def localAnt = new AntBuilder()
+    body = body.clone()
+    body = body.curry(localAnt)
+    localAnt.java(options, body)
+    return localAnt.project.properties
 }
 
 gwtJavac = { Map options, Closure body ->
@@ -448,12 +448,12 @@ gwtJavac = { Map options, Closure body ->
 }
 
 gwtRun = {String className, Closure body ->
-  gwtRunWithProps(className, [fork:true], body)
+  return gwtRunWithProps(className, [fork:true], body)
 }
 
 gwtRunWithProps = { String className, Map properties, Closure body ->
   properties.classname = className
-  gwtJava(properties) {
+  return gwtJava(properties) {  ant ->
         // Have to prefix this with 'ant' because the Init
         // script includes a 'classpath' target.
         ant.classpath {
@@ -541,7 +541,6 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
         body.delegate = delegate
         body()
     }
-  return ant.project.properties.result
 }
 
 /**

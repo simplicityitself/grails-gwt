@@ -7,19 +7,26 @@ grails.project.dependency.resolution = {
         grailsHome()
         grailsCentral()
         mavenCentral()
+      grailsRepo "http://grails.org/plugins"
+
     }
     dependencies {
       //for the release plugin..
       build 'org.apache.httpcomponents:httpclient:4.0.3'
-      test "org.spockframework:spock-grails-support:0.6-groovy-1.7"
+      //test "org.spockframework:spock-grails-support:0.6-groovy-1.7"
     }
     plugins {
-      test(":spock:0.6") {
+      /*test(":spock:0.6") {
         exclude "spock-grails-support"
-      }
-      compile (":new-doc:0.3.2") {
+        export=false
+      }*/
+      /*compile (":new-doc:0.3.2") {
         exclude 'xom'
-      }
+        export=false
+      } */
+      /*build (":release:2.0.0") {
+
+      }*/
     }
 }
 
