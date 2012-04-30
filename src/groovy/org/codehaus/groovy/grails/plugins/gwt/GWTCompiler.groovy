@@ -131,7 +131,7 @@ class GWTCompiler {
           }
         } finally {
           synchronized (executor) {
-            remaining --
+            remaining--
             executor.notifyAll()
           }
         }
@@ -199,7 +199,7 @@ class GWTCompiler {
       logFile << "   Compilation finished at ${new Date()}\n"
       logFile << "================================================================\n\n"
 
-      if (result != "0") {
+      if (result.result != "0") {
         def newLogFile = new File(logDir, "FAILED-${moduleName}.log")
         newLogFile.delete()
         logFile.renameTo(newLogFile)
@@ -215,11 +215,6 @@ class GWTCompiler {
     }
   }
 
-  def readInternalModuleName(String name) {
-
-
-
-  }
 
   //TODO, remove the copy paste here by passing a reference through.
   /**

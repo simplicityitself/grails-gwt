@@ -1,3 +1,5 @@
+includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
+
 //
 // This script is executed by Grails after plugin was installed to project.
 // This script is a Gant script so you can use all special variables provided
@@ -13,9 +15,5 @@ ant.mkdir(dir: "${basedir}/web-app/gwt")
 // if installing plugin is just a part of some other grails workflow (i.e. testing)
  
 ant.property(environment: "env")
-gwtHome = ant.project.properties."env.GWT_HOME"
-if (gwtHome) {
-   new File(gwtHome).eachFileMatch(~/^gwt-user\.jar$/) { File f ->
-        grailsSettings.compileDependencies << f
-   }
-}
+
+updateClasspath()

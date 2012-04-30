@@ -6,6 +6,8 @@ grails.project.dependency.resolution = {
         grailsHome()
         grailsCentral()
         mavenCentral()
+        grailsRepo "http://grails.org/plugins"
+
     }
     dependencies {
         //for the release plugin..
