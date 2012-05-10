@@ -1,3 +1,4 @@
+grails.release.scm.enabled = false
 grails.project.dependency.resolution = {
     inherits("global")
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
@@ -7,17 +8,24 @@ grails.project.dependency.resolution = {
         grailsCentral()
         mavenCentral()
         grailsRepo "http://grails.org/plugins"
-
     }
     dependencies {
-        //for the release plugin..
-        build "org.apache.httpcomponents:httpclient:4.0.3"
+        //build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
-        test "org.spockframework:spock-grails-support:0.6-groovy-1.7"
+
+
     }
     plugins {
-        test(":spock:0.6") { exclude "spock-grails-support" }
-        compile (":new-doc:0.3.2") { exclude "xom" }
+        build (":release:2.0.0") {
+          export=false
+        }
+        test(":spock:0.6") {
+          export=false
+        }
+        compile (":new-doc:0.3.2") {
+          export=false
+          exclude "xom"
+        }
     }
 }
 
