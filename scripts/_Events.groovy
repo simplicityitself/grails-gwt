@@ -86,13 +86,12 @@ void compileGwtClasses(forceCompile = false) {
         //
         ant.mkdir(dir: gwtClassesDir)
         gwtJavac( destDir: gwtClassesDir, includes: "**/*.java") {
-            src(path: 'src/gwt')
+            src(path: 'src/gwt')//current project gwt modules
             //include any sources from any included plugins
             buildConfig?.gwt?.plugins?.each {pluginName ->
               def pluginDir = binding.variables["${pluginName}PluginDir"]
               if (pluginDir) {
                 src(path: "${pluginDir}/src/gwt")
-                src(path: "${pluginDir}/src/java")
               }
             }
             ant.classpath {
