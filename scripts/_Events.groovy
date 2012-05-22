@@ -85,7 +85,16 @@ void compileGwtClasses(forceCompile = false) {
         //    http://code.google.com/p/google-gin/issues/detail?id=36
         //
         ant.mkdir(dir: gwtClassesDir)
-        gwtJavac(srcdir: "src/gwt", destDir: gwtClassesDir, includes: "**/*.java") {
+        gwtJavac( destDir: gwtClassesDir, includes: "**/*.java") {
+            src(path: 'src/gwt')
+            //include any sources from any included plugins
+            buildConfig?.gwt?.plugins?.each {pluginName ->
+              def pluginDir = binding.variables["${pluginName}PluginDir"]
+              if (pluginDir) {
+                src(path: "${pluginDir}/src/gwt")
+                src(path: "${pluginDir}/src/java")
+              }
+            }
             ant.classpath {
                 
                 gwtResolvedDependencies.each { File f ->
