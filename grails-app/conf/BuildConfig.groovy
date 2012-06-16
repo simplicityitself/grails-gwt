@@ -13,11 +13,10 @@ grails.project.dependency.resolution = {
         //for the release plugin..
         build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
-        test "org.spockframework:spock-grails-support:0.6-groovy-1.7"
+//        test "org.spockframework:spock-grails-support:0.6-groovy-1.7"
     }
     plugins {
         test(":spock:0.6") { exclude "spock-grails-support" }
-        compile (":new-doc:0.3.2") { exclude "xom" }
     }
 }
 
