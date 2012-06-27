@@ -13,10 +13,10 @@ grails.project.dependency.resolution = {
         //for the release plugin..
         build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
+        build "org.grails.plugins:resources:1.2-RC1"
     }
     plugins {
-        test(":spock:0.6") { export=false }
-        compile ":release:2.0.0"
+        test(":spock:0.6")
     }
 }
 
