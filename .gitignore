@@ -4,6 +4,7 @@ grails-gwt-*.zip
 plugin.xml
 /web-app/
 .idea/
+/target/
 
 .project
 .classpath
