@@ -5,7 +5,7 @@ target (default: "Runs the GWT hosted mode client.") {
 
     if (argsMap["params"]) {
         // Check whether a host and port have been specified.
-        def m = argsMap["params"][0] =~ /([a-zA-Z]\w*)?:?(\d+)?/
+        def m = argsMap["params"][0] =~ /([a-zA-Z][\w\.]*)?:?(\d+)?/
         if (m.matches()) {
             // The user can specify a host, a port, or both if separated
             // by a colon. If either or both are not given, the appropriate
