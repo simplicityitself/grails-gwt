@@ -90,7 +90,7 @@ void compileGwtClasses(forceCompile = false) {
             //include any sources from any included plugins
             buildConfig?.gwt?.plugins?.each {pluginName ->
               def pluginDir = binding.variables["${pluginName}PluginDir"]
-              if (pluginDir) {
+              if (pluginDir && new File("${pluginDir}/src/gwt").exists()) {
                 src(path: "${pluginDir}/src/gwt")
               }
             }
