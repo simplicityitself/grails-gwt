@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-import java.beans.Introspector
-import java.beans.PropertyDescriptor
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import org.apache.commons.io.FileUtils
-import org.codehaus.groovy.grails.commons.GrailsClassUtils
 import org.codehaus.groovy.grails.plugins.gwt.ActionHandlerArtefactHandler
 import org.codehaus.groovy.grails.plugins.gwt.DefaultGwtServiceInterfaceGenerator
-import org.codehaus.groovy.grails.plugins.gwt.GwtServiceInterfaceGenerator
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "0.7-SNAPSHOT"
-    def grailsVersion = "1.1 > *"
-    //def author = "Peter Ledbrook"
-    //def authorEmail = "peter@cacoethes.co.uk"
+    def version = "0.8-SNAPSHOT"
+    def grailsVersion = "2.0 > *"
     def title = "The Google Web Toolkit for Grails."
     def description = """\
 Incorporates GWT into Grails. In particular, GWT host pages can be
@@ -39,6 +30,10 @@ requests.
     def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPGWT" ]
     def documentation = "http://www.grails.org/plugin/gwt"
     def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
+	
+    def license = "APACHE"
+	
+	
     def observe = [ "services" ]
     def watchedResources = "file:./grails-app/actionHandlers/**/*ActionHandler.groovy"
     def artefacts = [ ActionHandlerArtefactHandler ]
