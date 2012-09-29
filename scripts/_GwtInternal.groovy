@@ -642,7 +642,7 @@ def addGinToDependencies(String version) {
 
     if (version.contains("1.0")) {
       downloadJarWithIvy("com.google.inject", "guice", "2.0")
-    } else if (version.contains("1.5.0")) {
+    } else if (version.contains("1.5.0") || version.contains("2.0.0")) {
       downloadJarWithIvy("com.google.inject", "guice", "3.0")
       downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0")
       downloadJarWithIvy("javax.inject", "javax.inject", "1")
