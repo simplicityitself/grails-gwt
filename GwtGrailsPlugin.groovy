@@ -28,7 +28,7 @@ GSPs and standard Grails services can be used to handle client RPC
 requests.
 """
     def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPGWT" ]
-    def documentation = "http://www.grails.org/plugin/gwt"
+    def documentation = "http://dawsonsystems.github.com/grails-gwt/guide/"
     def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
 	
     def license = "APACHE"
