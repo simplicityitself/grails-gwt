@@ -11,5 +11,7 @@ The plugin makes it easy to incorporate GWT code into your GSP pages, and it als
 This is the source of the plugin.
 
 The plugin host page is at http://grails.org/plugin/gwt
+
 Documentation can be found at http://dawsonsystems.github.com/grails-gwt/guide/
-The Google Group can be found at https://groups.google.com/forum/?fromgroups#!forum/grails-gwt
+
+The Google Group can be found at https://groups.google.com/group/grails-gwt
