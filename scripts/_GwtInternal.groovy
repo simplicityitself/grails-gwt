@@ -424,6 +424,46 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
     }
 }
 
+target (runCodeServer: "Runs the Super Dev Mode server.") {
+    depends(checkGwtHome)
+
+    event("StatusUpdate", [ "Starting the GWT Super Dev Mode server." ])
+    event("GwtRunHostedStart", [ "Starting the GWT Super Dev Mode server." ])
+
+    // Check for GWT 2.5 super dev mode.
+    ant.available(classname: "com.google.gwt.dev.codeserver.CodeServer", property: "isGwt25") {
+        ant.classpath {
+            fileset(dir: "${gwtHome}") {
+                include(name: "gwt-codeserver*.jar")
+            }
+
+            gwtResolvedDependencies.each { File f ->
+                pathElement(location: f.absolutePath)
+            }
+
+        }
+    }
+
+    def usingGwt25 = ant.project.properties.isGwt25 != null
+
+    if (!usingGwt25) {
+        println "Super Dev Mode only support in GWT 2.5.0 version"
+        exit(1)
+    }
+
+    def runClass = "com.google.gwt.dev.codeserver.CodeServer"
+    def modules = findModules("${basedir}/${gwtSrcPath}", false)
+
+    gwtRunWithProps(runClass, [spawn: false, fork: true]) {
+        if (argsMap["bindAddress"]) {
+            arg(value: "-bindAddress")
+            arg(value: argsMap["bindAddress"])
+        }
+
+        arg(line: modules.join(" "))
+    }
+}
+
 gwtJava = { Map options, Closure body ->
     if (gwtJavaCmd) {
         ant.echo message: "Using ${gwtJavaCmd} for invoking GWT tools"
@@ -460,6 +500,7 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
             fileset(dir: "${gwtHome}") {
                 include(name: "gwt-dev*.jar")
                 include(name: "gwt-user*.jar")
+                include(name: "gwt-codeserver*.jar")
                 // needed to include in case of GWT 2.3
                 include(name: "validation-api*.jar")
             }
@@ -631,6 +672,11 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-dev", version)
     downloadJarWithIvy("com.google.gwt", "gwt-user", version)
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
+
+    if (version.contains("2.5.0")) {
+      downloadJarWithIvy("com.google.gwt", "gwt-codeserver", version)
+      downloadJarWithIvy("org.json", "json", "20090211")
+    }
 
     downloadJarWithIvy("javax.validation", "validation-api", "1.0.0.GA")
     addDependency("javax.validation", "validation-api", "1.0.0.GA", "sources")
