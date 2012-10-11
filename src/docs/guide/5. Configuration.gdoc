@@ -43,5 +43,11 @@ h2. Other Configuration
 * gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)
 * gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode
 * gwt.parallel - can force the full parallel compiler mode to be on/ off
+* gwt.javac.cmd - The command to use to compile .java source files (default: `javac`)
+* gwt.java.cmd - The Java interpreter command (default: `java`)
+* gwt.output.style - The output style of the compiled Javascript produced by GWT - one of `OBF`, (default) to create compressed obfuscated output; `PRETTY`, to create human-readable JS; or `DETAILED` to create even more verbose output
+* gwt.compile.disable - Set to `true` to disable compilation
+* gwt.output.path - Directory where the compiled output files are written (default: `<BASE>/web-app/gwt`)
+* gwt.hosted.output.path -  Directory where the compiled output files are written in hosted mode (default: `tomcat/classes`)
 
 ... other options ...
