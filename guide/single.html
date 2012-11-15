@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>The Google Web Toolkit for Grails. 0.8-SNAPSHOT</title>
+        <title>The Google Web Toolkit for Grails. 0.8</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -65,7 +65,7 @@ requests.
                         <div class="project">
                             <h1>The Google Web Toolkit for Grails. - Reference Documentation</h1>
                             <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
-                            <p><strong>Version:</strong> 0.8-SNAPSHOT</p>
+                            <p><strong>Version:</strong> 0.8</p>
                             
                         </div>
 
@@ -191,6 +191,12 @@ It <strong class="bold">does not</strong> use the dependencies block from BuildC
 <li>gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)</li>
 <li>gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode</li>
 <li>gwt.parallel - can force the full parallel compiler mode to be on/ off</li>
+<li>gwt.javac.cmd - The command to use to compile .java source files (default: <code>javac</code>)</li>
+<li>gwt.java.cmd - The Java interpreter command (default: <code>java</code>)</li>
+<li>gwt.output.style - The output style of the compiled Javascript produced by GWT - one of <code>OBF</code>, (default) to create compressed obfuscated output; <code>PRETTY</code>, to create human-readable JS; or <code>DETAILED</code> to create even more verbose output</li>
+<li>gwt.compile.disable - Set to <code>true</code> to disable compilation</li>
+<li>gwt.output.path - Directory where the compiled output files are written (default: <code>&#60;BASE&#62;/web-app/gwt</code>)</li>
+<li>gwt.hosted.output.path -  Directory where the compiled output files are written in hosted mode (default: <code>tomcat/classes</code>)</li>
 </ul><p class="paragraph"/>&#8230; other options &#8230;
 
 
@@ -213,6 +219,12 @@ GWT Code can generally be partially unpicked from the GWT.create calls.  Any cod
                         
                         
                         <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Command%20Line/run-gwt-client.html">run-gwt-client</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Command%20Line/run-gwt-codeserver.html">run-gwt-codeserver</a>
                         </div>
                         
                         </div>
