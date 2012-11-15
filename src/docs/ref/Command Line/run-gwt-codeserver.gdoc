@@ -1,0 +1,8 @@
+h1. run-gwt-codeserver
+
+Run the GWT Super Dev Mode client.
+
+This hosts your GWT code and compiles it to Javascript, in draft mode, on demand.
+This removes the need to have a browser plugin, and speeds up page refreshes if the code hasn't changed.
+
+See https://developers.google.com/web-toolkit/articles/superdevmode
