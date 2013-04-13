@@ -2,4 +2,11 @@ The "Google Web Toolkit (GWT)":http://code.google.com/webtoolkit/ is an advanced
 
 The plugin makes it easy to incorporate GWT code into your GSP pages, and it also simplifies the handling of RPC requests on the server. If you have not used GWT before, please read the documentation on the GWT website.
 
-Jan Ehrhardt has kindly created a simple "tutorial":http://code.google.com/p/derjanandhisblog/wiki/GWTGrailsTutorial with sample code. Alberto Zaccagni wrote a "gwt on grails tutorial":http://www.lazywithclass.com/code/4/gwt-on-grails with a working example of client side passing a transfer object to the server side. You can also join in the discussions about the plugin and ask questions on the "Google Group for GWT/Grails integration":http://groups.google.com/group/grails-gwt/.
+Jan Ehrhardt has kindly created a simple "tutorial":http://code.google.com/p/derjanandhisblog/wiki/GWTGrailsTutorial with sample code. Alberto Zaccagni wrote a "gwt on grails tutorial":http://www.lazywithclass.com/code/4/gwt-on-grails with a working example of client side passing a transfer object to the server side.
+
+You can also join in the discussions about the plugin and ask questions on the "Google Group for GWT/Grails integration":http://groups.google.com/group/grails-gwt/
+
+The plugin host page is at http://grails.org/plugin/gwt
+The source code is at https://github.com/dawsonsystems/grails-gwt
+Documentation can be found at http://dawsonsystems.github.com/grails-gwt/guide/
+The Google Group can be found at https://groups.google.com/group/grails-gwt

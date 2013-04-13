@@ -14,9 +14,12 @@ grails.project.dependency.resolution = {
         build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
         build "org.grails.plugins:resources:1.2.RC2"
+
+
     }
     plugins {
         test(":spock:0.6")
+        build ":release:2.0.4"
     }
 }
 

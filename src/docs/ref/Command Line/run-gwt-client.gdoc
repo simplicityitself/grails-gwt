@@ -1,0 +1,9 @@
+h1. run-gwt-client
+
+Run the GWT Development Mode client.
+
+This hosts your GWT code and executes it as Java.  You will need the GWT plugin installed in your browser of choice.
+
+Then visit http://localhost:8080/<yourpage>?gwt.codesvr=127.0.0.1:9997
+
+See https://developers.google.com/web-toolkit/doc/latest/DevGuideCompilingAndDebugging
