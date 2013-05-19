@@ -677,7 +677,7 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-user", version)
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
 
-    if (version.contains("2.5.0")) {
+    if (version.startsWith("2.5")) {
       downloadJarWithIvy("com.google.gwt", "gwt-codeserver", version)
       downloadJarWithIvy("org.json", "json", "20090211")
     }
