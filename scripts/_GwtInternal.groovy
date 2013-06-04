@@ -373,7 +373,7 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
     def usingGwt20 = ant.project.properties.isGwt20 != null
     def runClass = usingGwt20 ? "com.google.gwt.dev.DevMode" :
             (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
-    def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", false) : ""
+    def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", true) : ""
 
     // GWT dev mode process does not need parent Gant process for anything.
     // Hence it is a good idea to spawn in, making parent script to continue and eventually exit
@@ -456,7 +456,7 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
     }
 
     def runClass = "com.google.gwt.dev.codeserver.CodeServer"
-    def modules = findModules("${basedir}/${gwtSrcPath}", false)
+    def modules = findModules("${basedir}/${gwtSrcPath}", true)
 
     gwtRunWithProps(runClass, [spawn: false, fork: true]) {
         if (argsMap["bindAddress"]) {
@@ -677,7 +677,7 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-user", version)
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
 
-    if (version.contains("2.5.0")) {
+    if (version.startsWith("2.5")) {
       downloadJarWithIvy("com.google.gwt", "gwt-codeserver", version)
       downloadJarWithIvy("org.json", "json", "20090211")
     }
@@ -696,7 +696,7 @@ def addGinToDependencies(String version) {
       downloadJarWithIvy("com.google.inject", "guice", "3.0")
       downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0")
       downloadJarWithIvy("javax.inject", "javax.inject", "1")
-      addDependency("aopalliance", "aopalliance", "1.0", "default")
+      addDependency("aopalliance", "aopalliance", "1.0")
     } else {
       println "Google Gin ${version} not supported by plugin, please manage the dependencies manually"
       exit(1)
@@ -708,13 +708,21 @@ def addGinToDependencies(String version) {
 
 def downloadJarWithIvy(String group, String artifact, String version) {
     addDependency(group, artifact, version)
-    // what do we want to download sources as well?
-    //addDependency(group, artifact, version, "sources")
 }
 
-def addDependency(group, name, version, type="default") {
-    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
-    addModuleToDependencies(mrid, type)
+def addDependency(group, name, version, type=null) {
+    if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
+      println """WARN: source dependencies might not be properly resolved with
+the current configuration, please add the following line at the top of
+grails.project.dependency.resolution in grails-app/conf/BuildConfig.groovy:
+
+dependencyManager.ivySettings.defaultCacheIvyPattern = "[organisation]/[module](/[branch])/ivy-[revision](-[classifier]).xml"
+
+"""
+    }
+    def extraAttrs = type == null ? [:] : ['m:classifier': type]
+    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version, extraAttrs)
+    addModuleToDependencies(mrid, 'default')
 }
 
 def addModuleToDependencies(ModuleRevisionId mrid, type) {
