@@ -2,9 +2,9 @@ commit.msg
 eclipse/
 grails-gwt-*.zip
 plugin.xml
-/web-app/
+
 .idea/
-/target/
+target/
 
 .project
 .classpath
