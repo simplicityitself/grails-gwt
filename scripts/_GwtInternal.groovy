@@ -451,12 +451,17 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
     def usingGwt25 = ant.project.properties.isGwt25 != null
 
     if (!usingGwt25) {
-        println "Super Dev Mode only support in GWT 2.5.0 version"
+        event("StatusError", [ "Super Dev Mode only support in GWT 2.5.0 version" ])
         exit(1)
     }
 
     def runClass = "com.google.gwt.dev.codeserver.CodeServer"
     def modules = findModules("${basedir}/${gwtSrcPath}", true)
+
+    if (!modules) {
+      event("StatusError", [ "No GWT modules with entry points are available in src/gwt" ])
+      exit(1)
+    }
 
     gwtRunWithProps(runClass, [spawn: false, fork: true]) {
         if (argsMap["bindAddress"]) {
