@@ -463,8 +463,11 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
             arg(value: "-bindAddress")
             arg(value: argsMap["bindAddress"])
         }
-
-        arg(line: modules.join(" "))
+        if(argsMap["module"]){
+	   arg(line: argsMap["module"])
+	}else{
+	   arg(line: modules.join(" "))
+	}
     }
 }
 
