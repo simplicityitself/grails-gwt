@@ -375,6 +375,8 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
             (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
     def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", true) : ""
 
+    event("StatusUpdate", [ "Found ${modules.size()} modules" ])
+
     // GWT dev mode process does not need parent Gant process for anything.
     // Hence it is a good idea to spawn in, making parent script to continue and eventually exit
     // freeing allocated memory that could be significant (up to 512MB in the default Grails installation)
