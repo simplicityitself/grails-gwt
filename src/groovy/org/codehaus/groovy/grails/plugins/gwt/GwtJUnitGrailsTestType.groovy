@@ -208,7 +208,13 @@ return suite;
                 formatter(classname: XMLJUnitResultFormatter.name, extension: ".xml")
             }
         }
-
+        buildBinding.buildSettings.config.gwt.plugins.each { pluginName ->
+          def pluginDir = buildBinding.variables["${pluginName}PluginDir"]
+          if (pluginDir) {
+            pathElement(location: "${pluginDir}/src/gwt")
+            pathElement(location: "${pluginDir}/src/java")
+          }
+        }
         // aggregate test results
         def parser = new XmlSlurper()
         int testsTotal = 0
