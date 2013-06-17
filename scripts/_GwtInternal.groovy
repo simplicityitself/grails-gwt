@@ -1,4 +1,6 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
+
+import grails.util.GrailsNameUtils
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.core.resolve.ResolveOptions
@@ -569,10 +571,14 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
 
             //add any modules from plugins defined by gwt.plugins in BuildConfig
             buildConfig?.gwt?.plugins?.each {pluginName ->
+              pluginName = GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)
               def pluginDir = binding.variables["${pluginName}PluginDir"]
               if (pluginDir) {
                 pathElement(location: "${pluginDir}/src/gwt")
                 pathElement(location: "${pluginDir}/src/java")
+                event("StatusUpdate", ["Added plugin ${pluginName} to the GWT project"])
+              } else {
+                event("StatusError", ["Plugin ${pluginName} cannot be added to the GWT project, as it cannot be found"])
               }
             }
 
