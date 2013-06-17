@@ -32,8 +32,11 @@ requests.
     def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
 	
     def license = "APACHE"
-	
-	
+
+    def pluginExcludes = [
+            "web-app/**"
+    ]
+
     def observe = [ "services" ]
     def watchedResources = "file:./grails-app/actionHandlers/**/*ActionHandler.groovy"
     def artefacts = [ ActionHandlerArtefactHandler ]
