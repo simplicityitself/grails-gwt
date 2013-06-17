@@ -30,7 +30,7 @@ updateClasspath = { classLoader = null ->
       if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
         grailsSettings.providedDependencies.each { dep ->
           grailsSettings.testDependencies << dep
-          gwtDependencies << f
+          gwtDependencies << dep
         }
       }
       else {
