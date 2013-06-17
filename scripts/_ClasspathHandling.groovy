@@ -8,7 +8,7 @@ updateClasspath = { classLoader = null ->
       def gwtHomeFile = new File(gwtHome)
       if (gwtHomeFile.exists()) {
         // Update the dependency lists.
-        new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
+        new File(gwtHome).eachFileMatch(~/^gwt-(dev.*|user.*)\.jar$/) { File f ->
           grailsSettings.providedDependencies << f
           grailsSettings.testDependencies << f
           gwtDependencies << f
