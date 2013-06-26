@@ -4,7 +4,7 @@ if (getBinding().variables.containsKey("updateClasspath")) return
 updateClasspath = { classLoader = null ->
   // Add GWT libraries to compiler classpath.
   if (getBinding().variables.containsKey("gwtHome") || getBinding().variables.containsKey("gwtResolvedDependencies")) {
-    if(getBinding().variables.containsKey("gwtHome")) {
+    if(getBinding().variables.containsKey("gwtHome") && gwtHome) {
       def gwtHomeFile = new File(gwtHome)
       if (gwtHomeFile.exists()) {
         // Update the dependency lists.
@@ -12,6 +12,11 @@ updateClasspath = { classLoader = null ->
           grailsSettings.providedDependencies << f
           grailsSettings.testDependencies << f
           gwtDependencies << f
+          rootLoader.addURL(f.toURL())
+
+          if (classLoader) {
+            classLoader.addURL(f.toURL())
+          }
         }
         def gwtServlet = new File(gwtHomeFile, "gwt-servlet.jar")
         if (gwtServlet.exists()) {
@@ -39,7 +44,7 @@ updateClasspath = { classLoader = null ->
                 "will be ignored."
       }
     }
-
+    println "Checking gwt deps $gwtResolvedDependencies for GWT libraries."
     gwtResolvedDependencies.each { File f ->
       if (!f.name.contains("gwt-dev")) {
 
@@ -50,6 +55,7 @@ updateClasspath = { classLoader = null ->
         }
       }
       if (f.name.startsWith("gwt-dev") || f.name.startsWith("gwt-user")) {
+        haveGwtOnClasspath=true
         grailsSettings.providedDependencies << f
       } else {
         grailsSettings.compileDependencies << f

@@ -1,6 +1,10 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_GwtInternal.groovy")
 
-eventCompileStart = { updateClasspath() }
+eventCompileStart = {
+  println "COMPILE START"
+  checkGwtHome()
+  updateClasspath()
+}
 
 eventSetClasspath = { ClassLoader rootLoader ->
   updateClasspath(rootLoader)
