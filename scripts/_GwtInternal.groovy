@@ -68,7 +68,7 @@ resolveGwtDependencies()
 //
 target (checkGwtHome: "Stops if GWT_HOME does not exist") {
     if (gwtHome==null) {
-        event("StatusFinal", ["GWT must be installed and GWT_HOME environment must be set."])
+        event("StatusFinal", ["GWT does not appear to be configured, either set gwt.version in BuildConfig (preferred), or GWT must be installed and GWT_HOME environment must be set."])
         exit(1)
     }
 
@@ -664,6 +664,7 @@ def resolveGwtDependencies() {
 }
 
 def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def antPropSetting) {
+  println "Checking GWT home version[$gwtVersion] buildconfig[$buildConfigSetting] sysprop[$sysPropSetting] antprop[$antPropSetting]"
   if (gwtVersion) {
       println "Gwt version ${gwtVersion} requested, downloading required dependencies"
       addGwtCoreToDependencies(gwtVersion)
