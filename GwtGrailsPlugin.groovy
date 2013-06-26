@@ -19,7 +19,7 @@ import org.codehaus.groovy.grails.plugins.gwt.DefaultGwtServiceInterfaceGenerato
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "0.8.1"
+    def version = "0.9"
     def grailsVersion = "2.0 > *"
     def title = "The Google Web Toolkit for Grails."
     def description = """\
@@ -32,8 +32,11 @@ requests.
     def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
 	
     def license = "APACHE"
-	
-	
+
+    def pluginExcludes = [
+            "web-app/**"
+    ]
+
     def observe = [ "services" ]
     def watchedResources = "file:./grails-app/actionHandlers/**/*ActionHandler.groovy"
     def artefacts = [ ActionHandlerArtefactHandler ]

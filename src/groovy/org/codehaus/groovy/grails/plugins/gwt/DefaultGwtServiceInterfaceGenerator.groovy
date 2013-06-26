@@ -107,7 +107,7 @@ class DefaultGwtServiceInterfaceGenerator implements GwtServiceInterfaceGenerato
         def exposeList = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'expose')
 
         // Check whether 'gwt' is in the expose list.
-        def gwtExposed = exposeList?.find { it.startsWith('gwt') }
+        def gwtExposed = exposeList?.find { it instanceof String && it.startsWith('gwt') }
         if (gwtExposed) {
             def m = gwtExposed =~ 'gwt:(.*)'
             if (m) {

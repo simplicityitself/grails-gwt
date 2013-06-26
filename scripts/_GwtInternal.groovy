@@ -1,4 +1,6 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
+
+import grails.util.GrailsNameUtils
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.core.resolve.ResolveOptions
@@ -373,7 +375,9 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
     def usingGwt20 = ant.project.properties.isGwt20 != null
     def runClass = usingGwt20 ? "com.google.gwt.dev.DevMode" :
             (usingGwt16 ? "com.google.gwt.dev.HostedMode" : "com.google.gwt.dev.GWTShell")
-    def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", false) : ""
+    def modules = usingGwt16 ? findModules("${basedir}/${gwtSrcPath}", true) : ""
+
+    event("StatusUpdate", [ "Found ${modules.size()} modules" ])
 
     // GWT dev mode process does not need parent Gant process for anything.
     // Hence it is a good idea to spawn in, making parent script to continue and eventually exit
@@ -452,20 +456,28 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
     def usingGwt25 = ant.project.properties.isGwt25 != null
 
     if (!usingGwt25) {
-        println "Super Dev Mode only support in GWT 2.5.0 version"
+        event("StatusError", [ "Super Dev Mode only support in GWT 2.5.0 version" ])
         exit(1)
     }
 
     def runClass = "com.google.gwt.dev.codeserver.CodeServer"
-    def modules = findModules("${basedir}/${gwtSrcPath}", false)
+    def modules = findModules("${basedir}/${gwtSrcPath}", true)
+
+    if (!modules) {
+      event("StatusError", [ "No GWT modules with entry points are available in src/gwt" ])
+      exit(1)
+    }
 
     gwtRunWithProps(runClass, [spawn: false, fork: true]) {
         if (argsMap["bindAddress"]) {
             arg(value: "-bindAddress")
             arg(value: argsMap["bindAddress"])
         }
-
-        arg(line: modules.join(" "))
+        if(argsMap["module"]){
+	   arg(line: argsMap["module"])
+	}else{
+	   arg(line: modules.join(" "))
+	}
     }
 }
 
@@ -560,10 +572,14 @@ gwtRunWithProps = { String className, Map properties, Closure body ->
 
             //add any modules from plugins defined by gwt.plugins in BuildConfig
             buildConfig?.gwt?.plugins?.each {pluginName ->
+              pluginName = GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)
               def pluginDir = binding.variables["${pluginName}PluginDir"]
               if (pluginDir) {
                 pathElement(location: "${pluginDir}/src/gwt")
                 pathElement(location: "${pluginDir}/src/java")
+                event("StatusUpdate", ["Added plugin ${pluginName} to the GWT project"])
+              } else {
+                event("StatusError", ["Plugin ${pluginName} cannot be added to the GWT project, as it cannot be found"])
               }
             }
 
@@ -678,7 +694,7 @@ def addGwtCoreToDependencies(String version) {
     downloadJarWithIvy("com.google.gwt", "gwt-user", version)
     downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
 
-    if (version.contains("2.5.0")) {
+    if (version.startsWith("2.5")) {
       downloadJarWithIvy("com.google.gwt", "gwt-codeserver", version)
       downloadJarWithIvy("org.json", "json", "20090211")
     }
@@ -697,7 +713,7 @@ def addGinToDependencies(String version) {
       downloadJarWithIvy("com.google.inject", "guice", "3.0")
       downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0")
       downloadJarWithIvy("javax.inject", "javax.inject", "1")
-      addDependency("aopalliance", "aopalliance", "1.0", "default")
+      addDependency("aopalliance", "aopalliance", "1.0")
     } else {
       println "Google Gin ${version} not supported by plugin, please manage the dependencies manually"
       exit(1)
@@ -709,13 +725,21 @@ def addGinToDependencies(String version) {
 
 def downloadJarWithIvy(String group, String artifact, String version) {
     addDependency(group, artifact, version)
-    // what do we want to download sources as well?
-    //addDependency(group, artifact, version, "sources")
 }
 
-def addDependency(group, name, version, type="default") {
-    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version)
-    addModuleToDependencies(mrid, type)
+def addDependency(group, name, version, type=null) {
+    if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
+      println """WARN: source dependencies might not be properly resolved with
+the current configuration, please add the following line at the top of
+grails.project.dependency.resolution in grails-app/conf/BuildConfig.groovy:
+
+dependencyManager.ivySettings.defaultCacheIvyPattern = "[organisation]/[module](/[branch])/ivy-[revision](-[classifier]).xml"
+
+"""
+    }
+    def extraAttrs = type == null ? [:] : ['m:classifier': type]
+    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version, extraAttrs)
+    addModuleToDependencies(mrid, 'default')
 }
 
 def addModuleToDependencies(ModuleRevisionId mrid, type) {

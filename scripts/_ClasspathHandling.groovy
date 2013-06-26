@@ -8,8 +8,8 @@ updateClasspath = { classLoader = null ->
       def gwtHomeFile = new File(gwtHome)
       if (gwtHomeFile.exists()) {
         // Update the dependency lists.
-        new File(gwtHome).eachFileMatch(~/^gwt-(dev-\w+|user)\.jar$/) { File f ->
-          grailsSettings.compileDependencies << f
+        new File(gwtHome).eachFileMatch(~/^gwt-(dev.*|user.*)\.jar$/) { File f ->
+          grailsSettings.providedDependencies << f
           grailsSettings.testDependencies << f
           gwtDependencies << f
         }
@@ -30,7 +30,7 @@ updateClasspath = { classLoader = null ->
       if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
         grailsSettings.providedDependencies.each { dep ->
           grailsSettings.testDependencies << dep
-          gwtDependencies << f
+          gwtDependencies << dep
         }
       }
       else {
@@ -49,9 +49,12 @@ updateClasspath = { classLoader = null ->
           classLoader.addURL(f.toURL())
         }
       }
-
-      grailsSettings.compileDependencies << f
-      grailsSettings.runtimeDependencies << f
+      if (f.name.startsWith("gwt-dev") || f.name.startsWith("gwt-user")) {
+        grailsSettings.providedDependencies << f
+      } else {
+        grailsSettings.compileDependencies << f
+        grailsSettings.runtimeDependencies << f
+      }
       grailsSettings.testDependencies << f
       gwtDependencies << f
     }
