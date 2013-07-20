@@ -631,7 +631,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
             if (m.count > 0) {
                 // now check if this module has an entry point
                 // if there's no entry point, then it's not necessary to compile the module
-                if (!entryPointOnly || file.text =~ /entry-point/) {
+                if (!entryPointOnly || file.text =~ /entry-point/ || file.text =~ /com.gwtplatform.mvp/) {
                     // Extract the fully-qualified module name.
                     modules << m[0][1].replace('/' as char, '.' as char)
                 }
