@@ -11,6 +11,7 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         //for the release plugin..
+        compile 'org.hibernate:hibernate-validator:4.2.0.Final'
         build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
         test ("org.spockframework:spock-grails-support:0.7-groovy-2.0") { export = false }
