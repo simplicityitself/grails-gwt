@@ -1,12 +1,20 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
 
 import grails.util.GrailsNameUtils
+import grails.util.BuildSettings
+
+//Ivy Support
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.core.resolve.ResolveOptions
 import org.apache.ivy.core.resolve.DownloadOptions
 import org.apache.ivy.core.report.ArtifactDownloadReport
 import org.apache.ivy.core.module.descriptor.Artifact
+import org.codehaus.groovy.grails.resolve.IvyDependencyManager
+
+//Generic Maven Support
+import org.codehaus.groovy.grails.resolve.Dependency
+import org.codehaus.groovy.grails.resolve.DependencyReport
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -386,7 +394,8 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
         // Hosted mode requires a special JVM argument on Mac OS X.
         if (antProject.properties.'os.name' == 'Mac OS X') {
             def osVersion = antProject.properties.'os.version'.split(/\./)
-            if (osVersion[0].toInteger() == 10 && osVersion[1].toInteger() >= 6) {
+            def javaVersion = antProject.properties.'java.version'
+            if (osVersion[0].toInteger() == 10 && osVersion[1].toInteger() >= 6 && !javaVersion.startsWith('1.7')) {
                 jvmarg(value: '-d32')
             }
 
@@ -630,7 +639,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
             if (m.count > 0) {
                 // now check if this module has an entry point
                 // if there's no entry point, then it's not necessary to compile the module
-                if (!entryPointOnly || file.text =~ /entry-point/) {
+                if (!entryPointOnly || file.text =~ /entry-point/ || file.text =~ /com.gwtplatform.mvp/) {
                     // Extract the fully-qualified module name.
                     modules << m[0][1].replace('/' as char, '.' as char)
                 }
@@ -728,18 +737,23 @@ def downloadJarWithIvy(String group, String artifact, String version) {
 }
 
 def addDependency(group, name, version, type=null) {
-    if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
-      println """WARN: source dependencies might not be properly resolved with
+    if (grailsSettings.dependencyManager in IvyDependencyManager) {
+        if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
+          println """WARN: source dependencies might not be properly resolved with
 the current configuration, please add the following line at the top of
 grails.project.dependency.resolution in grails-app/conf/BuildConfig.groovy:
 
 dependencyManager.ivySettings.defaultCacheIvyPattern = "[organisation]/[module](/[branch])/ivy-[revision](-[classifier]).xml"
 
 """
+        }
+        def extraAttrs = type == null ? [:] : ['m:classifier': type]
+        ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version, extraAttrs)
+        addModuleToDependencies(mrid, 'default')
     }
-    def extraAttrs = type == null ? [:] : ['m:classifier': type]
-    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version, extraAttrs)
-    addModuleToDependencies(mrid, 'default')
+    else {
+        addMavenModuleToDependencies(group, name, version)
+    }
 }
 
 def addModuleToDependencies(ModuleRevisionId mrid, type) {
@@ -761,4 +775,28 @@ def addModuleToDependencies(ModuleRevisionId mrid, type) {
             }
         }
     }
+}
+
+def addMavenModuleToDependencies(group, name, version) {
+	//Create a dependency with the supplied information
+	Dependency dependency2 = new Dependency(group, name, version)
+	//Add the dependency as "provided"
+	grailsSettings.dependencyManager.addDependency(dependency2, BuildSettings.PROVIDED_SCOPE)
+	DependencyReport dependencyReport = grailsSettings.dependencyManager.resolve(BuildSettings.PROVIDED_SCOPE)
+	if (dependencyReport.hasError()) {
+      println "GWT Dependency resolution has errors (${dependencyReport.getResolveError().getMessage()}), exiting"
+      exit(1)
+	}
+	dependencyReport.getJarFiles().each { dependencyJar ->
+		if (!gwtResolvedDependencies.contains(dependencyJar)) {
+			gwtResolvedDependencies << dependencyJar
+		}
+		// add artifacts to the list of Grails provided dependencies
+		// this enables SpringSource STS to build Eclipse's classpath properly
+		if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
+			if (!grailsSettings.providedDependencies.contains(dependencyJar)) {
+				grailsSettings.providedDependencies << dependencyJar
+			}
+		}
+	}
 }
