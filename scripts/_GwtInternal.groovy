@@ -1,12 +1,9 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
+includeTargets << new File("${dependencyManagerPluginDir}/scripts/_ExtendedDependencies.groovy")
+
 
 import grails.util.GrailsNameUtils
 import org.apache.ivy.core.module.id.ModuleRevisionId
-import org.apache.ivy.core.report.ResolveReport
-import org.apache.ivy.core.resolve.ResolveOptions
-import org.apache.ivy.core.resolve.DownloadOptions
-import org.apache.ivy.core.report.ArtifactDownloadReport
-import org.apache.ivy.core.module.descriptor.Artifact
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -653,7 +650,7 @@ def resolveGwtDependencies() {
           def group = m[0][1]
           def version = m[0][3]
 
-          downloadJarWithIvy(group, name, version)
+          addDependency(group, name, version)
       } else {
         println "${depDefinition} isn't a valid definition, exiting"
         exit(1)
@@ -690,29 +687,29 @@ def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def 
 
 def addGwtCoreToDependencies(String version) {
 
-    downloadJarWithIvy("com.google.gwt", "gwt-dev", version)
-    downloadJarWithIvy("com.google.gwt", "gwt-user", version)
-    downloadJarWithIvy("com.google.gwt", "gwt-servlet", version)
+    addDependency("com.google.gwt", "gwt-dev", version)
+    addDependency("com.google.gwt", "gwt-user", version)
+    addDependency("com.google.gwt", "gwt-servlet", version)
 
     if (version.startsWith("2.5")) {
-      downloadJarWithIvy("com.google.gwt", "gwt-codeserver", version)
-      downloadJarWithIvy("org.json", "json", "20090211")
+      addDependency("com.google.gwt", "gwt-codeserver", version)
+      addDependency("org.json", "json", "20090211")
     }
 
-    downloadJarWithIvy("javax.validation", "validation-api", "1.0.0.GA")
+    addDependency("javax.validation", "validation-api", "1.0.0.GA")
     addDependency("javax.validation", "validation-api", "1.0.0.GA", "sources")
 }
 
 def addGinToDependencies(String version) {
 
-    downloadJarWithIvy("com.google.gwt.inject", "gin", version)
+    addDependency("com.google.gwt.inject", "gin", version)
 
     if (version.contains("1.0")) {
-      downloadJarWithIvy("com.google.inject", "guice", "2.0")
+      addDependency("com.google.inject", "guice", "2.0")
     } else if (version.contains("1.5.0") || version.contains("2.0.0")) {
-      downloadJarWithIvy("com.google.inject", "guice", "3.0")
-      downloadJarWithIvy("com.google.inject.extensions", "guice-assistedinject", "3.0")
-      downloadJarWithIvy("javax.inject", "javax.inject", "1")
+      addDependency("com.google.inject", "guice", "3.0")
+      addDependency("com.google.inject.extensions", "guice-assistedinject", "3.0")
+      addDependency("javax.inject", "javax.inject", "1")
       addDependency("aopalliance", "aopalliance", "1.0")
     } else {
       println "Google Gin ${version} not supported by plugin, please manage the dependencies manually"
@@ -722,12 +719,8 @@ def addGinToDependencies(String version) {
     println "Added Google Gin ${version} to GWT environment"
 }
 
-
-def downloadJarWithIvy(String group, String artifact, String version) {
-    addDependency(group, artifact, version)
-}
-
 def addDependency(group, name, version, type=null) {
+
     if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
       println """WARN: source dependencies might not be properly resolved with
 the current configuration, please add the following line at the top of
@@ -742,23 +735,3 @@ dependencyManager.ivySettings.defaultCacheIvyPattern = "[organisation]/[module](
     addModuleToDependencies(mrid, 'default')
 }
 
-def addModuleToDependencies(ModuleRevisionId mrid, type) {
-    ResolveReport report = grailsSettings.dependencyManager.resolveEngine.resolve(mrid, new ResolveOptions(confs: [type] as String[], transitive:false, outputReport: true, download: true, useCacheOnly: false), false)
-
-    if (report.hasError()) {
-      println "GWT Dependency resolution has errors, exiting"
-      exit(1)
-    }
-    report.artifacts.each { Artifact artifact ->
-        ArtifactDownloadReport rep = grailsSettings.dependencyManager.resolveEngine.download(artifact, new DownloadOptions(log: DownloadOptions.LOG_DOWNLOAD_ONLY))
-        def jarFile = rep.localFile
-        gwtResolvedDependencies << jarFile
-        // add artifacts to the list of Grails provided dependencies
-        // this enables SpringSource STS to build Eclipse's classpath properly
-        if (grailsSettings.metaClass.hasProperty(grailsSettings, "providedDependencies")) {
-            if (!grailsSettings.providedDependencies.contains(jarFile)) {
-                grailsSettings.providedDependencies << jarFile
-            }
-        }
-    }
-}
