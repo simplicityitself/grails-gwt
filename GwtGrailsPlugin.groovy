@@ -27,7 +27,7 @@ Incorporates GWT into Grails. In particular, GWT host pages can be
 GSPs and standard Grails services can be used to handle client RPC
 requests.
 """
-    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPGWT" ]
+    def issueManagement = [ system: "Github", url: "https://github.com/simplicityitself/grails-gwt/issues" ]
     def documentation = "http://simplicityitself.github.com/grails-gwt/guide/"
     def scm = [url:"https://github.com/simplicityitself/grails-gwt"]
 	
