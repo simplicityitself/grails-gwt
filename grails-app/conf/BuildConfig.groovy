@@ -13,12 +13,13 @@ grails.project.dependency.resolution = {
         //for the release plugin..
         build "org.apache.httpcomponents:httpclient:4.0.3"
         build "org.apache.ivy:ivy:2.2.0"
+        build 'com.google.gwt:gwt-user:2.4.0'
         test ("org.spockframework:spock-grails-support:0.7-groovy-2.0") { export = false }
     }
     plugins {
         test(":spock:0.7") { export = false }
         build (":release:2.2.1") { export = false }
-        runtime ":resources:1.2.RC2"
+        runtime ":resources:1.2"
     }
 }
 
