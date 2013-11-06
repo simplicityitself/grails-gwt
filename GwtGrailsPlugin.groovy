@@ -19,7 +19,7 @@ import org.codehaus.groovy.grails.plugins.gwt.DefaultGwtServiceInterfaceGenerato
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "0.9.1"
+    def version = "0.9.2"
     def grailsVersion = "2.0 > *"
     def title = "The Google Web Toolkit for Grails."
     def description = """\
@@ -28,8 +28,8 @@ GSPs and standard Grails services can be used to handle client RPC
 requests.
 """
     def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPGWT" ]
-    def documentation = "http://dawsonsystems.github.com/grails-gwt/guide/"
-    def scm = [url:"https://github.com/dawsonsystems/grails-gwt"]
+    def documentation = "http://simplicityitself.github.com/grails-gwt/guide/"
+    def scm = [url:"https://github.com/simplicityitself/grails-gwt"]
 	
     def license = "APACHE"
 
