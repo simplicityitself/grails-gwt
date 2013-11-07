@@ -1,9 +1,8 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
-includeTargets << new File("${dependencyManagerPluginDir}/scripts/_ExtendedDependencies.groovy")
+includeTargets << new File("${extendedDependencyManagerPluginDir}/scripts/_ExtendedDependencies.groovy")
 
 
 import grails.util.GrailsNameUtils
-import org.apache.ivy.core.module.id.ModuleRevisionId
 
 // This script may be run more than once, because the _Events script
 // includes targets from it.
@@ -687,17 +686,17 @@ def resolveHome(def gwtVersion, def buildConfigSetting, def sysPropSetting, def 
 
 def addGwtCoreToDependencies(String version) {
 
-    addDependency("com.google.gwt", "gwt-dev", version)
-    addDependency("com.google.gwt", "gwt-user", version)
-    addDependency("com.google.gwt", "gwt-servlet", version)
+  gwtResolvedDependencies.addAll(addProvidedDependency("com.google.gwt", "gwt-dev", version))
+  gwtResolvedDependencies.addAll(addProvidedDependency("com.google.gwt", "gwt-user", version))
+  addDependency("com.google.gwt", "gwt-servlet", version)
 
-    if (version.startsWith("2.5")) {
-      addDependency("com.google.gwt", "gwt-codeserver", version)
-      addDependency("org.json", "json", "20090211")
-    }
+  if (version.startsWith("2.5")) {
+    addDependency("com.google.gwt", "gwt-codeserver", version)
+    addDependency("org.json", "json", "20090211")
+  }
 
-    addDependency("javax.validation", "validation-api", "1.0.0.GA")
-    addDependency("javax.validation", "validation-api", "1.0.0.GA", "sources")
+  addDependency("javax.validation", "validation-api", "1.0.0.GA")
+  addDependency("javax.validation", "validation-api", "1.0.0.GA", "sources")
 }
 
 def addGinToDependencies(String version) {
@@ -720,18 +719,8 @@ def addGinToDependencies(String version) {
 }
 
 def addDependency(group, name, version, type=null) {
-
-    if (type != null &&  grailsSettings.dependencyManager.ivySettings.defaultRepositoryCacheManager.ivyPattern.indexOf('[classifier') == -1) {
-      println """WARN: source dependencies might not be properly resolved with
-the current configuration, please add the following line at the top of
-grails.project.dependency.resolution in grails-app/conf/BuildConfig.groovy:
-
-dependencyManager.ivySettings.defaultCacheIvyPattern = "[organisation]/[module](/[branch])/ivy-[revision](-[classifier]).xml"
-
-"""
-    }
-    def extraAttrs = type == null ? [:] : ['m:classifier': type]
-    ModuleRevisionId mrid = ModuleRevisionId.newInstance(group, name, version, extraAttrs)
-    addModuleToDependencies(mrid, 'default')
+  gwtResolvedDependencies.addAll(addCompileDependency(group, name, version, type))
+  addTestDependency(group, name, version, type)
+  addRuntimeDependency(group, name, version, type)
 }
 
