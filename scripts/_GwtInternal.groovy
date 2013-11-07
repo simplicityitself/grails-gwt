@@ -382,7 +382,8 @@ target (runGwtClient: "Runs the GWT hosted mode client.") {
         // Hosted mode requires a special JVM argument on Mac OS X.
         if (antProject.properties.'os.name' == 'Mac OS X') {
             def osVersion = antProject.properties.'os.version'.split(/\./)
-            if (osVersion[0].toInteger() == 10 && osVersion[1].toInteger() >= 6) {
+            def javaVersion = antProject.properties.'java.version'
+            if (osVersion[0].toInteger() == 10 && osVersion[1].toInteger() >= 6 && !javaVersion.startsWith('1.7')) {
                 jvmarg(value: '-d32')
             }
 
@@ -626,7 +627,7 @@ def findModules(String searchDir, boolean entryPointOnly) {
             if (m.count > 0) {
                 // now check if this module has an entry point
                 // if there's no entry point, then it's not necessary to compile the module
-                if (!entryPointOnly || file.text =~ /entry-point/) {
+                if (!entryPointOnly || file.text =~ /entry-point/ || file.text =~ /com.gwtplatform.mvp/) {
                     // Extract the fully-qualified module name.
                     modules << m[0][1].replace('/' as char, '.' as char)
                 }
