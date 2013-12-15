@@ -1,0 +1,33 @@
+body {
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 85%;
+  font-weight: normal;
+  font-family: Arial, sans-serif;	
+  margin: 20px 20px 20px 20px;
+}
+.calc-Button {
+	border: 2px solid #000000;
+	border-top-color: #cccccc;
+	border-left-color: #cccccc;
+	padding: 0.15em;
+	background-color: #d3d3d3;
+	color: #000000;	
+	width: 30px;
+	height: 30px;
+	font-weight: normal;
+}
+.calc-Grid {	
+	width: 160px;
+}
+.calc-Panel {
+	padding: 0.15em;	
+	background-color: #a6c6a3;
+	border: 1px solid #000000;
+}
+.calc-Cell {
+}
+.gwt-TextBox {
+	background-color: #ffffff;
+	width: 168px;
+}

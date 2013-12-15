@@ -20,7 +20,7 @@ def addGwtResolvedDeps() {
 
   gwtResolvedDependencies.each { File f ->
     if (!f.name.contains("gwt-dev")) {
-
+      println "Adding ${f.name} to classpath"
       rootLoader.addURL(f.toURL())
 
       if (classLoader) {

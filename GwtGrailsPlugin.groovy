@@ -30,7 +30,9 @@ requests.
     def issueManagement = [ system: "Github", url: "https://github.com/simplicityitself/grails-gwt/issues" ]
     def documentation = "http://simplicityitself.github.com/grails-gwt/guide/"
     def scm = [url:"https://github.com/simplicityitself/grails-gwt"]
-	
+
+    def dependsOn = [extendedDependencyManager: "0.5.1"]
+
     def license = "APACHE"
 
     def pluginExcludes = [
