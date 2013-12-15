@@ -1,6 +1,8 @@
 includeTargets << new File("${gwtPluginDir}/scripts/_ClasspathHandling.groovy")
-includeTargets << new File("${extendedDependencyManagerPluginDir}/scripts/_ExtendedDependencies.groovy")
 
+if (getBinding().variables.containsKey("extendedDependencyManagerPluginDir")) {
+  includeTargets << new File("${extendedDependencyManagerPluginDir}/scripts/_ExtendedDependencies.groovy")
+}
 
 import grails.util.GrailsNameUtils
 

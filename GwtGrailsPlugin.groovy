@@ -31,7 +31,7 @@ requests.
     def documentation = "http://simplicityitself.github.com/grails-gwt/guide/"
     def scm = [url:"https://github.com/simplicityitself/grails-gwt"]
 
-    def dependsOn = [extendedDependencyManager: "0.5.1"]
+    def dependsOn = [extendedDependencyManager: "0.5.2"]
 
     def license = "APACHE"
 

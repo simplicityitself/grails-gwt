@@ -17,7 +17,7 @@ grails.project.dependency.resolution = {
     plugins {
         test(":spock:0.7") { export = false }
         build (":release:3.0.0", ':rest-client-builder:1.0.3') { export = false }
-        build ":extended-dependency-manager:0.5.1"
+        build ":extended-dependency-manager:0.5.2"
         runtime ":resources:1.2"
     }
 }
