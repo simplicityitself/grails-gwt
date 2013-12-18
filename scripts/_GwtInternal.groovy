@@ -645,7 +645,6 @@ def resolveGwtDependencies() {
   if (getPropertyValue("gwt.version", null)) {
     addGwtCoreToDependencies(getPropertyValue("gwt.version", null))
   }
-  if (1==1) return
   if (buildConfig.gwt.gin.version) {
     addGinToDependencies(buildConfig.gwt.gin.version)
   }
