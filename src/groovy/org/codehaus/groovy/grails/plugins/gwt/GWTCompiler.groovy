@@ -164,6 +164,12 @@ class GWTCompiler {
     try {
 
       def result = gwtRun(compilerClass, [resultproperty: "result", fork:true, output:"${logFile.absoluteFile}", error:"${logFile.absoluteFile}", append:true]) {
+          if (grailsSettings.config.gwt.compile.args) {
+              def c = grailsSettings.config.gwt.compile.args.clone()
+              c.delegate = delegate
+              c()
+          }
+
           jvmarg(value: '-Djava.awt.headless=true')
           arg(value: '-style')
           arg(value: gwtOutputStyle)
