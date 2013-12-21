@@ -42,9 +42,9 @@ h2. GWT Process command line options
 
 h3. gwt.run.args
 
-To alter the command line arguments passed to the GWT process when running the GWT dev mode client,
+To alter the command line arguments passed to the GWT processes.
 
-Create a gwt.run.args configuration property. A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the dev mode
+Create a gwt.run.args configuration property. A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the GWT processes.
 
 {code}
 gwt.run.args = {
@@ -57,7 +57,7 @@ gwt.run.args = {
 
 h3. gwt.compile.args
 
-To alter the command line arguments passed to the GWT process when running the GWT Compiler.
+To alter the command line arguments passed to the GWT process when running the GWT Compiler only.
 
 Create a gwt.compile.args configuration property. A closure that can contain gant style arg (or any other arg) for the java invocation of the compiler
 
