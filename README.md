@@ -12,6 +12,6 @@ This is the source of the plugin.
 
 The plugin host page is at http://grails.org/plugin/gwt
 
-Documentation can be found at http://dawsonsystems.github.com/grails-gwt/guide/
+Documentation can be found at http://simplicityitself.github.com/grails-gwt/guide/
 
 The Google Group can be found at https://groups.google.com/group/grails-gwt
