@@ -81,4 +81,12 @@ grails.project.dependency.resolution = {
 
 gwt {
   version="2.5.1"
+  dependencies = [
+      'com.gwtplatform:gwtp-mvp-client:1.0.3',
+      'com.gwtplatform:gwtp-clients-common:1.0.3',
+      'com.github.gwtbootstrap:gwt-bootstrap:2.3.2.0-SNAPSHOT',
+      'org.apache.velocity:velocity:1.7',
+      'org.vectomatic:lib-gwt-file:0.3.4',
+      'com.googlecode.gwt-crypto:gwt-crypto:2.3.0'
+  ]
 }
