@@ -38,10 +38,43 @@ h3. Import Plugins int GWT Scope
  gwt.plugins = ['reporting', 'work-management']
 {code}
 
+h2. GWT Process command line options
+
+h3. gwt.run.args
+
+To alter the command line arguments passed to the GWT process when running the GWT dev mode client,
+
+Create a gwt.run.args configuration property. A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the dev mode
+
+{code}
+gwt.run.args = {
+   jvmarg(value: '-Xms1024m')
+   jvmarg(value: '-Xmx2048m')
+ }
+
+{code}
+
+
+h3. gwt.compile.args
+
+To alter the command line arguments passed to the GWT process when running the GWT Compiler.
+
+Create a gwt.compile.args configuration property. A closure that can contain gant style arg (or any other arg) for the java invocation of the compiler
+
+
+{code}
+gwt.compile.args = {
+  arg(value: '-strict')
+  arg(value: '-XdisableClassMetadata')
+  arg(value: '-XdisableCastChecking')
+  arg(value: '-XenableClosureCompiler')
+}
+
+{code}
+
 h2. Other Configuration
 
 * gwt.local.workers - Fix the number of workers at the given level. (See Compilation for more information on this)
-* gwt.run.args - A closure that can contain gant style jvmargs (or any other arg) for the java invocation of the compiler/ dev mode
 * gwt.parallel - can force the full parallel compiler mode to be on/ off
 * gwt.javac.cmd - The command to use to compile .java source files (default: @javac@)
 * gwt.java.cmd - The Java interpreter command (default: @java@)
