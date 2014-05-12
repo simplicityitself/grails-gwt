@@ -437,8 +437,8 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
   event("StatusUpdate", [ "Starting the GWT Super Dev Mode server." ])
   event("GwtRunHostedStart", [ "Starting the GWT Super Dev Mode server." ])
 
-  // Check for GWT 2.5 super dev mode.
-  ant.available(classname: "com.google.gwt.dev.codeserver.CodeServer", property: "isGwt25") {
+  // Check for super dev mode availablility (since GWT 2.5).
+  ant.available(classname: "com.google.gwt.dev.codeserver.CodeServer", property: "isSuperDevModeAvailable") {
     ant.classpath {
       fileset(dir: "${gwtHome}") {
         include(name: "gwt-codeserver*.jar")
@@ -451,10 +451,10 @@ target (runCodeServer: "Runs the Super Dev Mode server.") {
     }
   }
 
-  def usingGwt25 = ant.project.properties.isGwt25 != null
+  def isSuperDevModeAvailable = ant.project.properties.isSuperDevModeAvailable != null
 
-  if (!usingGwt25) {
-    event("StatusError", [ "Super Dev Mode only support in GWT 2.5.0 version" ])
+  if (!isSuperDevModeAvailable) {
+    event("StatusError", [ "Super Dev Mode requires GWT 2.5.0 or newer" ])
     exit(1)
   }
 
@@ -697,7 +697,9 @@ def addGwtCoreToDependencies(String version) {
 
   addDependency("com.google.gwt", "gwt-servlet", version)
 
-  if (version.startsWith("2.5")) {
+  // GWT version >= 2.5.0
+  def versionComponents = parseVersion(version)
+  if (versionComponents[0] > 2 || (versionComponents[0] == 2 && versionComponents[1] >= 5)) {
     addDependency("com.google.gwt", "gwt-codeserver", version)
     addDependency("org.json", "json", "20090211")
   }
@@ -729,5 +731,9 @@ def addDependency(group, name, version, type="jar") {
   gwtResolvedDependencies.addAll(addCompileDependency(group, name, version, type))
   addTestDependency(group, name, version, type)
   addRuntimeDependency(group, name, version, type)
+}
+
+def parseVersion(String version) {
+  version.tokenize('.').collect { it.toInteger() }
 }
 
