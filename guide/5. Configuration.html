@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5 Configuration 0.9.2</title>
+    <title>5 Configuration 1.0.3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -23,25 +23,25 @@ function addJsClass() {
                 <a href="../guide/index.html" class="button">Table of contents</a>
 
                 <div id="nav-summary-childs" style="display:none;">
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/1.%20Introduction.html"><strong>1</strong><span>Introduction</span></a>
                     </div>
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/2.%20Getting%20Started.html"><strong>2</strong><span>Getting Started</span></a>
                     </div>
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/3.%20Server%20RPC.html"><strong>3</strong><span>Server RPC</span></a>
                     </div>
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Compilation.html"><strong>4</strong><span>Compilation</span></a>
                     </div>
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Configuration.html"><strong>5</strong><span>Configuration</span></a>
                     </div>
-                    
+
                     <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span></a>
                     </div>
-                    
+
                 </div>
             </div>
         </li>
@@ -52,8 +52,8 @@ function addJsClass() {
 </div>
 <div id="header">
     <div class="images clearfix">
-        
-        
+
+
     </div>
     <p>Incorporates GWT into Grails. In particular, GWT host pages can be
 GSPs and standard Grails services can be used to handle client RPC
@@ -67,15 +67,15 @@ requests.
         <td id="col1">
             <div id="main" class="corner-all">
 
-                
+
                     <div class="toc-item prev-left"><a href="../guide/4.%20Compilation.html">&lt;&lt; <strong>4</strong><span>Compilation</span></a></div>
-                
+
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                
+
                     <div class="toc-item next-right"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span> >></a></div>
-                
+
 
 
                 <div class="project">
@@ -83,14 +83,14 @@ requests.
 
                     <p><strong>Authors:</strong> Peter Ledbrook, David Dawson, Rob Purcell, Predrag Knežević</p>
 
-                    <p><strong>Version:</strong> 0.9.2</p>
+                    <p><strong>Version:</strong> 1.0.3</p>
 
-                    
+
                 </div>
 
-                
 
-                
+
+
 
 <h1 id="5. Configuration">5 Configuration</h1>
 
@@ -98,12 +98,12 @@ requests.
 It will use any repositories that you set up in the main BuildConfig.groovy
 It <strong class="bold">does not</strong> use the dependencies block from BuildConfig, instead you must use the options below.<p class="paragraph"/>The following options control dependency management
 <ul class="star">
-<li>gwt.version - Set a version number (eg "2.4.0") of GWT to use.</li>
+<li>gwt.version - Set a version number (eg "2.5.1") of GWT to use.</li>
 <li>gwt.home (prefer to set a version have have it downloaded) - use the gwt version installed at the given location</li>
 <li>gwt.gin.version - download gin and any necessary libraries</li>
 </ul><p class="paragraph"/><strong class="bold">example</strong>
 <div class="code"><pre>gwt &#123;
-    version=<span class="java&#45;quote">"2.3.0"</span>
+    version=<span class="java&#45;quote">"2.5.1"</span>
     gin.version=<span class="java&#45;quote">"1.5.0"</span>
 &#125;</pre></div><p class="paragraph"/><h3>GWT Modules</h3>
 <ul class="star">
@@ -127,11 +127,11 @@ It <strong class="bold">does not</strong> use the dependencies block from BuildC
 
 
                 <div style="clear:both;margin-top:15px;"></div>
-                
+
                     <div class="toc-item prev-left"><a href="../guide/4.%20Compilation.html">&lt;&lt; <strong>4</strong><span>Compilation</span></a></div>
-                
+
                     <div class="toc-item next-right"><a href="../guide/6.%20Testing.html"><strong>6</strong><span>Testing</span> >></a></div>
-                
+
                 <div style="clear:both"></div>
             </div>
         </td>
@@ -142,22 +142,22 @@ It <strong class="bold">does not</strong> use the dependencies block from BuildC
                     <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
                 </div>
                 <div class="menu">
-                    
+
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
-                        
-                            
+
+
                             <div class="menu-item"><a href="../ref/Command%20Line/compile-gwt-modules.html">compile-gwt-modules</a>
                             </div>
-                            
+
                             <div class="menu-item"><a href="../ref/Command%20Line/run-gwt-client.html">run-gwt-client</a>
                             </div>
-                            
+
                             <div class="menu-item"><a href="../ref/Command%20Line/run-gwt-codeserver.html">run-gwt-codeserver</a>
                             </div>
-                            
+
                             </div>
                     </div>
-                    
+
                 </div>
             </div>
         </td>
@@ -165,8 +165,8 @@ It <strong class="bold">does not</strong> use the dependencies block from BuildC
 </table>
 
 <div id="footer">
-    
-    
+
+
 </div>
 
 <script type="text/javascript" src="../js/docs.js"></script>
