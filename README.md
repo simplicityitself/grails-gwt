@@ -22,9 +22,8 @@ Add the plugin, plus the extended-dependency-manager plugin for accessing the cu
 ```
 plugins {
   build ":extended-dependency-manager:0.5.5"
-  compile ":gwt:1.0", {
+  compile ":gwt:1.0.3", {
     transitive=false
   }
 }
 ```
-

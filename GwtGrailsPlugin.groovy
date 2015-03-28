@@ -19,7 +19,7 @@ import org.codehaus.groovy.grails.plugins.gwt.DefaultGwtServiceInterfaceGenerato
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "1.0"
+    def version = "1.0.3"
     def grailsVersion = "2.0 > *"
     def title = "The Google Web Toolkit for Grails."
     def description = """\
@@ -57,7 +57,7 @@ requests.
 
         // Bean for generating RPC interfaces for services.
         gwtInterfaceGenerator(DefaultGwtServiceInterfaceGenerator)
-    }   
+    }
 
     /**
      * Registers the common web-related dynamic properties on services
@@ -88,7 +88,7 @@ requests.
                     'filter-class'('org.codehaus.groovy.grails.plugins.gwt.GwtCacheControlFilter')
                 }
             }
-        
+
             // Place the Shiro filter after the Spring character encoding filter, otherwise the latter filter won't work.
             def filter = xml.'filter-mapping'.find { it.'filter-name'.text() == "charEncodingFilter" }
             filter + {
@@ -119,17 +119,17 @@ requests.
             def grailsClass = application.addArtefact(ActionHandlerArtefactHandler.TYPE, event.source)
 
             // Re-register the action handler bean.
-            def beans = beans {                 
+            def beans = beans {
                 final c = configureActionHandler.clone()
                 c.delegate = delegate
                 c.call(grailsClass)
             }
 
-            if (event.ctx) {         
+            if (event.ctx) {
                 beans.registerBeans(event.ctx)
-            }				
+            }
         }
-    }                                                                                  
+    }
 
     def onApplicationChange = { event ->
     }
@@ -145,7 +145,7 @@ requests.
             bean.autowire = "byName"
         }
     }
-    
+
     /**
      * Searches a given directory for any GWT module files, and
      * returns a list of their fully-qualified names.
