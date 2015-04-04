@@ -98,3 +98,10 @@ into:
 {code}
 MyServiceAsync myService = GWT.create(MyService.class);
 {code}
+
+h3. For existing Java RPC RemoteServiceServlet implementations
+
+Because of the resource plugin, the location that GWT is looking for the resource policy is different from the URL. To resolve, GrailsRemoteServiceServlet was create. Extend this instead of RemoteServiceServlet, or provide a custom doGetSerializationPolicy.
+
+
+

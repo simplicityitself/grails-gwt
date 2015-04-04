@@ -1,6 +1,6 @@
 h1. run-gwt-client
 
-Run the GWT Development Mode client.
+Run the GWT Development Mode client (2.5.1 -> 2.6.1; for 2.7.0, see run-gwt-codeserver)
 
 This hosts your GWT code and executes it as Java.  You will need the GWT plugin installed in your browser of choice.
 

@@ -64,6 +64,13 @@ Starting the GWT hosted mode client. …
      [java] Listening for transport dt_socket at address: 5006
 {code}
 
+However, since 2.5.1, a JavaScript based code server method has been implemented, and has become mandatory in 2.7
+{code}
+grails run-gwt-codeserver
+{code}
+
+Note: in your BuildConfig.groovy, you must set an the property gwt.codeserver.port for RPC to work properly if you are using the resource plugin
+
 Then, create a launch config in STS:
 
 {code}
