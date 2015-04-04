@@ -6,3 +6,5 @@ This hosts your GWT code and compiles it to Javascript, in draft mode, on demand
 This removes the need to have a browser plugin, and speeds up page refreshes if the code hasn't changed.
 
 See https://developers.google.com/web-toolkit/articles/superdevmode
+
+You also need to set gwt.codeserver.port in BuildConfig.groovy for RPC to work properly.

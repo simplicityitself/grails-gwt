@@ -26,4 +26,5 @@ plugins {
     transitive=false
   }
 }
+setProperty('gwt.codeserver.port', '9876')
 ```

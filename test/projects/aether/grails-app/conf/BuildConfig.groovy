@@ -62,7 +62,7 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.1'
 
         build ":extended-dependency-manager:0.5.2"
-	      compile ":gwt:1.0-SNAPSHOT", {
+	      compile ":gwt:1.0.3", {
           transitive=false
         }
 

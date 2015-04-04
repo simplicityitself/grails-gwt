@@ -8,7 +8,7 @@ It will use any repositories that you set up in the main BuildConfig.groovy
 It *does not* use the dependencies block from BuildConfig, instead you must use the options below.
 
 The following options control dependency management
-* gwt.version - Set a version number (eg "2.4.0") of GWT to use.
+* gwt.version - Set a version number (eg "2.5.1") of GWT to use.
 * gwt.home (prefer to set a version have have it downloaded) - use the gwt version installed at the given location
 * gwt.gin.version - download gin and any necessary libraries
 
@@ -19,7 +19,7 @@ gwt {
     version="2.3.0"
     gin.version="1.5.0"
 }
-
+setProperty("gwt.codeserver.port", "9876") //needed for run-app and run-gwt-codeserver
 {code}
 
 h3. GWT Modules
