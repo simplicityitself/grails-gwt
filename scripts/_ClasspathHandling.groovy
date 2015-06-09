@@ -63,7 +63,7 @@ def maybeUseGwtHomeLibs(classLoader) {
   if(getBinding().variables.containsKey("gwtHome") && gwtHome) {
     def gwtHomeFile = new File(gwtHome)
     if (gwtHomeFile.exists()) {
-      println "Using the GWT installation at ${gwtHome.absolutePath}"
+      println "Using the GWT installation at ${gwtHomeFile.absolutePath}"
       // Update the dependency lists.
       new File(gwtHome).eachFileMatch(~/^gwt-(dev.*|user.*)\.jar$/) { File f ->
         grailsSettings.providedDependencies << f
