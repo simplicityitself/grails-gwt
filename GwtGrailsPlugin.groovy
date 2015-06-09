@@ -19,7 +19,7 @@ import org.codehaus.groovy.grails.plugins.gwt.DefaultGwtServiceInterfaceGenerato
 import org.codehaus.groovy.grails.web.plugins.support.WebMetaUtils
 
 class GwtGrailsPlugin {
-    def version = "1.0.3"
+    def version = "1.0.3-ABZ"
     def grailsVersion = "2.0 > *"
     def title = "The Google Web Toolkit for Grails."
     def description = """\
@@ -31,7 +31,7 @@ requests.
     def documentation = "http://simplicityitself.github.com/grails-gwt/guide/"
     def scm = [url:"https://github.com/simplicityitself/grails-gwt"]
 
-    def dependsOn = [extendedDependencyManager: "0.5.5"]
+    def dependsOn = [extendedDependencyManager: "0.5.5-ABZ"]
 
     def license = "APACHE"
 
